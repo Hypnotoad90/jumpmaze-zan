@@ -23,5 +23,6 @@ scripts/
    ranker_hs.acs: 999
    jmrun: 909, 920, 921, 922, 923, 924, 925, 926, 927, 928, 929
    TranslucentPlayers.pk3: 694, 695, 696, 693
+   jpxmapinfo.acs: 501
 
 Hypnojump: 833, 832
