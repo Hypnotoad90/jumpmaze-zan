@@ -1,0 +1,654 @@
+// Keeps track of players points on team-based maps.
+//
+// Author: 
+// Positron
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "jmrteam"
+#include "zcommon.acs"
+
+#import "constants.acs"
+#import "utility.acs"
+#import "timer.acs"
+#import "luk.acs"
+
+#import "ranker_hs.acs"
+
+// Start script number.
+#libdefine JRT_SCRIPT_START 960
+#libdefine JRT_SCRIPT_POINT 962
+
+// Maximum allowed score points per map.
+#define JRT_MAX_POINTS 10
+#define JRT_SHOW_DELAY_TIME 16
+
+// Points table layout:
+#define JRT_TBL_X 250
+#define JRT_TBL_Y 50000
+#define JRT_TBL_START_POSITION 52000
+#define JRT_TBL_PLACE_HEIGHT 1000
+#define JRT_TBL_REFRESH_TIME 8 // In seconds
+#define JRT_TBL_LINEID_OFFSET 960
+#define JRT_HS_LINE ( JRT_TBL_LINEID_OFFSET + 2 + JRT_MAX_POINTS )
+
+#define JRT_IDX_PLAYER 0
+#define JRT_IDX_POINTS 1
+
+// Keeps track of points for scored players.
+int _jrt_table[ JRT_MAX_POINTS ][ 2 ];
+int _jrt_table_size = 0;
+
+int _jrt_points_left = JRT_MAX_POINTS;
+int _jrt_points_total = JRT_MAX_POINTS;
+
+int _jrt_time_minutes = 0;
+int _jrt_time_seconds = 0;
+int _jrt_time_centiseconds = 0;
+
+str _jrt_end_message = "";
+
+// Start.
+script JRT_SCRIPT_START ( int totalPoints ) {
+   // Don't go over the maximum score points we can support.
+   if ( totalPoints <= JRT_MAX_POINTS ) {
+      _jrt_points_left = totalPoints;
+      _jrt_points_total = totalPoints;
+   }
+	isTeamMap = true;
+   if ( is_online() ) {
+      // Load high score.
+      if ( JrhIsEnabled() ) {
+         JrhSetLoadScript( 963 );
+         JrhSetDetailsScript( 965 );
+         acs_ExecuteWait( 963, 0 );
+      }
+
+      // Show the table periodically to reflect changes in players names.
+      while ( true ) {
+         JrtShowTable();
+         delay( TICS_IN_SECOND * JRT_TBL_REFRESH_TIME );
+      }
+   } 
+   else {
+      JrtDrawGoals();
+   }
+}
+
+// Adds point to player.
+script JRT_SCRIPT_POINT ( void ) {
+   if ( _jrt_points_left > 0 ) {
+      JrtAddPointToPlayer( playerNumber() );
+
+      // When all points have been awarded, calculate finish time.
+      if ( JrtGetPointsLeft() == 0 ) {
+         int finish_time = TimerGetTics();
+         JrtSetFinishTime( finish_time );
+
+         // High score.
+         if ( JrhIsEnabled() && JrhIsNew( finish_time ) ) {
+			
+			if (!JRTIsReallyNew(finish_time)) //make sure another server didn't update the record with a new high score
+				terminate;
+			
+            // Only proceed if map was completed without cheats.
+            if ( ! JrhIsCheatsEnabled() ) {
+               JrtHsSave( finish_time );
+               JrtHsAnnounceNew();
+               // Load new high score.
+               acs_ExecuteWait( 963, 0 );
+            }
+            else {
+               JrtHsAnnounceCheat();
+            }
+         }
+      }
+
+      // Update display.
+
+      delay( JRT_SHOW_DELAY_TIME );
+
+      if ( is_online() ) {
+         JrtShowTable();
+      }
+      else {
+         JrtDrawGoals();
+      }
+   }
+}
+
+function void JrtAddPointToPlayer( int player ) {
+   int position = JrtGetPositionInTable( player );
+
+   // Create a new space for first time players.
+   if ( position == VALUE_NONE ) {
+      position = _jrt_table_size;
+      _jrt_table[ position ][ JRT_IDX_PLAYER ] = player;
+      _jrt_table_size += 1;
+   }
+   
+   _jrt_table[ position ][ JRT_IDX_POINTS ] += 1;
+   _jrt_points_left -= 1;
+}
+
+function int JrtGetPositionInTable( int player ) {
+   for ( int pos = 0; pos < _jrt_table_size; pos += 1 ) {
+      if ( player == _jrt_table[ pos ][ JRT_IDX_PLAYER ] ) {
+         return pos;
+      }
+   }
+
+   return VALUE_NONE;
+}
+
+function void JrtSetFinishTime( int tics ) {
+   int seconds = tics / TICS_IN_SECOND;
+
+   _jrt_time_minutes = seconds / SECONDS_IN_MINUTE; 
+   _jrt_time_seconds = seconds % SECONDS_IN_MINUTE;
+   _jrt_time_centiseconds = cal_cseconds( tics % TICS_IN_SECOND );
+}
+
+function bool JrtIsPositionActive( int pos ) {
+   return ( _jrt_table[ pos ][ JRT_IDX_PLAYER ] != VALUE_NONE );
+}
+
+function int JrtGetPositionPlayer( int pos ) {
+   return _jrt_table[ pos ][ JRT_IDX_PLAYER ];
+}
+
+function int JrtGetPositionPoints( int pos ) {
+   return _jrt_table[ pos ][ JRT_IDX_POINTS ];
+}
+
+function int JrtGetTableSize( void ) {
+   return _jrt_table_size;
+}
+
+function int JrtGetPointsLeft( void ) {
+   return _jrt_points_left;
+}
+
+function int JrtGetTotalPoints( void ) {
+   return _jrt_points_total;
+}
+
+// Replace finish time message with a custom message.
+function void JrtSetEndMessage( str message ) {
+   _jrt_end_message = message;
+}
+
+script 961 ( int player ) DISCONNECT {
+   int position = JrtGetPositionInTable( player );
+   // We update only those players that have scored.
+   if ( position != VALUE_NONE ) {
+      _jrt_table[ position ][ JRT_IDX_PLAYER ] = VALUE_NONE;
+      delay( JRT_SHOW_DELAY_TIME );
+      JrtShowTable();
+   }
+}
+
+function void JrtShowTable( void ) {
+   setFont( "SMALLFONT" );
+   int table_y = JRT_TBL_Y;
+
+   int high_score_y = table_y;
+   int time_y = table_y + JRT_TBL_PLACE_HEIGHT;
+
+   // Move the high score time to the place where the completion time
+   // usually resides if we don't have a completion time yet.
+   if ( JrtGetPointsLeft() > 0 ) {
+      high_score_y += JRT_TBL_PLACE_HEIGHT;
+   }
+
+   // Draw the high score finish time.
+   if ( JrhIsSet() ) {
+      JrtHsShowFinishTime( high_score_y );
+   }
+
+   // Show finish time.
+   if ( JrtGetPointsLeft() == 0 ) {
+      JrtDrawTime( time_y );
+   }
+
+   // Draw the main helpers label:
+   table_y += JRT_TBL_PLACE_HEIGHT * 2;
+   hudMessageBold( 
+      s : "\cfMain Helpers\c-" ;
+      HUDMSG_PLAIN, JRT_TBL_LINEID_OFFSET + 1, 0, JRT_TBL_X,
+      table_y, 0
+   );
+
+   // We add two because we already have two messages above.
+   int message_id = JRT_TBL_LINEID_OFFSET + 2;
+   table_y = JRT_TBL_START_POSITION + 
+      // We multiply by 4 because we want to give extra space
+      // for the 'say' command.
+      ( 4 * JRT_TBL_PLACE_HEIGHT );
+
+   for ( int pos = 0; pos < _jrt_table_size; pos += 1 ) {
+      // For players that are still in game.
+      if ( _jrt_table[ pos ][ JRT_IDX_PLAYER ] != VALUE_NONE ) {
+         hudMessageBold(
+            s : "\cc", n : _jrt_table[ pos ][ JRT_IDX_PLAYER ] + 1,
+            s : "\c- \cd", i : _jrt_table[ pos ][ JRT_IDX_POINTS ], 
+            s : "\c-" ;
+            HUDMSG_PLAIN, message_id, 0, JRT_TBL_X, table_y, 0
+         );
+      }
+      // For disconnected players.
+      else {
+         hudMessageBold( 
+            s : "\cgDisconnected\c-",
+            s : " \cd", i : _jrt_table[ pos ][ JRT_IDX_POINTS ], 
+            s : "\c-" ;
+            HUDMSG_PLAIN, message_id, 0, JRT_TBL_X, table_y, 0
+         );
+      }
+
+      table_y += JRT_TBL_PLACE_HEIGHT;
+      message_id += 1;
+   }
+}
+
+function void JrtDrawTime( int tableY ) {
+   // Select a label based on the game type.
+   str time_label = "\crTime: \c-";
+   if ( is_online() ) {
+      time_label = "\ciTeamtime: \c-";
+   }
+
+   // Finish time end message.
+   if ( _jrt_end_message == "" ) {
+      hudMessageBold(
+         s : time_label, s : "\cb",
+         s : number_prefix( _jrt_time_minutes ), i : _jrt_time_minutes,
+         s : ":",
+         s : number_prefix( _jrt_time_seconds ), i : _jrt_time_seconds,
+         s : "\cs.", s : number_prefix( _jrt_time_centiseconds ), 
+         i : _jrt_time_centiseconds, s : "\c-" ;
+         HUDMSG_PLAIN, JRT_TBL_LINEID_OFFSET, 0, JRT_TBL_X, tableY, 0
+      );
+   }
+   // Custom end message.
+   else {
+      hudMessageBold( 
+         s : "\ci", s : _jrt_end_message, s : "\c-" ;
+         HUDMSG_PLAIN, JRT_TBL_LINEID_OFFSET, 0, JRT_TBL_X, tableY, 0
+      );
+   }
+}
+
+function void JrtDrawGoals( void ) {
+   if ( JrtGetPointsLeft() == 0 ) {
+      JrtDrawTime( JRT_TBL_Y );
+      JrtDrawGoalsLine( "\cd", "\cq", "\cq", 
+         JRT_TBL_Y + JRT_TBL_PLACE_HEIGHT );
+   }
+   else {
+      JrtDrawGoalsLine( "\cc", "\ck", "\ci", 
+         JRT_TBL_Y + JRT_TBL_PLACE_HEIGHT );
+   }
+}
+
+function void JrtDrawGoalsLine( str labelClr, str pointClr, str totalClr,
+   int tableY ) {
+   setFont( "SMALLFONT" );
+
+   // For single player, there's only one player playing and therefore 
+   // always one place taken in the score table, which will be the first.
+   int current_score = _jrt_table[ 0 ][ JRT_IDX_POINTS ];
+
+   // Even though there likely won't be any maps that will contain one point,
+   // we'll still choose the appropriate label based on the quantity 
+   // of the points.
+   str goals_label = "Goals";
+   if ( _jrt_points_total == 1 ) {
+      goals_label = "Goal";
+   }
+
+   hudMessage( 
+      s : labelClr, s : goals_label, s : ": ", 
+      s : pointClr, i : current_score, 
+      s : labelClr, s : " / ", 
+      s : totalClr, i : _jrt_points_total, s : "\c-" ;
+      HUDMSG_PLAIN, JRT_TBL_LINEID_OFFSET + 1, 0, JRT_TBL_X, tableY, 0
+   );
+}
+
+// This function is used to clear the table when
+function void JrtClearPointsTable( void ) {
+   // Clear all posssible player places and the table header
+   // with the finish time.
+   int lines_to_clear = JRT_MAX_POINTS + 2;
+
+   for ( int pos = 0; pos < lines_to_clear; pos += 1 ) {
+      clear_message( JRT_TBL_LINEID_OFFSET + pos );
+   }
+}
+
+// High Score (DB-specific functions and scripts)
+// ---------------------------------------------------------------------------
+
+// database record keys.
+str JRT_HS_RTIME = "jrt_hs_time";
+str JRT_HS_RPLAYER_PREFIX = "jrt_hs_helper";
+str JRT_HS_RPOINTS_PREFIX = "jrt_hs_points";
+str JRT_HS_RTOTAL_PLAYERS = "jrt_hs_total_players";
+str JRT_HS_RDATE = "jrt_hs_rdate";
+
+#define JRT_HS_TBL_X -1.75
+#define JRT_HS_TBL_Y 0.7
+#define JRT_HS_TBL_LINE JRH_LINE_NOTICE
+#define JRT_HS_TBL_LINE_HEIGHT 1000
+
+// Finish time.
+int _jrt_hs_minutes = -1;
+int _jrt_hs_seconds = -1;
+int _jrt_hs_centiseconds = -1;
+
+// Authors.
+int _jrt_hs_helpers_total = VALUE_NONE;
+int _jrt_hs_helpers_name[ JRT_MAX_POINTS ][ 100 ];
+int _jrt_hs_helpers_points[ JRT_MAX_POINTS ];
+int _jrt_hs_unaccounted_points = 0;
+
+// Date.
+int _jrt_hs_year;
+int _jrt_hs_month;
+int _jrt_hs_day;
+
+// High score loading.
+script 963 ( void ) {
+   //JrhSetLoadStatus( JRH_STATUS_WORKING );
+
+   // Finish time.
+   /*
+   acs_ExecuteWait( LUK_RETSCRIPT, 0, LUK_RETQUERY_INT, JRT_HS_RTIME );
+
+    Bail out if we couldn't get the high score data.
+   int result = LukGetQueryResult();
+   if ( result != LUK_RESULT_OK ) {
+      // No high score is set:
+      if ( result == LUK_RESULT_FAILED ) {
+         JrhSetLoadStatus( JRH_STATUS_LOADED );
+      }
+      // Load error:
+      else {
+         JrhSetLoadStatus( JRH_STATUS_ERROR );
+      }
+
+      terminate;
+   }*/
+
+   JrtHsSetFinishTime( GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RTIME) );
+
+   // Date.
+   /*acs_ExecuteWait( LUK_RETSCRIPT, 0, LUK_RETQUERY_DATE, JRT_HS_RDATE );
+
+   if ( LukGetQueryResult() != LUK_RESULT_OK ) {
+      JrhSetLoadStatus( JRH_STATUS_ERROR );
+      terminate;
+   }
+
+   _jrt_hs_year = LukGetDateYear();
+   _jrt_hs_month = LukGetDateMonth();
+   _jrt_hs_day = LukGetDateDay();
+	
+   // Load total players.
+   acs_ExecuteWait( LUK_RETSCRIPT, 0, LUK_RETQUERY_INT, 
+      JRT_HS_RTOTAL_PLAYERS );
+
+   if ( LukGetQueryResult() != LUK_RESULT_OK ) {
+      JrhSetLoadStatus( JRH_STATUS_ERROR );
+      terminate;
+   }*/
+	
+	int packed_data = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RDATE);
+	
+	if (packed_data != 0)
+	{
+		// Packed date is of this format: YYYYMMDD
+		_jrt_hs_day = packed_data % 100;
+		packed_data /= 100;
+		_jrt_hs_month = packed_data % 100;
+		packed_data /= 100;
+		_jrt_hs_year = packed_data;
+	}
+	
+   int total_players = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RTOTAL_PLAYERS);
+
+   // Get the names and points of each player.
+   int points_collected = 0;
+   int pos;
+
+   for ( pos = 0; pos < total_players; pos += 1 ) {
+      // Player name:
+	  /*
+      acs_ExecuteWait( LUK_LRETSCRIPT, 0, LUK_RETQUERY_STR, 
+         JRT_HS_RPLAYER_PREFIX, pos + 1 );
+
+      if ( LukGetQueryResult() != LUK_RESULT_OK ) {
+         break;
+		
+      }*/
+      JrtHsSetHelperName( pos );
+
+      // Player points:
+	  /*
+      acs_ExecuteWait( LUK_LRETSCRIPT, 0, LUK_RETQUERY_INT, 
+         JRT_HS_RPOINTS_PREFIX, pos + 1 );
+
+      if ( LukGetQueryResult() != LUK_RESULT_OK ) {
+         break;
+      }*/
+		str helperidpoints = strparam(s:JRT_HS_RPOINTS_PREFIX,s:"_",i:pos);
+		_jrt_hs_helpers_points[ pos ] = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), helperidpoints);
+		points_collected += _jrt_hs_helpers_points[ pos ];
+   }
+
+   if ( pos == total_players ) {
+      _jrt_hs_helpers_total = total_players;
+
+      // Unaccounted points:
+      _jrt_hs_unaccounted_points = 0;
+      if ( points_collected < JrtGetTotalPoints() ) {
+         _jrt_hs_unaccounted_points = JrtGetTotalPoints() - points_collected;
+      }
+
+      //JrhSetLoadStatus( JRH_STATUS_LOADED );
+   }
+   else {
+      //JrhSetLoadStatus( JRH_STATUS_ERROR );
+      terminate;
+   }
+}
+
+function void JrtHsSetFinishTime( int tics ) {
+   if ( tics > 0 ) {
+      int seconds = tics / TICS_IN_SECOND;
+
+      _jrt_hs_minutes = seconds / SECONDS_IN_MINUTE;
+      _jrt_hs_seconds = seconds % SECONDS_IN_MINUTE;
+      _jrt_hs_centiseconds = cal_cseconds( tics % TICS_IN_SECOND );
+
+      JrhSetFinishTime( tics );
+   }
+}
+
+// Copies a helper name from DB library buffer to ours.
+function void JrtHsSetHelperName( int pos ) {
+	str helperid = strparam(s:JRT_HS_RPLAYER_PREFIX,s:"_",i:pos);
+	str authstring = GetDBEntryString(toUpper(StrParam(n:PRINTNAME_LEVEL)), helperid);
+	for ( int i = 0; i < StrLen(authstring); ++i ) { _jrt_hs_helpers_name[ pos ][ i ] = GetChar( authstring, i ); }
+	 _jrt_hs_helpers_name[ pos ][ StrLen(authstring) ] = 0;
+}
+
+// Saves map run information as high score in permanent storage.
+function void JrtHsSave( int finishTime ) {
+   //LukStoreInt( JRT_HS_RTIME, finishTime );
+   BeginDBTransaction();
+   SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RTIME, finishTime);
+   //LukStoreDate( JRT_HS_RDATE );
+
+   // List index for forming list-like queries in luk.
+   int active = 0;
+   int table_size = JrtGetTableSize();
+
+   for ( int pos = 0; pos < table_size; pos += 1 ) {
+      // Only store players that are in-game.
+      if ( JrtIsPositionActive( pos ) ) {
+         active += 1;
+
+         // Player's name:
+         /*LukStoreNameL( 
+            JRT_HS_RPLAYER_PREFIX, active, JrtGetPositionPlayer( pos ) 
+         );*/
+		str helperid = strparam(s:JRT_HS_RPLAYER_PREFIX,s:"_",i:pos);
+		SetDBEntryString(toUpper(StrParam(n:PRINTNAME_LEVEL)), helperid, strparam(n:JrtGetPositionPlayer( pos ) + 1));
+         // Player's points:
+		 /*
+         LukStoreIntL( 
+            JRT_HS_RPOINTS_PREFIX, active, JrtGetPositionPoints( pos )
+         );*/
+		 str helperidpoints = strparam(s:JRT_HS_RPOINTS_PREFIX,s:"_",i:pos);
+		 SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), helperidpoints,JrtGetPositionPoints( pos ));
+      }
+   }
+
+   SetDBEntry( toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RTOTAL_PLAYERS, active );
+   
+	if (getcvar("jm_date") != 0)
+	{
+		SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RDATE, getcvar("jm_date"));
+	}
+	EndDBTransaction();
+}
+
+function void JrtHsShowFinishTime( int tableY ) {
+   setFont( "SMALLFONT" );
+   hudMessageBold(
+      s : "\cnRecord: \cb",
+      s : number_prefix( _jrt_hs_minutes ), i : _jrt_hs_minutes, 
+      s : ":", 
+      s : number_prefix( _jrt_hs_seconds ), i : _jrt_hs_seconds, 
+      s : "\cs.",
+      s : number_prefix( _jrt_hs_centiseconds ), i : _jrt_hs_centiseconds, 
+      s : "\c-" ;
+      HUDMSG_PLAIN, JRT_HS_LINE, 0, JRT_TBL_X, tableY, 0
+   );
+}
+
+function void JrtHsAnnounceNew( void ) {
+   setFont( "SMALL" );
+   hudMessageBold(
+      s : "\cdA new map record has been set!\c-" ;
+      HUDMSG_FADEOUT | HUDMSG_LOG, 1900, 0, 1.5, 0.14, 5.0, 1.0
+   );
+   ambientSound( "JM2HSWIN", 127 );
+}
+
+function void JrtHsAnnounceCheat( void ) {
+   hudMessageBold( 
+      s : "\ccThis team of super marines is beyond the high score\c-" ;
+      HUDMSG_FADEOUT | HUDMSG_LOG, 1900, 0, 1.5, 0.15, 5.0, 1.0
+   );
+   ambientSound( "JM2HSLOS", 127 );
+}
+
+// Prints high score details table.
+script 965 ( int showTime ) {
+   int y = JRT_HS_TBL_Y;
+   int line_id = JRT_HS_TBL_LINE;
+
+   setFont( "SMALLFONT" );
+
+   // Header:
+   hudMessage(
+      s : "\ciRecord details\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JRT_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JRT_HS_TBL_LINE_HEIGHT * 2;
+   line_id += 1;
+
+   // Record date:
+   hudMessage(
+      s : "\ckDate Set:\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JRT_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JRT_HS_TBL_LINE_HEIGHT;
+   line_id += 1;
+
+   if (_jrt_hs_year != 0)
+   {
+		hudMessage(
+		s : "\cc", s : conv_month_string( _jrt_hs_month ), 
+		s : " ", i : _jrt_hs_day, s : ", ", i : _jrt_hs_year, s : "\c-" ;
+		HUDMSG_FADEOUT, line_id, 0, JRT_HS_TBL_X, y, showTime, 1.0
+		);
+	}
+	else
+	{
+		hudMessage(
+		s : " Date unavailable" ;
+		HUDMSG_FADEOUT, line_id, 0, JRT_HS_TBL_X, y, showTime, 1.0
+		);
+	}
+
+   y += JRT_HS_TBL_LINE_HEIGHT * 2;
+   line_id += 1;
+
+   // Record time:
+   hudMessage(
+      s : "\ckFinish Time:\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JRT_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JRT_HS_TBL_LINE_HEIGHT;
+   line_id += 1;
+
+   hudMessage(
+      s : "\cb",
+      s : number_prefix( _jrt_hs_minutes ), i : _jrt_hs_minutes, 
+      s : ":", 
+      s : number_prefix( _jrt_hs_seconds ), i : _jrt_hs_seconds, 
+      s : "\cs.",
+      s : number_prefix( _jrt_hs_centiseconds ), i : _jrt_hs_centiseconds, 
+      s : "\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JRT_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JRT_HS_TBL_LINE_HEIGHT * 2;
+   line_id += 1;
+
+   // Main helpers:
+   hudMessage(
+      s : "\ckMain Helpers:\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JRT_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JRT_HS_TBL_LINE_HEIGHT;
+   line_id += 1;
+
+   for ( int helper = 0; helper < _jrt_hs_helpers_total; helper += 1 ) {
+      hudMessage(
+         s : "\cc", a : _jrt_hs_helpers_name[ helper ], s : " \cd",
+         i : _jrt_hs_helpers_points[ helper ], s : "\c-" ;
+         HUDMSG_FADEOUT, line_id, 0, JRT_HS_TBL_X, y, showTime, 1.0
+      );
+
+      y += JRT_HS_TBL_LINE_HEIGHT;
+      line_id += 1;
+   }
+
+   if ( _jrt_hs_unaccounted_points > 0 ) {
+      hudMessage(
+         s : "\cgUnaccounted \cd", 
+         i : _jrt_hs_unaccounted_points, s : "\c-" ;
+         HUDMSG_FADEOUT, line_id, 0, JRT_HS_TBL_X, y, showTime, 1.0
+      );
+   }
+}

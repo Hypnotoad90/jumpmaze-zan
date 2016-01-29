@@ -1,0 +1,509 @@
+clearepisodes
+
+episode map01
+name "Jumper's First Steps"
+key 1
+
+episode map04
+name "Learning The Basics"
+key 2
+
+episode map11
+name "Moderate Challenges"
+key 3
+
+episode map20
+name "Advanced Tactics"
+key 4
+
+episode map26
+name "The Path of Perils"
+key 5
+
+
+
+map titlemap "Jump Maze"
+music D_DM2TTL
+sky1 BSKY1 0.1
+sky2 stsky8 0.1
+clipmidtextures
+next titlemap
+
+
+
+
+map map01 "Box Processing"
+music D_BoxPro
+Par 33
+exitpic "Inter01"
+cluster 1
+intermusic D_Int01
+next map02
+
+map map02 "Downtown UAC"
+music D_UAC
+sky1 stsky11 0.0
+clipmidtextures
+Par 49
+exitpic "Inter02"
+cluster 1
+intermusic D_Int01
+next map03
+
+map map03 "Race to the Top!"
+music D_Race
+sky1 stsky1 0.1
+Par 39
+exitpic "Inter03"
+cluster 1
+intermusic D_Int01
+next map04
+
+map map04 "Mando's Express"
+sky1 NJSKY13 0.1
+forcenoskystretch
+clipmidtextures
+music D_expres
+Par 70
+exitpic "Inter04"
+cluster 2
+intermusic D_Int02
+next map05
+
+map map05 "Storage Facility"
+music D_STOR1
+sky1 stsky5 0.0
+clipmidtextures
+Par 83
+exitpic "Inter05"
+cluster 2
+intermusic D_Int02
+next map06
+
+map map06 "Nukage Lab"
+music D_NuLab
+clipmidtextures
+Par 65
+exitpic "Inter06"
+cluster 2
+intermusic D_Int02
+next map07
+
+map map07 "The 30 Second Canyon"
+music D_30Secs
+sky1 stsky9 0.2
+Par 60
+exitpic "Inter07"
+cluster 2
+intermusic D_Int02
+next map08
+
+map map08 "Up the Frozen River"
+music D_FROZEN
+sky1 stsky2 0.0
+clipmidtextures
+Par 102
+exitpic "Inter08"
+cluster 2
+intermusic D_Int02
+next map09
+
+map map09 "Speed Arena"
+music D_Speed
+sky1 stsky8 1
+Par 76
+exitpic "Inter09"
+cluster 2
+intermusic D_Int02
+next map10
+
+map map10 "Doomfiend's Blue Domain"
+music D_Blue
+Par 122
+exitpic "Inter10"
+cluster 2
+intermusic D_Int02
+next map11
+
+map map11 "Canyon Complex"
+music D_Canyon
+sky1 stsky9 0.1
+Par 87
+exitpic "Inter11"
+cluster 3
+intermusic D_Int03
+next map12
+
+map map12 "Shadowed Fortress"
+sky1 stsky7 0.1
+music D_Shadow
+Par 76
+exitpic "Inter12"
+intermusic D_Int03
+cluster 3
+next map13
+
+map map13 "Tech Facility"
+music D_Tech1
+clipmidtextures
+Par 102
+exitpic "Inter13"
+cluster 3
+intermusic D_Int03
+next map14
+
+map map14 "Factory Entrance"
+music D_Facto
+clipmidtextures
+Par 155
+exitpic "Inter14"
+cluster 3
+intermusic D_Int03
+next map15
+
+map map15 "Forest of the Undead"
+music D_Undead
+sky1 stsky8 0.1
+Par 87
+exitpic "Inter15"
+cluster 3
+intermusic D_Int03
+next map16
+
+map map16 "Keo's Domain - Jumper's Path"
+music D_Refiny
+sky1 stsky14 0.5
+clipmidtextures
+Par 130
+exitpic "Inter16"
+cluster 3
+intermusic D_Int03
+next map17
+
+map map17 "Hell's Fury"
+music D_Hell
+sky1 stsky6 0.0
+Par 89
+exitpic "Inter17"
+cluster 3
+intermusic D_Int03
+next map18
+
+map map18 "Thumper's Perils of a Toxicity"
+sky1 SKYFOG0 0
+music D_Toxic
+Par 175
+exitpic "Inter18"
+cluster 3
+intermusic D_Int03
+next map19
+
+map map19 "Skulltag Olympia 2008"
+music D_STO08
+sky1 stsky9 0.1
+Par 132
+exitpic "Inter19"
+cluster 3
+intermusic D_Int03
+next map20
+
+map map20 "Canyons, Caves, and Lava. Oh my!"
+Music D_FWCCL
+sky1 CLOUDBOX 0.0
+EVENLIGHTING
+strifefallingdamage
+ForceFallingDamage
+Par 173
+exitpic "Inter20"
+cluster 4
+intermusic D_Int04
+next map21
+
+map map21 "Castle Climb"
+music D_Castle
+sky1 stsky7 0.1
+clipmidtextures
+Par 165
+exitpic "Inter21"
+cluster 4
+intermusic D_Int04
+next map22
+
+map map22 "Life of a Test Subject"
+music D_Life
+sky1 stsky2 0.3
+clipmidtextures
+Par 142
+exitpic "Inter22"
+cluster 4
+intermusic D_Int04
+next map23
+
+map map23 "Escape From Lab 9"
+sky1 BSKY1 0.1   
+music D_MAKO
+Par 228
+exitpic "Inter23"
+cluster 4
+intermusic D_Int04
+next map24
+
+map map24 "Phendrana"
+music D_Phend
+sky1 sky_cld1 0.1
+Par 211
+exitpic "Inter24"
+cluster 4
+intermusic D_Int04
+next map25
+
+map map25 "Unholy Despair"
+music D_Unholy
+sky1 stsky6 0.0
+Par 113
+exitpic "Inter25"
+cluster 4
+intermusic D_Int04
+next map26
+
+map map26 "Gosimers Jumpmaze"
+music D_MMX7SI
+sky1 Stsky1 0
+Par 222
+exitpic "Inter26"
+cluster 5
+intermusic D_Int05
+next map27
+
+map map27 "Welcome to the Void"
+music D_WTTV
+sky1 stsky5 0.1
+Par 402
+exitpic "Inter27"
+cluster 5
+intermusic D_Int05
+next map28
+
+map map28 "Cloud 9"
+Sky1 SKYFOG0 0.1
+music D_CLOUD9
+Par 204
+exitpic "Inter28"
+cluster 5
+intermusic D_Int05
+next map29
+
+map map29 "Volcano Hallway"
+music D_Volcan
+sky1 void 0
+Par 168
+exitpic "Inter29"
+cluster 5
+intermusic D_Int05
+next map30
+sky1 stsky13 0
+
+map map30 "Fate of a Platformer"
+sky1 stsky4 0.0
+music D_Fate
+clipmidtextures
+Par 272
+exitpic "Inter30"
+cluster 5
+intermusic D_Int06
+next WIN01
+secretnext WIN02
+
+map WIN01 "Looking Back"
+music D_CLUS05
+cluster 6
+nointermission
+next map01
+
+map WIN02 "A Legend to Remember"
+music D_Clus06
+Sky1 stsky8 0.1
+cluster 7
+nointermission
+next map31
+
+map map31 "4-Halls of Death"
+music D_ROBO
+sky1 Stsky1 0
+Par 408
+exitpic "Inter31"
+cluster 8
+intermusic D_Int06
+next map32
+
+map map32 "Precision Run"
+music D_PreRun
+Par 193
+exitpic "Inter32"
+cluster 8
+intermusic D_Int06
+next map01
+
+
+Clusterdef 1
+music D_Clus01
+pic "compblue"
+exittext
+
+
+"	Well done! You've learned the basis of
+jumping! You're on your way to becoming a
+master platformer. The road ahead is
+long and tough, and there will be many 
+mistakes made, but don't give up hope. 
+
+
+	These next maps will test your skill in
+basic jumps, and will introduce using lamps,
+torches, and actors to get around areas.
+
+
+
+Welcome to the Easy maps. Good luck!"
+
+
+
+Clusterdef 2
+music D_Clus02
+pic "comptile"
+exittext
+
+
+"	Impressive! It seems that you have
+learned new ways to jump around maps.
+Mastering the use of jumping on actors
+will come in handy as you continue to
+progress on to more difficult maps.
+
+	The upcoming maps are a little
+more challenging than what you have
+experienced. Learn the bunny hop in order
+to reach gaps further away than previous
+maps.
+
+Now you have reached the Moderate maps.
+Watch your step!"
+
+
+
+Clusterdef 3
+music D_Clus03
+flat "RRock04"
+exittext
+
+
+"	After completing the moderate maps
+you feel like taking a break right?
+
+Wrong!
+
+From here on, the maps will only get
+harder as you progress. It is here
+where you must put actor jumping to
+the test. Platforms are smaller as
+well, so learn how to stop fast
+to prevent yourself from falling.
+
+The real challenge begins here.
+
+Good luck playing the Hard maps..."
+
+
+
+Clusterdef 4
+music D_Clus04
+pic "skinedge"
+exittext
+
+
+"	A wise man once said...
+''Only by practice can you learn the way...''
+
+After completing many challenges, you look
+back to reflect on what you have learned.
+Strafe jumping, actor jumps,
+bunny hopping and hard braking.
+How could simple jumping be this
+difficult and complex?
+You turn forward, and prepare for the final
+challenges that await. Bridge jumping,
+projectile evasion...
+The true test of platformers was
+about to begin.
+
+You prepared yourself for the real
+challenge...the Very Hard maps..."
+
+Clusterdef 6
+music D_Clus05
+pic "ZZZFACE4"
+Entertext
+
+
+"	Congratulations! You have made it
+through a lot of pain and suffering!
+You slowly make your way out of the icon's
+brain and walk away to rest.
+
+You turn your head back to the giant demon
+and realize that it was only weakened. The
+Icon will live on...
+
+Realizing you are too weak to re-enter the
+Icon, you turn away, start to walk, and wait
+for the day when another platformer can
+continue where you failed..."
+
+
+Clusterdef 7
+music D_Clus06
+Flat "WFWATER1"
+Entertext
+
+
+"	After throwing your body into the heart,
+a large explosion starts inside the icon.
+
+Legends have told about the legendary
+platformer who chose a path of trials
+and determination.
+That legendary platformer, who took the
+route that no other platformer would take,
+lived on to defeat the strongest of demons...
+the Icon.
+To this day that legend is still told...
+That legendary platformer...is you.
+
+Cngratulations on completing Jump Maze!
+As a victory gift, enjoy these two secret
+maps! They aren't easy, so good luck!
+                          - James Esquibel"
+
+
+Clusterdef 8
+music D_Evil
+pic "WFWATER1"
+Exittext
+
+
+"	Congratulations! You've completed all 32
+maps! You must feel proud of yourself after all
+that pain and swearing at your computer
+screen. After that long road, you should
+probably take a rest now, maybe go find
+another game, or even go outside for a bit
+to relax...
+
+...or you could play again, and this time see
+if you have improved by beating the par times
+on each map.
+The choice is up to you though...
+
+Thanks for playing Jump Maze!
+
+                          - James Esquibel"

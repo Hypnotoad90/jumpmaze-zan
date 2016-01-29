@@ -1,0 +1,94 @@
+// Makes the game world activate scripts. Useful for fixing those bugs
+// where a script activated by a player would break when they disconnect
+// from the game.
+//
+// NOTE:
+// I wrote this code when I didn't know that setActivator( 0 ); would set
+// the current script activator to be the game world. This statement should
+// be the way to go. I'm going to keep this code here for backwards 
+// compatibility reasons but consider it deprecated.
+//
+// Author:
+// Positron
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "strigger"
+#include "zcommon.acs"
+
+#import "constants.acs"
+
+// Type of Script Trigger actions for internal use.
+#define STA_EXEC 0  // acs_Execute()
+#define STA_EXEC_ARGS 1  // acs_Execute() with args.
+#define STA_EXECA 2  // acs_ExecuteAlways()
+#define STA_EXECA_ARGS 2  // acs_ExecuteAlways() with args.
+
+int _st_num = VALUE_NONE;
+int _st_action = VALUE_NONE;
+int _st_args[ 3 ];
+
+function void ScriptTrigger( int num ) {
+   _st_num = num;
+   _st_action = STA_EXEC;
+   acs_Execute( 990, 0 );
+}
+
+// Any unused parameters must still be set, zero will do.
+function void ScriptTriggerArg( int num, int arg1, int arg2, int arg3 ) {
+   _st_num = num;
+   _st_action = STA_EXEC_ARGS;
+   ScriptTriggerSetArgs( arg1, arg2, arg3 );
+   acs_Execute( 990, 0 );
+}
+
+function void ScriptTriggerAlways( int num ) {
+   _st_num = num;
+   _st_action = STA_EXECA;
+   acs_Execute( 990, 0 );
+}
+
+function void ScriptTriggerAlwaysArg( int num, int arg1, int arg2, int arg3 ) {
+   _st_num = num;
+   _st_action = STA_EXECA_ARGS;
+   ScriptTriggerSetArgs( arg1, arg2, arg3 );
+   acs_Execute( 990, 0 );
+}
+
+function void ScriptTriggerSetArgs( int arg1, int arg2, int arg3 ) {
+   _st_args[ 0 ] = arg1;
+   _st_args[ 1 ] = arg2;
+   _st_args[ 2 ] = arg3;
+}
+
+script 990 OPEN {
+   // Make sure we have a script number.
+   if ( _st_num != VALUE_NONE ) {
+      // Perform the appropriate action.
+      switch ( _st_action ) {
+         case STA_EXEC:
+            acs_Execute( _st_num, 0 );
+            break;
+
+         case STA_EXEC_ARGS:
+            acs_Execute( _st_num, 0, _st_args[ 0 ], _st_args[ 1 ],
+                _st_args[ 2 ] );
+            break;
+
+         case STA_EXECA:
+            acs_ExecuteAlways( _st_num, 0 );
+            break;
+
+         case STA_EXECA_ARGS:
+            acs_ExecuteAlways( _st_num, 0, _st_args[ 0 ], 
+               _st_args[ 1 ], _st_args[ 2 ] );
+            break;
+      }
+
+      _st_num = VALUE_NONE;
+   }
+
+   suspend;
+   restart;
+}

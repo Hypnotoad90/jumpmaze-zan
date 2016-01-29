@@ -1,0 +1,557 @@
+*******************************************************************************
+*                                                                             *
+* Jumpmaze 2 Changelog                                                        *
+*                                                                             *
+*******************************************************************************
+
+Release Candidate [Jroc]
+===============================================================================
+
+*RC3*
+------
+Fixed error in survival maze script from RC2
+Added lightning's hootmap update
+
+*RC2*
+------
+Fixed CVARINFO
+Unpacked translucent players into pk3
+Set jm_countdown to 0 when survival
+
+*RC1*
+------
+MAP64: Added way more demons in the demon puzzle to make it significantly easier
+MAP64: Updated boss fight completely
+MAP64: Removed excess secret sectors and removed one of the kill floors at start to make it a bit easier
+MAP64: Hopefully fixed new joining players spawning at boss fight for no reason
+MAP63: Added a couple more helpful arrows
+MAP60: Fixed teleport bug
+MAP61: Fixed some grammar errors
+MAP33: Fixed exit letting people through prematurely
+Fixed elevator trolls in red hot ride maps, removed glitchy mirrors in secrets
+Added Leonard's translucent players mod
+Updated pars with the help of Cyber
+Updated Survival Maze mode to reduce the par time less when there are time boosts
+Added Survival items to remaining maps
+Prevented map33 from being played in survival mode
+Cleaned up scripts
+Updated documentation
+
+V8a [Jroc]
+===============================================================================
+
+-Fixed MAP64 to be compatible with 2.0
+-Fixed leaderboard formatting 
+
+V8 [Jroc]
+===============================================================================
+
+Note: it has been over a year since I last worked on Jumpmaze 2, a year ago I was likely making additional changes,
+	  unfortunately I forgot to note these changes down in the changelog, so this changelog is unlikely to be
+	  comprehensive.
+
+- NEW MAP: added map MAP64: the final jumpmaze map, known as "The Last Hurrah"
+- Old MAP64 moved to MAP41, and old MAP41 moved to RJECT06
+- UPDATED SCRIPTS: updated the scripts to the latest version that utilizes Zandronum's new database and accounts system
+- Another major pk3 reorganisation, all text lumps from the map wads put into the pk3 and merged, remaining sounds/sprites put in the correct folders
+- merged marine class fix
+- added puke 998 keysection
+- removed logo from titlepic, as it's the same as the m_doom
+- removed spawnids from harmless rockets, to stop them conflicting with jumpmaze in zandronum 2.0
+
+# MAP33
+
+- Reduced filesize to a quarter using Hisymak's new wad optimization tool
+- Made wooden section significantly easier
+- Added some detail in the outdoor section
+- JSF and SS members are now saved in the database, and can be listed with two new switches in the map
+- made endurance challenge entrance Snail proof
+- fixed spelling errors
+
+# MAP50
+
+- Replaced skybox
+- Changed some texturing/detail
+- Fixed wrong texture at end
+- Fixed teleports at the beginning
+
+# MAP63
+
+- added hint to shoot darker trees
+- disabled inner gate switch at end, no need for it and it's constantly exploited to break the map
+
+# MAP54
+
+- merged light's map54 fix
+- change the ambient sound indexes to a much higher number so they no longer overwrite other maps
+
+# MAP49
+
+- cleaned up this map, made it slightly less ugly, added texture variety, curved sharp corners and added altered heigh levels/detail
+
+# MAP36
+
+- fixed texture error
+
+# MAP39
+
+- moved red door back so it cant be gotten from below
+- texture changes and minor edits
+
+# MAP47
+
+- fixed missing floor teleport
+
+# MAP51
+
+- fixed sprite error when jumping over water in software
+
+# MAP53
+
+- prevented people from shooting marine at end to block exit
+
+# MAP64 (jump city)
+
+- fixed missing floor teleports
+- realligned and changed some textures
+
+# MAP44
+
+- added impassable lines to stop players getting into inescapable or glitchy areas
+
+V7c [Jroc]
+===============================================================================
+Scripts
+-allowed cvar "jm_countdown" to specifiy length of countdown intervals
+-added hook to my voter mod by adding "jm_voter" cvar
+
+# MAP33
+
+-fixed scrolling treadmill upper textures
+-alligned some textures
+-added extra thrust lines to entrance to endurance challenge
+-fixed: player tids weren't getting reset after map exit
+-fixed: grammar errors in map33
+
+# MAP50
+
+-fixed buggy textures
+-changed some detail
+
+# MAP41
+
+-scripts compiled properly
+-boss fixed [HeavenWraith]
+
+New(old)map: RJECT05 Island's of desolation returns from the dead to offer some jumpmaze 2 nostalgia!
+
+Other
+
+-added TerminusEst13's jumping doomguy sprites
+-fixed m_doom offset
+-added a shit map called "shit" (don't play it)
+
+
+V7b
+===============================================================================
+# Moved the training map to MAP00, gave it its own episode cluster [Jroc]
+
+# Removed the pistol from maps not requiring it [Jroc]
+
+# Made sure no player spawns are in front of other player spawns giving an advantage in most maps [Jroc]
+
+#Map34 - changed and alligned a few textures [Jroc]
+
+#Map36 - edited to look better [Jroc]
+
+#Map39 - edited to look slightly less terrible [Jroc]
+
+#Map35 - Changed and alligned some texture and a few other polishes, changed number of exit vents back to 1 since 2 is redundant now [Jroc]
+
+#Map50 - Edited to look less terrible in some parts and changed the layout slightly
+
+Added an optional countdown timer script, activated when server admin sets jm_countdown to 1 [Jroc]
+
+Forced maps to activate unblockplayers and chasecam, can be bypased by setting jm_flagsbypass to 1 [Jroc]
+
+Moved all the resources in each wad into specific folders within the pk3, removing the numerous clonflicts [Jroc]
+
+Created a new map called Jump Trials, now MAP33 [Jroc]
+
+Detailed and fixed JumpFactory and added it to map54 [Jroc]
+
+Fixed teleport bug in Druglab [Jroc]
+
+Fixed ceiling bug on MAP41 [Jroc]
+
+Improved countdown timer and added new sounds [Jroc]
+
+Updated interrogator with fixed boss [Jroc]
+
+v7a
+===============================================================================
+
+# Added a couple of bonus maps, both by me. [Jroc]
+
+# Returned map Gravity Chambers by Wirtualnosc as RJECT03
+
+# Mapinfo
+- Added par times being shown in intermissions
+- Fixed cluster messages shown in singleplayer after finishing some maps
+
+# Map fixes
+- Fixed missing clear inventory functionality on MAP42, MAP58 and MAP61.
+
+# MAP41 - Interrogator
+- Changed to 0.98e version
+- Now has 3d floors (decorative) in the challenge after teleport
+- Now has a secret Interrogator battle
+- Par time changed to 1:50
+
+# MAP63 - Across the Dark Swamp
+- Fixed some big shortcuts. People were abusing them and skipping large parts of the map.
+- Fixed the rising and lowering castle gate bug
+- Added one new music track
+- Some wooden buildings now have 3d roofs
+- Teleports now look more like Hexen teleports
+- Some other minor improvements and additions
+
+# MAP64 - Jump city
+- Fixed door bug in the room after falling in the tall chimney
+
+v7
+===============================================================================
+
+# Added New Maps (NOTE MAP NUMBERS BELOW HAVE SINCE CHANGED, KEPT HERE FOR REFERENCE)
+- (MAP61) Sweet Dreams Wario by Frits 
+- (MAP62) AAC's Hive by AAC 
+- (MAP63) Across the Dark Swamp by Hisymak
+- (MAP64) Jump City by The Player 
+- (MAP65) Interrogator by HeavenWraith 
+- (MAP66) Red Hot Ride II by AAC 
+~ [Jroc (thanks to hisymak for preparing these maps for integration)]
+
+# Scripts
+- Fixed the bug introduced in v6 where the individual time, or the time that 
+  is displayed once all ranks have been exhausted, did not show. [Positron]
+- Removed the flag that disables suicide in Survival Maze. [Positron]
+
+# Map fixes
+- Stopped Map33 from freezing you. [Jroc]
+- Replaced the icef1 texture to a new renamed version of that texture (hwice)
+  in Interrogator map, and changed the animdef entry so that it no longer
+  affects other maps such as training. [Jroc]
+- Fixed missing clear inventory functionality on MAP47, MAP49, and MAP50.
+  [Positron] 
+- Fixed missing clear inventory functionality on MAP54, MAP33 [Jroc]
+- Replaced interrogator map with software compatible version [Jroc]
+- Made map37 compatible with the 98e software 3d floors bug [Jroc]
+- Increased timer on UD on top part from 2 seconds to 3 seconds in MAP65 [Jroc]
+
+# MAP52 -- Vivid Dreams, Sweetheart
+- Fixed the bug where invulnerability was kept after the map has ended.
+  [Positron]
+# MAP44 -- Jumpmaze HQ
+- Made the last area less annoying by removing the lost souls, replacing the jump pads on the side areas with a simple thin platform and adding deep water to those areas. [Jroc]
+
+# MAP58 - Druglab
+- Replaced this map with positron's remake, removed Infer's first drug hall section as it was inconsistent with the rest of the mapping style, improved the vents leading to outdoors. [Jroc]
+
+# Changed Eternal Void and Infer's Hell from MAP41 and MAP47 to RJECT01 and RJECT02 respectively, removing them from the main maplist due to their being unpopular (but with still the oppurtunity for serverhosts to include them in the maplist should they wish to), moved Interrogator to MAP41, Druglab to MAP47 and RHR2 to MAP58 (so as to ensure RHR2 comes after RHR1). [Jroc]
+
+V6a
+===============================================================================
+
+# Scripts
+- Fixed the bug where the "no high score is set" message appears when the
+  auto-show recard details feature is on on maps with no high score yet.
+
+# MAP60 -- 40 Below Zero
+- Made the jump after the box storage depot in the cave with the hanging pipes
+  a little more easier.
+- Extended the time for the door to open by 2 seconds at the end of the map.
+
+
+V6
+===============================================================================
+
+# New Maps
+- (MAP33) Training by The Player
+- (MAP37) Volcano Escape by Volcano, AC3, AAC, and Positron
+- (MAP40) Proteh's Chaos Base by Proteh
+- (MAP59) Rage Maze 2 by The Player
+- (MAP60) 40 Below Zero by Positron
+
+# Removed Maps
+- (MAP37) Islands Of Desolation by MxMaster
+- (MAP40) Gravity Chambers by Wirtualnosc
+
+# General
+- Added a credits list.
+- Changed the format of MAPINFO lump to the new format.
+- Removed the Zombieman and Duke Nukem skins. They can be found in Jumpix.
+- Added a KEYCONF lump for Jumpmaze that allows associating keys with special
+  Jumpmaze actions--like showing the map record details--in the key 
+  customization menu.
+- Shifted maps MAP33 and MAP51 from v5 to MAP51 and MAP58 in v6, respectively.
+- Changed name of "Blood Donations, Anyone?" (MAP55) to "Bloody Donation."
+- Included luk binaries for Windows and Linux.
+
+# Scripts
+- Fixed the auto-fist script.
+- Made some changes to the WhoExited script to hopefully keep the message
+  from ever appearing at the left corner of the player's screen.
+- Made some small changes to the timer codebase. Hopefully these changes will
+  fix the glitch where the par time sometimes does not appear. I'm still not
+  certain as to what might cause the glitch, but I have a pretty good idea.
+- Improved the internal structure of many of the scripts and added minor
+  upgrades to some.
+- ScriptTrigger script has been deprecated in favor of setActivator( 0 ).
+- Added a script to remedy the telefrag issue.
+- Added a small client-side helper library.
+- Added a dialogue display system that appropriately shows a long message on
+  a player's machine based on their screen resolution. It can be found used in
+  the map Training (MAP33).
+
+# Survival Maze
+- Fixed existing bugs.
+- Added pickup items to the game mode.
+
+# MAP35 -- Rage Maze
+- Made the secret not visible in the automap.
+- Removed the light streak on the floor near the end.
+- Added z-height to the teleports in the fan area.
+- Changed the texture on one of the vertical lamps and increased the size of
+  a power line detail to make the visuals more appealing.
+
+# MAP36 -- Goldfinger
+- Fixed a bad floor texture on the silver machines at the start.
+
+# MAP38 -- Jumpmaze Circuit
+- Adjusted the position of some of the teleport destinations so players don't
+  teleport near cliffs.
+
+# MAP41 -- Eternal Void
+- Added height to some teleport destinations.
+
+# MAP42 -- Lost Halls
+- Changed some metal floor textures that were of the wrong orientation.
+- Fixed a mismatched texture at the finish area.
+- Added metal bars to all open windows. It makes no sense to have windows that
+  block the player when open. The bars make the windows look better, too.
+- Made the teleports at the finish area of the first three sections teleport
+  the player outside the section they were in.
+
+# MAP43 -- Lava Laboratory
+- Added an updated version of the map by AC3.
+
+# MAP44 -- Jumpmaze HQ
+- Made the blue key teleportation occur after every pickup instead of only on
+  the first time.
+- Fixed wrong orientation textures inside the building. Some of these were 
+  caused by the building shifted in DB2 to fix the silent door teleport
+  orientation.
+- Upgraded map difficulty to Hard.
+
+# MAP45 -- Going Through Hell
+- Added more teleport destinations in areas to help in reducing telefragging.
+
+# MAP46 -- Blocks of Doom
+- Added a multiplayer Tic-Tac-Toe game inside a secret.
+
+# MAP47 -- Infer's Hell
+- Added height to many teleport destinations in the map.
+
+# MAP48 -- Escaping From the Horror
+- Added height to some teleport destinations in the second section.
+
+# MAP49 -- Kill Ratio
+- Added height to some teleport destinations.
+
+# MAP51 -- Port Town
+- Added an updated version of the map. From AC3:
+    " Changed the song level, and also reduced the size for the songs.
+    " Changed the atmosphere of the map to a more peaceful world.
+    " Removed the annoying buildings what they cause lag fps. Before,
+      at the exit area you get 30 fps, now you get 60 - 70 fps.
+    " Arranged the entire map, to aglin many textures.
+- Intermission pic removed.
+
+# MAP52 -- Vivid Dreams, Sweetheart
+- Added more detail throughout the map and made it look more realistic
+  and consistent.
+- Upgraded difficulty to "Very Hard."
+- Made some parts a bit easier.
+- Changed music.
+- Removed intermission pic.
+
+# MAP54 -- Airship Doomed
+- Included an updated version of the map from Master Garo.
+- Map title changed.
+
+# MAP55 -- Bloody Donation
+- Major upgrade performed on map.
+- Changed music.
+
+# MAP56 -- Red Hot Ride
+- Changed name.
+- Added updated version. From AC3:
+    " Improved the message of the song secret area. The message displayed
+      will show only one time.
+    " The exit area is now in a boat. The past switch is to open the door.
+    " Reduced the size of the music level.
+    " The annoying "Red Fog" is no more.
+    " 10% easier.
+    " * The mirror can't display properly when you enter in the song sec
+    
+# MAP57 -- Core Dump
+- Repainted the map, adding extra details throughout.
+- Replaced some walking sections with jump-oriented sections.
+- Changed music.
+
+
+V5
+===============================================================================
+
+Build 2
+-------------------------------------------------------------------------------
+
+# New Maps
+- (MAP53) Doomed Cruise by Frank
+- (MAP55) Blood Donations, Anyone? by Positron
+- (MAP56) Red Hot Tide by AAC
+- (MAP57) Core Dump by Positron
+
+# General
+- Separated each map into a separate wad file.
+- Created a stand-alone wad for the MAPINFO lump.
+- Separated the music/sound and extra-textures/rest into separate wads.
+- Removed unsused textures that were previously used in the now discarded
+  Mario and Contra maps.
+- Made the time script more efficient by moving the responsibility of 
+  displaying the par time to the client side. In previous versions, 
+  the static par time was sent every second with the current map time.
+- Fixed DECORATE warnings on startup.
+- Fixed unknown patches and textures warnings on startup of Skulltag.
+- Separated many scripts like the timer and ranker scripts into
+  separate libraries. They can now be updated without having to
+  update the whole pk3 first.
+- Removed Doomkiller's badmouth skin.
+- Replaced AC3's Duke skin with a newer version.
+- Changed the structure of the project to resemble more of what a
+  PK3 structure looks like.
+
+# MAP33 -- Port Town
+- Replaced older version with an upgraded version from AC3.
+- Fixed the race script where an already completed player finishes
+  the race again takes the teleport spot of the next available free
+  spot in the podium. 
+
+# MAP34 -- Jungle Falls
+- Fixed the many teleport actions that were missing in Easy mode.
+- Fixed missing textures across the map.
+
+# MAP35 -- Rage Maze
+- Fixed missing teleport actions in the second nukage section in 
+  the middle and in the sector after the two lamps.
+- Removed the wind off a little sector to the right of the vents
+  and after the fans.
+- Closed off the openings at the entrance of the lava part that 
+  would have allowed a player to escape the map.
+
+# MAP38 -- Jumpmaze Circuit
+- Fixed the many marines that were missing in Easy mode.
+
+# MAP39 -- Escaping from Hell
+- Fixed two missing teleport actions inside the sectors with the lava
+  ceilings in the imp part.
+
+# MAP40 -- Gravity Chambers
+- Added an extra pillar near the High Jump rune so players don't have to
+  fall down and teleport back to start of the area.
+
+# MAP41 -- Eternal Void
+- Fixed the missing sky texture error on startup in console.
+- Made the red, green, and blue switches teleport the player to the 
+  starting area of those areas, and the white and orange
+  switches teleport the player to the finish area.
+
+# MAP42 -- Lost Halls
+- Fixed the different texture on one of the pillars with the fire torches
+  near the end.
+
+# MAP43 -- Lava Laboratory
+- Replaced the old version of the map with a repainted and updated
+  version by AC3.
+- Changed the floor teleport spot to the other side across the blue skull. 
+
+# MAP44 -- Jumpmaze HQ
+- Made the last two switches of the map teleport the player back to
+  the starting position of that area instead of having to go down
+  into the lava to do that.
+- Fixed the bug where the player could get the final point and 
+  therefore list the finish time without first killing the Lost 
+  Souls. This is due to the finish line being outside the pillars
+  that are lowered when the Lost Souls are killed.
+- Made the player teleport to the appropriate place after picking up
+  the blue card.
+- Made the forcefield switches teleport the player to the appropriate location
+  after being pressed.
+
+# MAP45 -- Going Through Hell
+- Closed small tunnel openings inside the two caves with the imp balls.
+- Changed different texture of the right pillar in the left cave
+  to the one used on other pillars. 
+- Added a teleport action in the sector that encompasses the first
+  sector in Hell part.
+- Added a teleport action in the first sector of the second section
+  of the Hell part. This is the section with the chaingunner heads
+  to both sides.
+- Closed the areas with the hanging and impaled humans on both sides
+  of the first sector in the Hell part.
+- Closed the cages both sides in the first tunnel of the Hell part, 
+  near the two Candelabras.
+
+# MAP46 -- Blocks of Doom
+- Made the key placed messages have the same line ID to avoid messing up the
+  display when two keys are placed simultaneously. Also made the messages log
+  into the console for future reference.
+
+# MAP47 -- Infer's Hell
+- Made the messages of the first two switches more helpful.
+
+# MAP48 -- Escaping From the Horror
+- Fixed the missing "N" texture error at startup in console.
+
+# MAP49 -- Kill Ratio
+- Made the lava waterfall that has a scrolling lava above scroll down.
+
+# MAP50 -- Space-station
+- Fixed missing teleport actions under the big ceiling lamps at
+  the end of the boxes section.
+- Fixed missing teleport actions under the lamp in the nukage 
+  area near the end of the map.
+
+# MAP51 -- Druglab
+- Added teleport action in the light sector near the red key door.
+- Added teleport action under the pillar sticking out of the ceiling
+  in the red key area.
+- Added teleport action under the lamp in the nukage section.
+- Added teleport actions at the end under the lamps.
+
+# MAP52 -- Vivid Dreams, Sweetheart
+- Fixed the issue where the haste rune would not be removed after
+  completing the buildings area.
+- Map received upgrades in many areas.
+
+# MAP54 -- Doomkiller's Airship
+- Added the WhoExited function call to tell who exited the map.
+- Added teleport actions under the bridges in the red key
+  area and removed an instant death action from one of them.
+- Fixed (for now) the ambient sound conflict with MAP24 of Jumpmaze.
+
+
+Special thanks
+-------------------------------------------------------------------------------
+A special thanks goes out to AC3, AAC, and anybody else who helped track down
+many of the bugs and glitches.

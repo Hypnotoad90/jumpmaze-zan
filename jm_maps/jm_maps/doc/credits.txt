@@ -1,0 +1,24 @@
+*******************************************************************************
+
+Credits
+
+*******************************************************************************
+
+Jumpmaze
+-------------------------------------------------------------------------------
+Please see the readme file inside the jumpmaze.zip file for the full credit
+list for Jumpmaze.
+
+
+Jumpmaze Post-Release Maintenance ( PRM )
+-------------------------------------------------------------------------------
+ - Positron ( DuNR1DA2 )
+ - AC3
+ - AAC
+ - The Player
+
+
+Special Thanks
+-------------------------------------------------------------------------------
+A special thanks goes out to AC3, AAC, Frank, and anyone else who helped track
+down the bugs and glitches.

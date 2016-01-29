@@ -1,0 +1,50 @@
+// Brings players back to the location where they got telefragged upon
+// respawning.
+//
+// Author: 
+// Positron
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "teleptch"
+#include "zcommon.acs"
+
+#import "constants.acs"
+
+#define TLPT_TID_OFFSET 28100
+
+// Holds TIDs of temporary teleport destinations.
+int _tlpt_dest[ MAX_PLAYERS ];
+
+function void TelePatchOnDeath( int player ) {
+   // Change the activator of the script to the killer of the
+   // dead player to determine if the player got telefragged.
+   setActivatorToTarget( 0 );
+   int killer = playerNumber();
+
+   if ( killer >= 0 && killer != player ) {
+      // Create a TID for a temporary teleport destination.
+      _tlpt_dest[ player ] = TLPT_TID_OFFSET + player;
+      // Spawn the teleport destination at killer's coordinates.
+      spawn( "TeleportDest2", getActorX( 0 ),
+         getActorY( 0 ), getActorZ( 0 ), _tlpt_dest[ player ], 
+         GetActorAngle( 0 ) >> 8 );
+   }
+}
+
+function void TelePatchOnRespawn( int player ) {
+   if ( _tlpt_dest[ player ] ) {
+      teleport( _tlpt_dest[ player ], 0, 0 );
+      TelePatchOnDisconnect( player );
+   }
+}
+
+// Remove any temporary destinations that might have been left behind
+// if a player disconnected while being dead.
+function void TelePatchOnDisconnect( int player ) {
+   if ( _tlpt_dest[ player ] ) {
+      thing_Remove( _tlpt_dest[ player ] );
+      _tlpt_dest[ player ] = 0;
+   }
+}

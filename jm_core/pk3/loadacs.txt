@@ -1,0 +1,4 @@
+autofist
+jm2_cdwn
+sflags
+TRANSLUCENT

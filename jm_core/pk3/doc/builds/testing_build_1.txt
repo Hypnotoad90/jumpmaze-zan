@@ -1,0 +1,58 @@
+BUILD 1 test:
+Performed on: August 13, 2010
+===============================================================================
+
+General:
+-------------------------------------------------------------------------------
+- Remove the duplicate DECORATE lump from one of the wads. [ DONE ]
+- Make the map difficulty message consistent throughout the game by making a 
+  single function to handle the displaying of the message. [ DONE ]
+- Team score script fails in multiplayer emulated mode.
+
+
+MAP33
+-------------------------------------------------------------------------------
+- Fix race script where an already completed player finishes the race again
+  takes the teleport spot of the next available free spot in the podium. 
+  [ FIXED ]
+- Remove duplicate lumps. [ Done ]
+
+
+MAP40
+-------------------------------------------------------------------------------
+- Add an extra pillar near the High Jump rune so players don't have to fall
+  down and teleport back to start of the area. Right now, it is sloppy design.
+  [ DONE ]
+
+
+MAP42
+-------------------------------------------------------------------------------
+- Fix the different texture on one of the pillars with the fire torches near
+  the end. [ FIXED ]
+
+
+MAP43
+-------------------------------------------------------------------------------
+- Change the floor teleport spot to the other side across the blue skull. 
+  [ DONE ]
+
+
+MAP44
+-------------------------------------------------------------------------------
+- Teleport the player to the appropriate place after picking up the blue card.
+  [ DONE ]
+- Make the forcefield switches teleport the player to the appropriate location.
+  [ DONE ]
+- Check the nukage flow in the right forcefield switch area. [ CANNOT CONFIRM ]
+
+
+MAP46
+-------------------------------------------------------------------------------
+- Make the key placed messages have the same line ID to avoid messing up the
+  display when two keys are placed simultaneously. [ DONE ]
+- Log the above messages into the console for future reference. [ DONE ]
+
+
+MAP49
+-------------------------------------------------------------------------------
+- Make the lava waterfall that has a scrolling lava above scroll down. [ DONE ]

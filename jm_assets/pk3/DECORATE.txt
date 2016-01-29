@@ -1,0 +1,2428 @@
+//JM1
+
+      actor GIANTCYBER 11342
+{
+  spawnid 159
+  obituary "%o km."
+  scale 5
+  health 20000
+  damage 500
+  radius 100
+  height 503
+  mass 50000
+  MissileType SuperRocket
+  MissileHeight 183
+  speed 20
+  painchance 1
+  seesound "cyber/sight"
+  painsound "cyber/pain"
+  deathsound "cyber/death"
+  activesound "cyber/active"
+  attacksound "weapons/sshotf"
+  MONSTER
+  +FLOORCLIP
+  +DONTMORPH
+  +BOSS
+  +MISSILEMORE
+  states
+  {
+  Spawn:
+    CYBR AB 10 A_Look
+    loop
+  See:
+    CYBR A 3 A_Hoof
+    CYBR ABBCC 3 A_Chase
+    CYBR D 3 A_Metal
+    CYBR D 3
+    loop
+  Missile:
+    CYBR E 6 A_FaceTarget
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    CYBR E 6 A_FaceTarget
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    CYBR F 12 A_Missileattack
+    goto See
+  Pain:
+    CYBR G 10 A_Pain
+    goto See
+  Death:
+    CYBR H 10
+    CYBR I 10 A_Scream
+    CYBR JKL 10
+    CYBR M 10 A_NoBlocking
+    CYBR NO 10
+    CYBR P 30
+    CYBR P -1 A_BossDeath
+  }
+}
+
+
+ACTOR Snow
+{
+    Radius 1
+    Height 1
+    Speed 0
+    Damage 0
+    Alpha 0.6
+    RenderStyle Translucent
+    +NOBLOCKMAP
+    +DROPOFF
+    +MISSILE
+    +NOTELEPORT
+    +ACTIVATEIMPACT
+    +ACTIVATEPCROSS
+    +DONTSPLASH
+    States
+    {
+    Spawn:
+        SNOW A 1
+        Loop
+    Death:
+        SNOW A 4
+        Stop
+    }
+}  
+
+actor Snowing128 12364
+{
+    Radius 64
+    Height 1
+    Speed 0
+    Mass 9999999
+    +SPAWNCEILING
+    +NOGRAVITY
+    +CORPSE
+    States
+    {
+    Spawn:
+        TNT1 A 5 A_SpawnItemEX("Snow", Random(-64,64), Random(-64,64), 0, 0, 0, 0, 0, 128, 128)
+        Loop
+    }
+}
+
+actor SmallMudkip 24621
+{
+  Game Doom
+  radius 12
+  height 24
+  +SOLID
+  states
+  {
+  Spawn:
+    MDKP A 10
+    loop
+  }
+}
+
+actor BeatingHeart 6666
+{
+  spawnid 201
+  health 100
+  radius 72
+  height 184
+  mass 1000
+  painchance 1
+  +SOLID
+  states
+  {
+  Spawn:
+    HART ABCD 5
+    loop
+  }
+}
+
+
+actor ElectricityShooter 19191
+{
+   Radius 4
+   Height 8
+   Mass 1
+   Health 1
+   +INVULNERABLE
+   +NOGRAVITY
+   +NOCLIP
+   States
+   {
+	Spawn:
+      TNT1 A 8 A_Jump(128, 1)
+	  TNT1 A 8 A_Jump(128, 1)
+	  TNT1 A 8 A_Jump(128, 1)
+	  TNT1 A 2 A_Jump(128, 3)
+	  TNT1 A 0 A_PlaySound("electric/spawn")
+      TNT1 A 8 A_CustomMissile("ElectricityShot", random(0, 8), random(-8, 8), random(4, -4), 2, random(4, -4))
+      Loop
+	  TNT1 A 8 A_SpawnItem("ElectricSparkSpawner")
+	  Loop
+   }
+}
+
+ACTOR ElectricityShot
+{
+	Speed 25
+	Radius 2
+	Height 2
+	Damage 255
+	PROJECTILE
+	+DOOMBOUNCE
+	RenderStyle Translucent
+    Alpha 1.0
+	States
+	{
+	Spawn:
+		ZAP6 ABCABCABC 2 bright A_FadeOut
+		Stop
+	Death:
+	    TNT1 A 1 A_PlaySound("electric/Hit")
+		TNT1 A 1 A_SpawnItem("ElectricSparkSpawner")
+		stop
+	}
+}
+
+actor ElectricSparkSpawner
+{
+-SOLID
++NOGRAVITY
++NOCLIP
++NOBLOCKMAP
++CLIENTSIDEONLY
+RenderStyle None
+States
+{
+Spawn:
+TNT1 A 1
+TNT1 AAAAAAAAAAAAAAAA 0 A_CustomMissile("ElectricSpark", 0, 0, random(0,360), 2, random(-100,100))
+Stop
+}
+}
+
+ACTOR ElectricSpark
+{
+   Speed 8
+   Damage 0
+   PROJECTILE
+   Radius 2
+   +DONTSPLASH
+   Height 2
+   RenderStyle Translucent
+   Alpha 1.0
+   +CLIENTSIDEONLY
+   States
+   {
+   Spawn:
+      ZAP1 ABCDEF 1 A_FadeOut(0.1)
+      Stop
+   } 
+}
+
+
+//JM2
+
+Actor JungleTree1 30103
+{
+	Height 40
+	Radius 10
+	+SOLID
+	states
+	{
+	Spawn:
+		BSH2 A -1
+		stop
+	}
+}
+
+Actor JungleTree3 30105
+{
+	Height 60
+	Radius 10
+	+SOLID
+	states
+	{
+	Spawn:
+		TRI3 A -1
+		stop
+	}
+}
+
+Actor JungleTree4 30106
+{
+	Height 60
+	Radius 10
+	+SOLID
+	states
+	{
+	Spawn:
+		TRI4 A -1
+		stop
+	}
+}
+
+Actor JungleTree5 30110
+{
+	Height 150
+	Radius 20
+	+SOLID
+	states
+	{
+	Spawn:
+		TRI5 A -1
+		stop
+	}
+}
+
+Actor JungleTree6 30111
+{
+	Height 150
+	Radius 20
+	+SOLID
+	states
+	{
+	Spawn:
+		TRI6 A -1
+		stop
+	}
+}
+
+ACTOR SoundWaterfall2 : SoundWaterfall 30107
+{
+}
+
+actor WaveMarine 10001
+{
+  Game Doom
+  radius 20
+  height 56
+  +SOLID
+  states
+  {
+  Spawn:
+    MRNW AB 10
+    loop
+  }
+}
+
+actor HeadBangMarine 10002
+{
+  Game Doom
+  radius 20
+  height 56
+  +SOLID
+  states
+  {
+  Spawn:
+    MRNH ABCB 7
+    loop
+  }
+}
+
+actor FistMarine 10003
+{
+  Game Doom
+  radius 20
+  height 56
+  +SOLID
+  states
+  {
+  Spawn:
+    MRNC AB 8
+    loop
+  }
+}
+
+actor SmallMudkip 24621
+{
+  Game Doom
+  radius 12
+  height 24
+  +SOLID
+  states
+  {
+  Spawn:
+    MDKP A 10
+    loop
+  }
+}
+
+//new classes
+
+ACTOR DoomPlayerJumper : Doomplayer
+{
+    species "jumper"
+	Player.DisplayName "Marine"
+}
+
+actor JumpingDoomguy : DoomPlayer
+{
+	species "jumper"
+	+NOSKIN
+	Player.DisplayName "Jumping Marine"
+    States
+	{
+    Spawn:
+        PLAY AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_JumpIf(momz >> 0, "Jumping")
+        Loop
+    See:
+        PLAY AAAABBBBCCCCDDDD 1 A_JumpIf(momz >> 0, "Jumping")
+        Loop
+	Jumping:
+        PLAJ A 1
+        PLAJ A 0 A_CheckFloor("Spawn")
+        goto Jumping
+    Missile:
+        PLAY E 12 
+        Goto Spawn
+    Melee:
+        PLAY F 6 BRIGHT
+        Goto Missile
+    Pain:
+        PLAY G 4 
+        PLAY G 4 A_Pain
+        Goto Spawn
+	}
+}
+
+actor Cyberhunter 2143
+{
+  spawnid 151
+  obituary "%o was demolished."
+  hitobituary "%o was demolished."
+  health 100
+  radius 16
+  height 56
+  mass 100
+  speed 8
+  painchance 150
+  painsound "*pain50"
+  deathsound "*death" 
+  MONSTER
+  +FLOORCLIP
+  +DONTHURTSPECIES
+  +NOTARGET
+  states
+  {
+  Spawn:
+    PLY2 A 4 A_Look
+    PLY2 A 4 
+    goto Spawn
+    PLY2 A 4 A_Look
+    PLY2 A 4 
+    PLY2 A 4 A_Look
+    PLY2 B 4 
+    PLY2 B 4 A_Look
+    PLY2 B 4 
+    goto Spawn+3
+  See:
+    PLY2 ABCD 3 A_Chase
+    loop
+  Pain:
+    PLY2 G 4
+    PLY2 G 4 A_Pain
+    goto Spawn+3
+    Missile:
+    PLY2 E 12 A_FaceTarget
+    goto Spawn+3
+    PLY2 F 6 bright
+    loop
+  Melee:
+    goto Missile
+    goto See
+  Missile:
+    PLY2 E 6 A_FaceTarget
+    PLY2 F 5 A_CyberAttack
+    goto missile
+  Death:
+    PLY2 H 10
+    PLY2 I 10 A_Scream
+    PLY2 J 10 A_NoBlocking
+    PLY2 KLM 10
+    PLY2 N -1
+    stop
+  XDeath:
+    PLY2 O 5
+    PLY2 P 5 A_XScream
+    PLY2 Q 5 A_NoBlocking
+    PLY2 RSTUV 5
+    PLY2 W -1
+    stop
+  Raise:
+    PLY2 MLKJIH 4
+    
+	}
+}
+
+ACTOR Turboqueer : CustomInventory 32111
+{
+	+NOGRAVITY
+	-INVENTORY.ALWAYSPICKUP
+	Inventory.PickupMessage "$PICKUP_TURBOSPHERE"
+	Inventory.PickupAnnouncerEntry "turbosphere"
+	States
+	{
+  Spawn:
+	TURB ABCD 3 Bright
+	Loop
+  Pickup:
+    TNT1 A 0 A_JumpIfInventory ("PowerTurbo", 1, "Nope")
+    TNT1 A 1 A_SpawnItem ("Turbosphere", 1)
+    fail
+  Nope:
+    TNT1 A 1 
+	fail
+  }
+}
+
+ACTOR DerpRune : CustomInventory 32112
+{
+	+NOGRAVITY
+	+FLOATBOB
+	States
+	{
+	Spawn:
+		HASR ABCD 6
+		Loop
+    Pickup:
+		TNT1 A 0 A_JumpIfInventory ("RuneSpeed25", 1, "Nope")
+		TNT1 A 1 A_SpawnItem ("HasteRune2", 1)
+		fail	
+	Nope:
+		TNT1 A 1 
+		fail
+	}
+}
+
+ACTOR HasteRune2: HasteRune
+{
++INVENTORY.ALWAYSPICKUP
+}
+
+ACTOR HarmlessRocket
+{
+  Game Doom
+  Radius 11
+  Height 8
+  Speed 20
+  Damage 0
+  Projectile
+  +RANDOMIZE
+  +DEHEXPLOSION
+  +ROCKETTRAIL
+  SeeSound "weapons/rocklf"
+  DeathSound "weapons/rocklx"
+  Obituary "$OB_MPROCKET" // "%o rode %k's rocket."
+  States
+  {
+  Spawn:
+    MISL A 1 Bright
+    Loop
+  Death:
+    MISL B 8 Bright A_RadiusThrust (5000, 50) 
+    MISL C 6 Bright
+    MISL D 4 Bright
+    Stop
+  }
+}
+
+ACTOR GeneralJroc : ScriptedMarine 32113
+{
+	States
+	{
+	  Spawn:
+    SENA A 4 A_MarineLook
+    SENA A 4 A_MarineNoise
+    Loop
+  Idle:
+    SENA A 4 A_MarineLook
+    SENA A 4 A_MarineNoise
+    SENA A 4 A_MarineLook
+    SENA B 4 A_MarineNoise
+    SENA B 4 A_MarineLook
+    SENA B 4 A_MarineNoise
+    Loop
+  See:
+    SENA ABCD 4 A_MarineChase
+    Loop
+	}
+}
+
+ACTOR Wario : ScriptedMarine 32114
+{
+	States
+	{
+	  Spawn:
+    WLF2 A 4 A_MarineLook
+    WLF2 A 4 A_MarineNoise
+    Loop
+  Idle:
+    WLF2 A 4 A_MarineLook
+    WLF2 A 4 A_MarineNoise
+    WLF2 A 4 A_MarineLook
+    WLF2 B 4 A_MarineNoise
+    WLF2 B 4 A_MarineLook
+    WLF2 B 4 A_MarineNoise
+    Loop
+  See:
+    WLF2 ABCD 4 A_MarineChase
+    Loop
+	}
+}
+
+ACTOR Positron : ScriptedMarine 32115
+{
+	States
+	{
+  Spawn:
+    GSOL A 4 A_MarineLook
+    GSOL A 4 A_MarineNoise
+    Loop
+  Idle:
+    GSOL A 4 A_MarineLook
+    GSOL A 4 A_MarineNoise
+    GSOL A 4 A_MarineLook
+    GSOL B 4 A_MarineNoise
+    GSOL B 4 A_MarineLook
+    GSOL B 4 A_MarineNoise
+    Loop
+  See:
+    GSOL ABCD 4 A_MarineChase
+    Loop
+	}
+}
+
+// Porkalator
+
+ACTOR ArtiPorkDoom : ArtiPork 10030
+{
+	Game Doom
+}
+
+// Fog Spawner --------------------------------------------------------------
+
+ACTOR FogSpawnerDoom : FogSpawner 20000
+{
+	Game Doom
+	+CLIENTSIDEONLY
+}
+
+// Small Fog Patch ----------------------------------------------------------
+
+ACTOR FogPatchSmallDoom : FogPatchSmall 20001
+{
+	Game Doom
+}
+
+// Medium Fog Patch ---------------------------------------------------------
+
+ACTOR FogPatchMediumDoom : FogPatchMedium 20002
+{
+	Game Doom
+}
+
+// Large Fog Patch ----------------------------------------------------------
+
+ACTOR FogPatchLargeDoom : FogPatchLarge 20003
+{
+	Game Doom
+}
+
+// Spike (thrust floor) -----------------------------------------------------
+
+// Spike up -----------------------------------------------------------------
+
+ACTOR ThrustFloorUpDoom : ThrustFloorUp 10091
+{
+	Game Doom
+}
+
+// Spike down ---------------------------------------------------------------
+
+ACTOR ThrustFloorDownDoom : ThrustFloorDown 10090
+{
+	Game Doom
+}
+
+// Mossy Rocks
+
+ACTOR ZRock1Doom : ZRock1 10006
+{
+	Game Doom
+}
+
+ACTOR ZRock2Doom : ZRock2 10007
+{
+	Game Doom
+}
+
+ACTOR ZRock3Doom : ZRock3 10009
+{
+	Game Doom
+}
+
+ACTOR ZRock4Doom : ZRock4 10015
+{
+	Game Doom
+}
+
+ACTOR ZRockBlackDoom : ZRockBlack 10099
+{
+	Game Doom
+}
+
+// Mushrooms
+
+ACTOR ZPoisonShroomDoom : ZPoisonShroom 18104
+{
+	Game Doom
+
+	States
+	{
+	Spawn:
+		SHRH A 5 A_PoisonShroom
+		Goto Pain+1
+	Pain:
+		SHRH A 6
+		SHRH B 8 A_Pain
+		Goto Spawn
+	Death:
+		SHRH CD 5
+		SHRH E 5 A_SpawnItem("PoisonCloud", 0, 28)
+		SHRH F -1
+		Stop
+	}
+}
+
+ACTOR PoisonCloudObit : PoisonCloud replaces PoisonCloud
+{
+	Obituary "%o choked."
+}
+
+ACTOR ZShroomLarge1Doom : ZShroomLarge1 10039
+{
+	Game Doom
+}
+
+
+ACTOR ZShroomLarge2Doom : ZShroomLarge2 10040
+{
+	Game Doom
+}
+
+ACTOR ZShroomLarge3Doom : ZShroomLarge3 10041
+{
+	Game Doom
+}
+
+ACTOR ZShroomSmall1Doom : ZShroomSmall1 10042
+{
+	Game Doom
+}
+
+ACTOR ZShroomSmall2Doom : ZShroomSmall2 10044
+{
+	Game Doom
+}
+
+ACTOR ZShroomSmall3Doom : ZShroomSmall3 10045
+{
+	Game Doom
+}
+
+ACTOR ZShroomSmall4Doom : ZShroomSmall4 10046
+{
+	Game Doom
+}
+
+ACTOR ZShroomSmall5Doom : ZShroomSmall5 10047
+{
+	Game Doom
+}
+
+ACTOR ZShrub1Doom : ZShrub1 18101
+{
+	Game Doom
+}
+
+// Shrub2 -------------------------------------------------------------------
+
+ACTOR ZShrub2Doom : ZShrub2 18102
+{
+	Game Doom
+}
+
+ACTOR ZStalagmitePillarDoom : ZStalagmitePillar 10048
+{
+	Game Doom
+}
+
+ACTOR ZStalagmiteLargeDoom : ZStalagmiteLarge 10049
+{
+	Game Doom
+}
+
+ACTOR ZStalagmiteMediumDoom : ZStalagmiteMedium 10050
+{
+	Game Doom
+}
+
+ACTOR ZStalagmiteSmallDoom : ZStalagmiteSmall 10051
+{
+	Game Doom
+}
+
+ACTOR ZStalactiteLargeDoom : ZStalactiteLarge 10052
+{
+	Game Doom
+}
+
+ACTOR ZStalactiteMediumDoom : ZStalactiteMedium 10056
+{
+	Game Doom
+}
+
+ACTOR ZStalactiteSmallDoom : ZStalactiteSmall 10057
+{
+	Game Doom
+}
+
+
+ACTOR BrassTorchDoom : BrassTorch 18061
+{
+	Game Doom
+}
+
+ACTOR ZTwinedTorchDoom : ZTwinedTorch 10116
+{
+	Game Doom
+}
+
+ACTOR ZTwinedTorchUnlitDoom : ZTwinedTorchUnlit 10117
+{
+	Game Doom
+}
+
+// Wall torch ---------------------------------------------------------------
+
+ACTOR ZWallTorchDoom : ZWallTorch 10054
+{
+	Game Doom
+}
+
+ACTOR ZWallTorchUnlitDoom : ZWallTorchUnlit 10055
+{
+	Game Doom
+}
+
+ACTOR ZCandleDoom : ZCandle 10119
+{
+	Game Doom
+}
+
+// Banner
+
+ACTOR ZBannerTatteredDoom : ZBannerTattered 10077
+{
+	Game Doom
+}
+
+// Barrel
+
+ACTOR ZBarrelDoom : ZBarrel 18100
+{
+	Game Doom
+}
+
+ACTOR ZBucketDoom : ZBucket 18103
+{
+	Game Doom
+}
+
+
+// Corpses
+
+ACTOR ZCorpseKabobDoom : ZCorpseKabob 10061
+{
+	Game Doom
+}
+
+ACTOR ZCorpseSittingDoom : ZCorpseSitting 10110
+{
+	Game Doom
+}
+
+ACTOR ZCorpseHangingDoom : ZCorpseLynchedNoHeart 10071
+{
+	Game Doom
+	Radius 11
+	Height 75
+}
+
+ACTOR ZCorpseLynchedDoom : ZCorpseLynched 10108
+{
+	Game Doom
+}
+
+ACTOR BloodPoolDoom : BloodPool 10111
+{
+	Game Doom
+}
+
+// Pottery2 -----------------------------------------------------------------
+
+ACTOR Pottery1Doom : Pottery1 10104
+{
+	Game Doom
+}
+
+ACTOR Pottery2Doom : Pottery2 10105
+{
+	Game Doom
+}
+
+ACTOR Pottery3Doom : Pottery3 10106
+{
+	Game Doom
+}
+
+// Steins
+
+ACTOR TableShit1Doom : TableShit1 18500
+{
+	Game Doom
+}
+
+ACTOR TableShit2Doom : TableShit2 18501
+{
+	Game Doom
+}
+
+// Trees
+
+ACTOR ZTreeDeadDoom 10024
+{
+	Game Doom
+	Radius 10
+	Height 96
+	+SOLID
+	States
+	{
+	Spawn:
+		TRH1 A -1
+		Stop
+	}
+}
+
+ACTOR ZTreeDoom 10025
+{
+	Game Doom
+	Radius 15
+	Height 128
+	+SOLID
+	States
+	{
+	Spawn:
+		TRH1 A -1
+		Stop
+	}
+}
+
+ACTOR ZTreeSwamp150Doom 10026
+{
+	Game Doom
+	Radius 10
+	Height 150
+	+SOLID
+	States
+	{
+	Spawn:
+		TRH2 A -1
+		Stop
+	}
+}
+
+ACTOR ZTreeSwamp120Doom : ZTreeSwamp120 10027
+{
+	Game Doom
+}
+
+ACTOR ZStumpBurnedDoom : ZStumpBurned 10028
+{
+	Game Doom
+}
+
+ACTOR ZStumpBareDoom : ZStumpBare 10029
+{
+	Game Doom
+}
+
+ACTOR ZTreeLarge1Doom : ZTreeLarge1 10078
+{
+	Game Doom
+}
+
+ACTOR ZTreeLarge2Doom : ZTreeLarge2 10079
+{
+	Game Doom
+}
+
+ACTOR ZTreeGnarled1Doom : ZTreeGnarled1 10080
+{
+	Game Doom
+}
+
+ACTOR ZTreeGnarled2Doom : ZTreeGnarled2 10087
+{
+	Game Doom
+}
+
+ACTOR ZStumpSwamp1Doom : ZStumpSwamp1 10037
+{
+	Game Doom
+}
+
+ACTOR ZStumpSwamp2Doom : ZStumpSwamp2 10038
+{
+	Game Doom
+}
+
+ACTOR ZLogDoom : ZLog 10088
+{
+	Game Doom
+}
+
+ACTOR ZSwampVineDoom : ZSwampVine 10060
+{
+	Game Doom
+}
+
+ACTOR TreeDestructibleDoom : TreeDestructible 18062
+{
+	Game Doom
+}
+
+ACTOR BatSpawnerDoom : BatSpawner 10225
+{
+	Game Doom
+}
+
+ACTOR LeafSpawnerDoom : LeafSpawner 10113
+{
+	Game Doom
+	+CLIENTSIDEONLY
+}
+
+ACTOR TeleSmokeDoom : TeleSmoke 10140
+{
+	Game Doom
+}
+
+ACTOR BridgeDoom : Bridge 10118
+{
+	Game Doom
+}
+
+
+
+ACTOR TeleportFogHexen
+{
+	+NOBLOCKMAP
+	+NOTELEPORT
+	+NOGRAVITY
+	RenderStyle Add
+	States
+	{	
+	Spawn:
+		TELE ABCDEFGHGFEDC 6 Bright
+		Stop
+	}
+}
+
+actor Interrogator 10252
+{
+	health 50000
+	radius 192
+	height 512
+	mass 99999999
+	+SHOOTABLE
+	+NOGRAVITY
+	+NOBLOOD
+	+NOCLIP
+	+BOSS
+	states
+	{
+	Spawn:
+		TNT1 A -1
+	Death:
+		TNT1 A 0
+		stop
+	}
+}
+
+actor Hand1 : Interrogator 10253
+{
+	health 2000
+}
+
+//airship crap
+
+actor GlassSpawner
+{
+  Radius 2
+  Height 2
+  -SOLID
+  +NOGRAVITY
+  +NOCLIP
+  States
+  {
+  Spawn:
+    TNT1 A 0
+    TNT1 A 1
+    goto Death
+  Death:
+    TNT1 A 0
+    TNT1 A 1 A_PlaySoundEx("glass/break","SoundSlot7")
+    TNT1 A 0 A_Burst("IceChunk")
+    stop
+  }
+}
+
+actor Core 31140
+{
+  obituary ""
+  health 100
+  radius 8
+  height 8
+  mass 100000000
+  speed 0
+  painchance 0
+  deathsound "Brain/Death"
+  MONSTER
+  +BOSS
+  damagefactor normal, 0.0
+  damagefactor piss, 0.0
+  damagefactor cum, 0.0
+  damagefactor rocket, 100.0
+  damagefactor fire, 0.0
+  damagefactor ice, 0.0
+  damagefactor disintegrate, 0.0
+  damagefactor bomb, 100.0
+  -SOLID
+  +SHOOTABLE
+  +NOBLOOD
+  +NOTARGET
+  +FRIENDLY
+  +NOCLIP
+  +DONTBLAST
+  -WINDTHRUST
+  states
+  {
+  Spawn:
+    TNT1 A 1
+    loop
+  See:
+    TNT1 A 1
+    loop
+  Missile:
+    TNT1 A 1
+    goto See
+  Pain:
+    TNT1 A 1
+    goto See
+  Death:
+    TNT1 A 0
+    TNT1 A 1 A_Scream
+    TNT1 A 1 A_NoBlocking
+    TNT1 A -1
+    Stop
+  }
+}
+
+actor "Crank Launcher" : DoomWeapon 31141
+{
+  Game Doom
+  SpawnID 29
+  Weapon.SelectionOrder 2500
+  Weapon.AmmoUse 0
+  Weapon.AmmoGive 2
+  Weapon.AmmoType "RocketAmmo"
+  -WEAPON.NOAUTOFIRE
+  Inventory.PickupMessage "Got the Crank Launcher!"
+  States
+  {
+  Ready:
+    MISG A 1 A_WeaponReady
+    Loop
+  Deselect:
+    MISG A 1 A_Lower
+    Loop
+  Select:
+    MISG A 1 A_Raise
+    Loop
+  Fire:
+    MISG B 8 A_GunFlash
+    MISG B 0 A_Recoil(12)
+    MISG B 12 A_FireCustomMissile("SpecialRocket")
+    MISG B 0 A_ReFire
+    Goto Ready
+  Flash:
+    MISF A 3 Bright A_Light1
+    MISF B 4 Bright
+    MISF CD 4 Bright A_Light2
+    Goto LightDone
+  Spawn:
+    LAUN A -1
+    Stop
+  }
+}
+
+actor SpecialRocket
+{
+  Game Doom
+  Radius 11
+  Height 8
+  Speed 20
+  Damage 20
+  Projectile
+  +RANDOMIZE
+  +DEHEXPLOSION
+  -ROCKETTRAIL
+  SeeSound "weapons/rocklf"
+  DeathSound "weapons/rocklx"
+  Obituary "$OB_MPROCKET" // "%o rode %k's rocket."
+  +FORCEXYBILLBOARD
+  +EXTREMEDEATH
+  DamageType Rocket
+  Decal Scorch
+  States
+  {
+  Spawn:
+    MISL A 1 bright
+    loop
+  Death:
+    MISL B 8 bright A_Explode
+    MISL C 6 bright
+    MISL D 4 bright
+    stop
+  }
+}
+
+actor NewRocket
+{
+  Game Doom
+  Radius 11
+  Height 8
+  Speed 20
+  Damage 20
+  Projectile
+  +RANDOMIZE
+  +DEHEXPLOSION
+  -ROCKETTRAIL
+  SeeSound "weapons/rocklf"
+  DeathSound "weapons/rocklx"
+  Obituary "$OB_MPROCKET" // "%o rode %k's rocket."
+  +FORCEXYBILLBOARD
+  +EXTREMEDEATH
+  Decal Scorch
+  States
+  {
+  Spawn:
+    MISL A 1 bright
+    loop
+  Death:
+    TNT1 A 0
+    TNT1 A 0 A_Explode(128,128)
+    TNT1 A 1 A_SpawnItem("Bang4Cloud")
+    TNT1 AAAAAAAA 0 A_SpawnItemEx("FiredRocketSmoke", 0, 0, 0, 0.01 * Random(-125, 125), 0.01 * Random(-125, 125), 0.01 * Random(25, 245), 0, 128, 0)
+    stop
+  }
+}
+
+Actor FiredRocketSmoke
+{
+ Alpha 0.9
+ +FORCEXYBILLBOARD
+ +CLIENTSIDEONLY
+ +NOINTERACTION
+ States
+ {
+  Spawn:
+   TNT1 A 0
+   TNT1 A 0 A_Jump(255, "Cloud1", "Cloud2", "Cloud3", "Cloud4")
+  Cloud1:
+   SMOK A 1 A_FadeOut(0.0125)
+   Wait
+  Cloud2:
+   SMOK B 1 A_FadeOut(0.0125)
+   Wait
+  Cloud3:
+   SMOK C 1 A_FadeOut(0.0125)
+   Wait
+  Cloud4:
+   SMOK D 1 A_FadeOut(0.0125)
+   Wait
+ }
+}
+
+actor Quake
+{
+  Radius 16
+  Height 8
+  Speed 0
+  Damage 0
+  Projectile
+  +RANDOMIZE
+  -SOLID
+  +NOGRAVITY
+  +NOCLIP
+  RenderStyle None
+  States
+  {
+  Spawn:
+    TNT1 A 0
+    TNT1 A 0
+    goto Death
+  Death:
+    TNT1 A 0
+    TNT1 A 105 Radius_Quake(5,105,0,5,0)
+    stop
+  }
+}
+
+actor QuakeSpawner
+{
+  Radius 16
+  Height 8
+  -SOLID
+  +NOGRAVITY
+  +NOCLIP
+  RenderStyle None
+  States
+  {
+  Spawn:
+    TNT1 A 0
+    TNT1 A 1
+    goto Death
+  Death:
+    TNT1 A 0
+    TNT1 A 1 A_SpawnItem("Quake")
+    TNT1 A 0 A_CustomMissile("Quake",0,0,20,2)
+    TNT1 A 0 A_CustomMissile("Quake",0,0,60,2)
+    TNT1 A 0 A_CustomMissile("Quake",0,0,120,2)
+    TNT1 A 0 A_CustomMissile("Quake",0,0,160,2)
+    TNT1 A 0 A_CustomMissile("Quake",0,0,-20,2)
+    TNT1 A 0 A_CustomMissile("Quake",0,0,-60,2)
+    TNT1 A 0 A_CustomMissile("Quake",0,0,-120,2)
+    TNT1 A 0 A_CustomMissile("Quake",0,0,-160,2)
+    stop
+  }
+}
+
+//map60 stuff
+
+actor ptSnowPineTree 13868 {
+   +SOLID
+   radius 16
+   height 96
+   
+   states {
+      spawn:
+         PTSP A -1
+         stop
+   }
+}
+
+actor ptSanta 13869 {
+   +SOLID
+   radius 16
+   height 96
+   
+   states {
+      spawn:
+         PTSA A -1
+         stop
+   }
+}
+
+actor ptSantaBack 13870 {
+   +SOLID
+   radius 16
+   height 96
+   
+   states {
+      spawn:
+         PTSB A -1
+         stop
+   }
+}
+
+actor ptDoNotDisturbSign 13872 {
+   +SOLID
+   radius 16
+   height 64
+   
+   states {
+      spawn:
+         PTDD A -1
+         stop
+   }
+}
+
+actor ptSleepingSnowman 13873 {
+   +SOLID
+   radius 16
+   height 64
+   
+   states {
+      spawn:
+	     PTS2 A 1
+         PTS2 A 35 A_PlaySound( "PTSNORE" )
+		 PTS2 B 70
+         loop
+   }
+}
+
+actor ptAngrySnowman 13874 {
+   +SOLID
+   radius 16
+   height 64
+   
+   states {
+      spawn:
+         PTAS A -1
+		 stop
+   }
+}
+
+//hive
+
+Actor phobos : DoomPlayer 30009
+{
+   Translation "112:127=0:0"
+   Obituary "%o was melted by \caAA\cnC\cf's plasma rifle."
+   health 2500
+   Game Doom
+   DamageFactor "FriendlyFire", 0
+   DamageFactor "RocketExplosion1", 0
+   DamageFactor "RocketExplosion2", 0
+   DamageFactor "RocketExplosion3", 0
+   DamageFactor "Railgun", 0
+   DamageFactor "BFGSplash", 0
+   PainSound "*pain"
+   DeathSound "*death"
+   MeleeRange 256
+   //Additional flags for the monster AI.
+   MONSTER
+   +QUICKTORETALIATE
+   +MISSILEMORE
+   +MISSILEEVENMORE
+   +CANPUSHWALLS
+   +CANUSEWALLS
+   -FRIENDLY
+   States
+   {
+   Spawn:
+      TNT1 A 0 //Dummy frame needed.
+      TNT1 A 0 //ACS. Don't forget the chainsaw marine.
+   PreIdle:
+      TNT1 A 0 A_ChangeFlag ("PUSHABLE", 1)
+   Idle:
+      TNT1 A 0 A_JumpIf (momx > 0, "XMomCheck")
+      TNT1 A 0 A_JumpIf (momx < 0, "XMomCheck")
+      TNT1 A 0 A_JumpIf (momy > 0, "YMomCheck")
+      TNT1 A 0 A_JumpIf (momy < 0, "YMomCheck")
+      PHOB A 1 A_LookEx (0, 0, 4096, 1200, 90, "PreSee")
+      TNT1 A 0 A_CheckSight ("PreWander")
+      Goto Idle
+   XMomCheck:
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB A 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB A 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB A 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB A 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB B 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB B 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB B 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB B 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB C 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB C 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB C 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB C 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB D 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB D 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB D 1
+      TNT1 A 0 A_JumpIf (momx == 0, "Idle")
+      PHOB D 1
+      TNT1 A 0 A_LookEx (0, 0, 4096, 1200, 90, "PreSee")
+      Goto XMomCheck
+   YMomCheck:
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB A 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB A 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB A 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB A 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB B 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB B 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB B 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB B 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB C 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB C 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB C 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB C 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB D 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB D 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB D 1
+      TNT1 A 0 A_JumpIf (momy == 0, "Idle")
+      PHOB D 1
+      TNT1 A 0 A_LookEx (0, 0, 4096, 1200, 90, "PreSee")
+      Goto YMomCheck
+   CheckIfPlayerInSight:
+      TNT1 A 0 A_TakeInventory ("NoPlayerInSightTimer", 16)
+      TNT1 A 0 A_CheckSight ("PreIdle")
+      Goto See2
+   PreSee:
+      TNT1 A 0 A_ChangeFlag ("PUSHABLE", 0)
+   See:
+      TNT1 A 0 A_TakeInventory ("NoPlayerInSightTimer", 16)
+   See2:
+      TNT1 A 0 A_Jump (128, 1)
+      Goto See3+6
+      TNT1 A 0
+      Goto See4+6
+   See3:
+      TNT1 A 0 A_Jump (random(128, 256), 2)
+      TNT1 A 0 A_GiveInventory ("NoPlayerInSightTimer", 1)
+      TNT1 A 0 A_JumpIfInventory ("NoPlayerInSightTimer", 16, "CheckIfPlayerInSight")
+      TNT1 A 0 A_Jump (random(128, 256), 2)
+      TNT1 A 0 A_ClearTarget
+      TNT1 A 0 A_Jump (random(128, 256), 1)
+      Goto See4+6
+      TNT1 A 0 A_Chase
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      Goto See3
+   See4:
+      TNT1 A 0 A_Jump (random(128, 256), 2)
+      TNT1 A 0 A_GiveInventory ("NoPlayerInSightTimer", 1)
+      TNT1 A 0 A_JumpIfInventory ("NoPlayerInSightTimer", 16, "CheckIfPlayerInSight")
+      TNT1 A 0 A_Jump (random(128, 256), 2)
+      TNT1 A 0 A_ClearTarget
+      TNT1 A 0 A_Jump (random(128, 256), 1)
+      Goto See3+6
+      TNT1 A 0 A_Chase
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Chase
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      Goto See4
+   PreWander:
+      TNT1 A 0 A_ChangeFlag ("PUSHABLE", 0)   
+   Wander:
+      TNT1 A 0 A_Jump (128, 1)
+      Goto Wander2+1
+      TNT1 A 0
+      Goto Wander3+1
+   Wander2:
+      TNT1 A 0 A_Jump (random(128, 256), 1)
+      Goto Wander3+1
+      TNT1 A 0 A_LookEx (0, 0, 4096, 1200, 90, "See")
+      TNT1 A 0 A_Wander
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-25.7, 1, 0, 0)
+      Goto Wander2
+   Wander3:
+      TNT1 A 0 A_Jump (random(128, 256), 1)
+      Goto Wander2+1
+      TNT1 A 0 A_LookEx (0, 0, 4096, 1200, 90, "See")
+      TNT1 A 0 A_Wander
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB A 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB B 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB C 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      TNT1 A 0 A_Wander
+      PHOB D 1 A_Recoil (-0.8668116)
+      TNT1 A 0 ThrustThing (angle*256/360-230.3, 1, 0, 0)
+      Goto Wander3
+   Pain:
+      TNT1 A 0 A_ChangeFlag ("PUSHABLE", 0)
+   Pain2:
+      TNT1 A 0 A_Jump (128, 1)
+      Goto Pain3
+      TNT1 A 0
+      Goto Pain4
+   Pain3:
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      TNT1 A 0 A_Pain
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      Goto See
+   Pain4:
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      TNT1 A 0 A_Pain
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB G 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      Goto See
+   Death:
+      PHOB H 10
+      PHOB I 10 A_Scream
+      PHOB J 10 A_NoBlocking
+      PHOB KLM 10
+      TNT1 A 0 A_SpawnItemEx ("DeadMarine", 0, 0, 0, 0, 0, 0, 0, 1)
+      stop
+   XDeath:
+      PHOB O 5
+      PHOB P 5 A_XScream
+      PHOB Q 5 A_NoBlocking
+      PHOB RSTUV 5
+      TNT1 A 0 A_SpawnItemEx ("GibbedMarine", 0, 0, 0, 0, 0, 0, 0, 1)
+      stop
+   Melee:
+      TNT1 A 0 A_Jump (128, 1)
+      Goto Melee2+1
+      TNT1 A 0
+      Goto Melee3+1
+   Melee2:
+      TNT1 A 0 A_Jump (random(128, 256), 1)
+      Goto Melee3+1
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-102.3, 1, 0, 0)
+      TNT1 A 0 A_Jump (random(128, 256), 1)
+      Goto Melee2
+      TNT1 A 0 A_SpidRefire
+      Goto Missile
+   Melee3:
+      TNT1 A 0 A_Jump (random(128, 256), 1)
+      Goto Melee2+1
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (0.88125)
+      TNT1 A 0 ThrustThing (angle*256/360-153.7, 1, 0, 0)
+      TNT1 A 0 A_Jump (random(128, 256), 1)
+      Goto Melee3
+      TNT1 A 0 A_SpidRefire
+   Missile:
+      TNT1 A 0 A_Jump (128, 1)
+      Goto Missile2+1
+      TNT1 A 0
+      Goto Missile3+1
+   Missile2:
+      TNT1 A 0 A_Jump (random(224, 256), 1)
+      Goto Missile3+1
+      TNT1 A 0 A_FaceTarget
+      TNT1 A 0 A_CustomMissile ("NewPlasmaBall", 32, 0, 0, 0)
+      TNT1 A 0 NoiseAlert (0, 0)
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_Jump (random(64, 256), 2)
+      TNT1 A 0 A_SpidRefire
+      TNT1 A 0 A_Jump (random(0, 8), 1)
+      Goto Missile2
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_Jump (random(128, 256), 74)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-192, 1, 0, 0)
+      TNT1 A 0 A_SpidRefire
+      Goto Missile2
+      TNT1 A 0 A_SpidRefire
+      Goto Missile2
+   Missile3:
+      TNT1 A 0 A_Jump (random(224, 256), 1)
+      Goto Missile2+1
+      TNT1 A 0 A_FaceTarget
+      TNT1 A 0 A_CustomMissile ("NewPlasmaBall", 32, 0, 0, 0)
+      TNT1 A 0 NoiseAlert (0, 0)
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_Jump (random(64, 256), 2)
+      TNT1 A 0 A_SpidRefire
+      TNT1 A 0 A_Jump (random(0, 8), 1)
+      Goto Missile3
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB E 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_Jump (random(128, 256), 74)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB A 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB B 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB C 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_FaceTarget
+      PHOB D 1 A_Recoil (-0.61476)
+      TNT1 A 0 ThrustThing (angle*256/360-64, 1, 0, 0)
+      TNT1 A 0 A_SpidRefire
+      Goto Missile3
+      TNT1 A 0 A_SpidRefire
+      Goto Missile3
+   }
+}
+
+Actor NewPlasmaBall : PlasmaBall
+{
+
+  DamageType "FriendlyFire"
+}
+
+ACTOR NoPlayerInSightTimer : Inventory
+{
+}
+
+//blocks of doom
+
+actor TttPistol : Pistol 18913 {
+   weapon.SlotNumber 1
+}
+
+//bloody 
+
+actor Waldo 23999 {
+   +SOLID
+   Radius 32
+   Height 92
+   
+   States {
+      Spawn:
+         WLDO A -1
+         STOP
+   }
+}
+
+//JUMPFACT
+
+actor smalljungle 9546
+{
+  Game Doom
+  States
+  {
+  Spawn:
+    SHR6 A -1
+    Stop
+  }
+}
+
+actor smallbush 9548
+{
+  Game Doom
+  States
+  {
+  Spawn:
+    SHR8 A -1
+    Stop
+  }
+}
+
+actor ConfusedMarine 32012 
+{
+  health 1000
+  radius 16
+  height 56
+  mass 100
+  speed 10
+  painchance 90
+  MONSTER
+  +FLOORCLIP
+  +FRIGHTENED
+  activesound "cma/active"
+  deathsound "cma/death"
+  painsound "cma/pain"
+  translation "11:85=21:35"
+  States
+  {
+  spawn:
+    PLAY A 4 A_Look
+    loop
+  see:
+    PLAY ABCD 1 A_Chase
+	loop
+  pain:
+    PLAY G 4
+    PLAY G 4 A_Pain
+    goto see
+  death:
+    PLAY H 10
+    PLAY I 10 A_Scream
+    PLAY J 10 A_NoBlocking
+    PLAY KLM 10
+    PLAY N -1
+    stop
+  raise:
+    PLAY MLKJIH 5
+    goto see
+  }
+}
+
+
+actor Chubs 32017
+{
+    Health 150
+	Radius 22
+	Height 58
+	Speed 12
+	PainChance 120
+	Damage 25
+	MONSTER 
+	+FLOORCLIP
+	seesound "chubs/see"
+	painsound "chubs/pain"
+	deathsound "chubs/death"
+	activesound "chubs/active"
+	obituary "%o was masacred by a fat guy"
+	states
+	{
+	Spawn:
+		CHUB A 10 A_Look
+		Loop
+	See:
+		CHUB AABBCCDD 4 A_Chase
+		Loop
+	Missile:
+		CHUB E 16 BRIGHT A_FaceTarget
+		CHUB F 8 BRIGHT bright A_CustomMissile("Rocket", 18, 0)
+		CHUB E 8 BRIGHT A_FaceTarget
+		Goto See
+	Pain:
+		CHUB G 3
+		CHUB G 3 A_Pain
+		Goto See
+	Death:
+		CHUB H 7
+		CHUB I 7 A_Scream
+		CHUB J 7 A_NoBlocking
+		CHUB K 7
+		CHUB L 7
+		CHUB M 7
+		CHUB N -1
+		Stop
+	XDeath:
+		CHUB O 5
+		CHUB P 5 A_XScream
+		CHUB Q 5 A_NoBlocking
+		CHUB RS 5
+		CHUB T -1
+		Stop
+	Raise:
+		CHUB NMLKJIH 5
+		Goto See
+	}
+}
+
+//PROTEH
+
+ACTOR SecretCheck : Inventory
+{
+}
+
+ACTOR TranslucentScript : CustomInventory
+{
+	+INVENTORY.UNDROPPABLE
+	+AUTOACTIVATE
+	Inventory.MaxAmount 0
+	States
+	{
+		Spawn:
+		TNT1 A 0
+		Stop
+		Pickup:
+		TNT1 A 0 ACS_ExecuteAlways(693, 0, 0, 0, 0)
+		Stop
+	}
+}

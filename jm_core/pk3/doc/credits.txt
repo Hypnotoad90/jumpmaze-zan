@@ -1,0 +1,298 @@
+*******************************************************************************
+*                                                                             *
+* Jumpmaze 2 v8 Credits                                                       *
+*                                                                             *
+*******************************************************************************
+
+
+Game
+===============================================================================
+
+Project leaders/Archive Maintainers (past and present): Hypnotoad (aka Jroc, aka The Player), Hisymak, Positron, Wario
+Based on Jumpmaze by Cyber
+
+Maps
+-------------------------------------------------------------------------------
+
+MAP00 -- Training
+  Author: The Player
+  Music: Carrington Institute, Perfect Dark
+
+MAP33 -- Jump Trials
+  Author: The Player
+  Music: UNATCO, Deus Ex
+  
+MAP34 -- Junglefalls
+  Author: Wario
+  Music: Primal Rave by David Wise, Donkey Kong Country 2 OST
+
+MAP35 -- Rage Maze
+  Author: The Player
+  Music: Futureal by Iron Maiden (MIDI)
+
+MAP36 -- Goldfinger
+  Author: The Player
+  Music: Caverns and Silo Detonation Imminent levels, Goldeneye 64
+
+MAP37 -- Volcano Escape
+  Author: Volcano, AC3, AAC, Positron
+  Music: Hollow Tree, Battletoads in Battlemaniacs OST
+
+MAP38 -- Jumpmaze Circuit
+  Author: Wario
+  Music: Luigi Raceway, Mario Kart 64
+
+MAP39 -- Escaping From Hell
+  Author: The Player
+  Music: Credits (MAP12) composed by Simon "SlayeR" Judd, Hellcore 2
+
+MAP40 -- Proteh's Chaos Base
+  Author: Proteh
+  Music: Red Canyon level, F-Zero GX
+
+MAP41 -- Jump City
+  Author: The Player
+  Music: Blank Page by team AiR (cracktro)
+
+MAP42 -- Lost Halls
+  Author: AconyX
+  Music: Halls of the Damned (E2M6), Doom 1
+
+MAP43 -- Lava Laboratory
+  Author: Deth!, AC3
+  Music: World 2-1, Lenti, Jazz Jackrabbit
+
+MAP44 -- Jumpmaze HQ
+  Author: Gosimer
+  Music: The Dance of the Spheres by David M. Karlsson
+
+MAP45 -- Going Through Hell
+  Author: Thumper
+  Music: The Beauty and the Beast by Nightwish
+
+MAP46 -- Blocks Of Doom
+  Author: Wirtualnosc
+  Music: Dead Simple (MAP07), Doom 2
+
+MAP47 -- Druglab
+  Author: Infer
+  Music: Command Center (E2M5), Doom 1
+
+MAP48 -- Escaping From The Horror
+  Author: AconyX
+  Music: Deimos Lab (E2M4), Doom 1
+
+MAP49 -- Kill Ratio
+  Author: Infer
+  Music: Kill Ratio by Sonic Mayhem, Quake II OST
+
+MAP50 -- Spacestation
+  Author: The Player
+  Music: Rise Of The Triads, How'd I do? (intermission)
+
+MAP51 -- Port Town
+  Author: AC3
+  Music: Silence level, F-Zero for the SNES
+
+MAP52 -- Vivid Dreams, Sweetheart
+  Author: Positron
+  Music: The Great River Race by Bjorn Lynne,
+    http://www.lynnemusic.com/midi.html, 
+    http://www.shockwave-sound.com
+
+MAP53 -- Doomed Cruise
+  Author: Frank
+  Music: Become the Hunted by James Paddock, Plutonia 2 (MAP11)
+
+MAP54 -- Jumping Factory
+  Author: Lightning
+  Music: Factory, Super Mario RPG
+
+MAP55 -- Blood Donations
+  Author: Positron
+  Music: Zombie Chase by Bjorn Lynne,
+    http://www.lynnemusic.com/midi.html, 
+    http://www.shockwave-sound.com
+
+MAP56 -- Red Hot Ride
+  Author: AAC
+  Music: Crocodile Cacophony by David Wise, Donkey Kong Country 2 OST
+
+MAP57 -- Core Dump
+  Author: Positron
+  Music: Beneath Another Sky by Bjorn Lynne,
+    http://www.lynnemusic.com/midi.html, 
+    http://www.shockwave-sound.com
+
+MAP58 -- Red Hot Ride II
+  Author: AAC
+  Music: Big Boss Blues by Eveline Fischer, Donkey Kong Country 3
+
+MAP59 -- Rage Maze 2
+  Author: The Player
+  Music: Transylvania by Iron Maiden (MIDI)
+
+MAP60 -- 40 Below Zero
+  Author: Positron
+  Music: 
+    - Winding Roads by Bjorn Lynne,
+      http://www.lynnemusic.com/midi.html,
+      http://www.shockwave-sound.com;
+    - Frosty the Snowman midi music from EKN.net.
+
+MAP61 -- Sweet Dreams Wario
+  Author: Frits
+  Music: Lightning by Jay Reichard, F-Zero: GP Legend
+    http://www.vgmusic.com/music/console/nintendo/gba/index-af.html
+
+MAP62 -- AAC's Hive
+  Author: AAC
+  Music: Wasp Hive, Donkey Kong Country 2
+
+MAP63 -- Across the Dark Swamp
+  Author: Hisymak
+  Music: Oes Bog (MAP03), wolfen.wad (Hexen) 
+  
+MAP64 -- "The Last hurrah"
+  Author: The Player
+  Music: Donkey Kong Country - Misty Menace, Mario 64 - Final Bowser Music, Mario 64 - Credits Music
+
+RJECT01 -- Infer's Hell
+  Author: Infer
+  Music: From Resident Evil (details unknown/forgotten)
+
+RJECT02 -- Eternal Void
+  Author: Gosimer
+  Music: 
+    - Killer Instinct, Glacius theme
+    - Chrono Trigger OST, Fanfare 1, Lucca's Theme
+
+RJECT03 -- Gravity Chambers
+  Author: Wirtualnosc
+  Music: Descent I, level 3
+
+RJECT04 -- Airship Doomed
+  Author: Master Garo
+  Music:
+    - Kitchen Ace (And Taking Names) (E1M4) by Bobby Prince, Doom 1
+    - Harder, Better, Faster, Strong by Daft Punk 
+	
+RJECT05 -- Island's of Desolation
+  Author: Propaganda
+  Music: Song from touhou
+  
+RJECT06 -- Interrogator
+  Author: HeavenWraith
+  Music:
+    - Battle With Seymour (Black Mages remix) by Uematsu Nobuo, Final Fantasy X
+    - Tai ma Gekisen by Takanashi Yasuharu, Fairy Tail soundtrack II
+	
+DRAG -- Drag Race
+  Author: The Player
+  Music: Silence, F Zero X
+  
+FLOORLAV -- Floor is Lava A.K.A Jroc's Nightmare
+  Author: The Player
+  Music: "The Healer Stalks" - Bobby Prince
+ 
+SHIT -- The Key To Victory
+  Author: The Player
+
+Scripts
+-------------------------------------------------------------------------------
+
+General utility scripts, like the Jumpmaze rankers and who-exited, implemented
+by Positron. Some of the scripts are based on scripts originally implemented
+by Wario. 
+
+Ranker scripts updated by Hypnotoad to utilize Zandronum's new database and accounts system
+
+Survival Maze idea by Marine and expanded/implemented by Positron.
+
+luk ACS library by Positron.
+
+Testing
+-------------------------------------------------------------------------------
+
+A thanks goes out to all who helped test the beta releases of Jumpmaze 2. 
+The following have helped with testing, in no particular order: AAC, AC3, Frank, Wario, Wirtualnosc, Agaures, Snail, Lightning, Hisymak, Cyber
+
+
+Resources
+===============================================================================
+
+Textures
+-------------------------------------------------------------------------------
+
+bloodrpb1.wad: 
+  Textures from Blood by Monolith. Ripped by Tormentor667.
+
+cage_tex.wad: 
+  Various textures made by Cage.
+
+cwbdoom1.wad, cwbdoom3.wad, cwbdoom4.wad: 
+  Texture wads by Christopher "shaithis" Buecheler.
+
+decontex.wad: 
+  Deconstruct Industrial Texture Pack by Stecki.
+
+doom.wad, doom2.wad:
+  Textures from Doom 1 and 2 by id Software.
+
+duketex.wad: 
+  Duke Nukem 3D textures made by 3D Realms and ripped by Tormentor667.
+
+graphtx1.wad, graphtx2.wad, graphtx3.wad:
+  Resource wads by Sean Johnson.
+
+hlexptex.wad: 
+  Half-Life textures made by Valve and Gearbox. Ripped by Ceeb.
+
+NMTEXT1.WAD:
+  Resource wad by Nick Baker.
+
+skulltag_data.pk3:
+  The standard wad for Skulltag made by the Skulltag team.
+
+Graphics
+-------------------------------------------------------------------------------
+Titlepic, M_DOOM, INTERPIC and jumping player sprites by TerminusEst13
+
+Sounds
+-------------------------------------------------------------------------------
+
+JM2HSWIN:
+success_low.wav by grunz
+http://www.freesound.org/samplesViewSingle.php?id=109663
+
+JM2HSLOS:
+negativebeep.wav by Splashdust
+http://www.freesound.org/samplesViewSingle.php?id=67454
+
+SVMZSND1:
+curious_up.wav by pierrecartoons1979
+http://www.freesound.org/samplesViewSingle.php?id=90132
+
+SVMZSND2:
+exp_obj_large03.wav by ggctuk
+http://www.freesound.org/samplesViewSingle.php?id=80500
+
+SVMZSND3:
+level_up_3note2.wav by jivatma07
+http://www.freesound.org/samplesViewSingle.php?id=76234
+
+Many other unattributed sounds found at:
+  - http://www.shockwave-sound.com
+  - http://www.wavsource.com
+  - http://www.talkingwav.com
+  - http://quiss.tripod.com/sounds.html
+  - http://www.grsites.com
+
+Intermission music by Propaganda
+
+Translucent Players by Leonard
+
+luk
+===============================================================================
+
+Developed by Positron, with help from Aiur850, The Player, and Frank.

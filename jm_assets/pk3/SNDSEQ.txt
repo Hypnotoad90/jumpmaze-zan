@@ -1,0 +1,24 @@
+:LiftRaven
+	platform 1
+	playuntildone PlatformStart
+	playrepeat StoneMove
+	stopsound PlatformStop
+end
+
+:StoneMoveRaven
+	door 0
+	playrepeat StoneMove
+	stopsound DoorCloseLight
+end
+
+:DoorHexen
+	door 2
+	playtime        DoorOpen        13
+	playrepeat      StoneMove
+	stopsound	DoorCloseLight
+end
+
+:WaterSurface
+	platform 3
+	playrepeat WaterMove
+end

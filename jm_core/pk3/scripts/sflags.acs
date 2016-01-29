@@ -1,0 +1,15 @@
+#library "sflags"
+#include "zcommon.acs"
+
+script 861 OPEN
+{
+	if ( getCvar( "jm_flagsbypass" ) == 0 ) 
+		{
+		ConsoleCommand("sv_unblockplayers 1");
+		ConsoleCommand("sv_chasecam 1");
+		}
+	else if ( getCvar( "jm_flagsbypass" ) == 1 ) 
+		{
+		terminate;
+		}
+}

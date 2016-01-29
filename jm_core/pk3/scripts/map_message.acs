@@ -1,0 +1,133 @@
+// This script file is used to display a standard message listing basic
+// information about the current map.
+//
+// Author: 
+// Positron (modified by Hypnotoad)
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "jmmapmsg"
+#include "zcommon.acs"
+
+#import "jmgame.acs"
+#import "map_skill.acs"
+#import "constants.acs"
+#import "utility.acs"
+//#import "luk.acs" no
+#import "ranker_hs.acs"
+#import "ranker_solo.acs"
+
+#define MM_TOTAL_DIFFICULTIES 6
+
+// String versions with appropriate colors of the map skills available.
+str _mm_diff[ MM_TOTAL_DIFFICULTIES ] = {
+   "\ccVaried\c-", "\cqVery Easy\c-", "\cdEasy\c-",
+   "\chModerate\c-", "\cgHard\c-", "\cmVery Hard\c-",
+};
+
+// Delay in tics before the message is displayed.
+#define MM_DELAY 66
+// Seconds to wait for the record holder name to load before proceeding further.
+#define MM_TIMEOUT 2
+// How long to display the map startup message on screen.
+#define MM_DISPLAY_TIME 3.0
+
+str _mm_author = "";
+str _mm_name = "";
+str _mm_skill = "";
+int _mm_num = VALUE_NONE;
+int _mm_par[ 10 ];
+bool _mm_is_set = false;
+
+function void MmSet( str name, str author, int skill, str par ) {
+   _mm_author = author;
+   _mm_name = name;
+   _mm_num = getLevelInfo( LEVELINFO_LEVELNUM );
+
+   // If an invalid skill value was given, select unknown.
+   if ( skill < 0 || skill >= MM_TOTAL_DIFFICULTIES ) {
+      skill = MAP_SKILL_UNKNOWN;
+   }
+   _mm_skill = _mm_diff[ skill ];
+
+   MmSetPar( par );
+
+   _mm_is_set = true;
+}
+
+script 980 ENTER {
+   delay( MM_DELAY );
+
+   if ( _mm_is_set ) {
+      // High score.
+      if ( JrhIsEnabled() ) {
+         // Wait for the ranker to complete loading the high score.
+         if ( JrhGetLoadStatus() == JRH_STATUS_WORKING ) {
+            scriptWait( JrhGetLoadScript() );
+         }
+
+         // Auto show high score details table if enabled. We put this code
+         // here so we can show the details table at the same time as the
+         // map message appears.
+         if ( JrhIsSet() && JrhIsAutoShowDetailsTable() ) {
+            JrhShowDetails( MM_DISPLAY_TIME );
+         }
+      }
+
+      // We don't need to display the record holder's name in the map message
+      // if the record details auto show feature is enabled. This only applies
+      // to the solo ranker.
+      if ( JmGameGetMapType() == JMG_MAP_SOLO && JrhIsSet() &&
+         ! JrhIsAutoShowDetailsTable() ) {
+         MmDisplayRecord();
+      }
+      else {
+         MmDisplay();
+      }
+   }
+}
+
+// Removes the whitespace found in the par time, so it looks nicer when
+// shown in the map message.
+function void MmSetPar( str par ) {
+   int par_length = strlen( par );
+   int par_pos = 0;
+
+   for ( int pos = 0; pos < par_length; pos += 1 ) {
+      int character = getChar( par, pos );
+      if ( character != ' ' ) {
+         _mm_par[ par_pos ] = character;
+         par_pos += 1;
+      }
+   }
+
+   _mm_par[ par_pos ] = '\0';
+}
+
+function void MmDisplay( void ) {
+   setFont( "SMALL" );
+   hudMessage( 
+      s : "\cf", s : _mm_name, s : " - ", 
+      s : "MAP", s : number_prefix( _mm_num ), i : _mm_num, s : " - ",
+      s : "Author: ", s : _mm_author, s : "\n\n",
+      s : "\ciLevel of Difficulty\n", s : _mm_skill, s : "\n\n",
+      s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\c-" ;
+      HUDMSG_FADEOUT | HUDMSG_LOG, 412, 0, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
+   );
+}
+
+// This function displays the map message and also includes the record
+// holder's name.
+function void MmDisplayRecord( void ) {
+   setFont( "SMALL" );
+   hudMessage( 
+      s : "\cf", s : _mm_name, s : " - ", 
+      s : "MAP", s : number_prefix( _mm_num ), i : _mm_num, s : " - ",
+      s : "Author: ", s : _mm_author, s : "\n\n",
+      s : "\ciLevel of Difficulty\n", s : _mm_skill, s : "\n\n",
+      s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\n\n",
+      s : "\ciMap record set by:\c-\n", a : _jrs_hs_author, s : "\c-" ;
+      HUDMSG_FADEOUT | HUDMSG_LOG, 412, 0, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
+   );
+}

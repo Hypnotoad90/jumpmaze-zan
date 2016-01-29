@@ -1,0 +1,13 @@
+*******************************************************************************
+
+Info
+
+*******************************************************************************
+
+The Jumpmaze Post-Release Maintenance ( PRM ) pk3 is meant to provide script
+enhancements and bug/glitch fixes after the release of Jumpmaze final. The 
+Jumpmaze PRM is a continuation from the jumpmaze_hotfix wad, so all previous 
+bug/glitch fixes are inherited. For the maintenance pk3 to take effect, it
+should be loaded right after the jumpmaze final wad.
+
+This pk3 is released with permission from Jumpmaze project lead, James.

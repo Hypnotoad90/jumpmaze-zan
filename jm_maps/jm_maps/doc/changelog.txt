@@ -1,0 +1,219 @@
+*******************************************************************************
+
+Jumpmaze Post-Release Maintenance (PRM) Changelog
+
+*******************************************************************************
+
+V2
+===============================================================================
+
+Scripts
+-------------------------------------------------------------------------------
+- Included latest utility scripts.
+
+MAP10 - Doomfiend's Blue Domain
+-------------------------------------------------------------------------------
+- Made the exit swith not be activated again once it's been successfully 
+  pressed the first time.
+
+MAP12 - Shadow Fortress
+-------------------------------------------------------------------------------
+- Fixed misaligned brick textures at the exit. These were introduced after the
+  final was released.
+
+MAP29 - Volcano Hallway
+-------------------------------------------------------------------------------
+- Fixed the quick exit glitch found in the area before the first checkpoint
+  is reached that was introduced in V1. 
+
+
+V1 (Continued from jumpmaze_hotfix.wad)
+===============================================================================
+
+General
+-------------------------------------------------------------------------------
+- Upgraded all the utility scripts, such as the jumpmaze rankers.
+- Added a new game mode called Survival Maze, enabled by playing in Survival.
+- Some maps had the clear inventory function calls in an OPEN script, causing
+  them to be called only on map start and not when the player enters the game,
+  so I changed it into an ENTER script.
+- Changed the script numbers of some scripts to something below 900, because
+  all script numbers above and including 900 are reserved for the utility
+  scripts.
+
+Box Processing - MAP01
+-------------------------------------------------------------------------------
+- Fixed a missing texture at the bottom of the pit, near the four boxes at 
+  the end of the map.
+- Fixed the misaligned box texture at the bottom, half way through the map.
+- Fixed misaligned metal textures at the bottom pit near the end.
+- Fixed misaligned box textures at the end.
+- Fixed misaligned box textures at the secret area.
+- Aligned construction textures throughout the map.
+
+Race To The Top - MAP03
+-------------------------------------------------------------------------------
+- Fixed missing metal textures on some of the pillars.
+
+Mando's Express - MAP04
+-------------------------------------------------------------------------------
+- Fixed a missing train sound in some of the passanger cars.
+- Fixed the train operator door ceiling slipping a little.
+
+Storage Facility - MAP05
+-------------------------------------------------------------------------------
+- Aligned the wall textures in the beginning.
+- Made the death areas an Instant Death sector special.
+- Moved the whole in the wall to the left a little to resolve a wall texture
+  misalignment just after the beginning in the area with one small and
+  long box. 
+- Fixed a texture misalignment in the dark area near the entrance to the first
+  secret.
+- Fixed a missing lamp ceiling texture near the two towers close to the exit.
+- Changed the sector a little to align the lamp ceiling texture in the above
+  mentioned area.
+- Fixed other minor texture misalignments throughout the map.
+- Made the conveyor path impassable in the secret.
+
+Nukage Lab - MAP06
+-------------------------------------------------------------------------------
+- Fixed an open sector error near the exit switch.
+- Aligned some construction tape textures.
+- Aligned some green tile textures near and at the exit.
+- Closed off some sewers.
+
+Doomfiend's Blue Domain - MAP10
+-------------------------------------------------------------------------------
+- Fixed an unknown texture error shown in console on a line with index 411.
+- Added a skybox picker at the bottom pit after the long ride down the pillars
+  in the middle of the map.
+- Fixed misaligned skybox.
+- Made the inaccessible sectors hidden from the automap.
+
+Canyon Complex - MAP11
+-------------------------------------------------------------------------------
+- Fixed a bunch of missing texture errors on detail elements at the silver
+  pillar area.
+- Fixed the errors where two sectors were not closed in the area near the 
+  blue lamps and right after the fall to the exit area.
+
+Shadowed Fortress - MAP12
+-------------------------------------------------------------------------------
+- Fixed lots of unclosed sectors in the beginning. These are the ceiling lamp
+  sectors.
+- Fixed missing textures throughout the map.
+- Fixed a detail at the very end, right above the imp.
+
+Tech Facility - MAP13
+-------------------------------------------------------------------------------
+- Fixed a missing texture near the red chamber in the middle of the map.
+- Made the blue pillar switch near the end stay lit when the pillars are up.
+
+Forest Of The Undead - MAP15
+-------------------------------------------------------------------------------
+- Fixed the script dying error that is activated when stepped on the star
+  pillar in the middle of the map.
+
+Keo's Domain - MAP16
+-------------------------------------------------------------------------------
+- Made the switch that raises the instant pillars just after the "KEO" stay
+  lit when the pillars are up.
+- Fixed many missing or misaligned textures.
+
+Hell's Fury - MAP17
+-------------------------------------------------------------------------------
+- Fixed missing textures in the lost souls crack to the left just before the
+  falling floor in the beginning.
+- Fixed the bug where a disconnecting player could kill the script that
+  collapses the floor in the beginning.
+
+Thumper's Perils of a Toxicity - MAP18
+-------------------------------------------------------------------------------
+- Fixed overlapping lines under on the arrow near the "NOOBS" sign.
+- Fixed a ton of missing, though not visible, textures across the map.
+- Fixed missing teleport actions on the left of the starting area.
+- Fixed a missing teleport action in the sector with the flickering side lamps
+  near the start.
+
+Canyons, Caves, and Lava. Oh My! - MAP20
+-------------------------------------------------------------------------------
+- Fixed unclosed sectors in the darkness, second checkpoint, area.
+- Fixed an unclosed sector in the lava in the third checkpoint area.
+- Fixed a bunch of missing textures.
+
+Castle Climb - MAP21
+-------------------------------------------------------------------------------
+- Fixed a detail error that caused missing textures to appear on the ceiling
+  above the circular hole in the area just before the red carpet area.
+
+Escape from Lab 9 - MAP23
+-------------------------------------------------------------------------------
+- Fixed many missing textures across the map.
+- Fixed a misplaced texture on the bottom rim of many chambers.
+- Put the correct warp water texture for the underwater ceiling.
+
+Phendrana - MAP24
+-------------------------------------------------------------------------------
+- Patched the holes in some of the floating snowflakes in the beginning.
+- Fixed the inescapable hole at the first ice hallway that is made by the
+  two adjacent pillars near the exit door.
+
+Unholy Despair - MAP25
+-------------------------------------------------------------------------------
+- Fixed action scripts that can die when a player leaves the game.
+- Fixed the missing execution of a script at the area where the floor 
+  collapses.
+
+Gosimer's Jumpmaze - MAP26
+-------------------------------------------------------------------------------
+- Fixed the bug where the Cyberdemon script at the end would die when a player
+  who activated it disconnects.
+- Fixed some invisible missing texture errors, for the sake of keeping things
+  clean.
+- Closed the opening to the water tunnel at the bottom in the middle of
+  the map.
+- Added teleport actions under the lavafalls near the end of the map.
+- Fixed misaligned textures throughout the map.
+
+Welcome To The Void - MAP27
+-------------------------------------------------------------------------------
+- Made the light switch stay lit when the lights are on.
+- Made the switch that releases the blood and creates a blood pool stay lit
+  when working.
+- Made the switch that raises the pillar right after the floor puzzle stary
+  lit.
+- Made the switch that shows the floor bridges in the second teleport section
+  stay up until the script terminates.
+- Reduced the square puzzle code to under 100 lines. Also fixed the bug where
+  the square puzzle script would die if the player spectated just after
+  completing the puzzle.
+
+Cloud 9 - MAP28
+-------------------------------------------------------------------------------
+- Fixed missing textures throughout the map.
+
+Volcano Hallway - MAP29
+-------------------------------------------------------------------------------
+- Fixed missing texture error found in console.
+
+Fate Of A Platformer - MAP30
+-------------------------------------------------------------------------------
+- Fixed a ton of missing, though not visible, textures across the map.
+- Fixed a misaligned gate texture to the left and right of the elevator near 
+  the start of the map.
+- Fixed the heart killing script, where a spectating played could kill it.
+
+4-Halls Of Death - MAP31
+-------------------------------------------------------------------------------
+- Fixed all the scripts in the map that were broken when the activator of
+  those scripts decided to leave the game.
+- Fixed a scrolling upper texture on the left side of the first chamber, near
+  the first pinky demon.
+- Fixed waterfall textures that were not scrolling at the right area of the
+  first chamber.
+- Fixed some not visible missing textures.
+- Put scroll on water sectors that were missing it in the second chamber.
+
+A Legend To Remember - WIN02
+-------------------------------------------------------------------------------
+- Fixed the script dying when the chosen player spectates and kills the script.

@@ -1,0 +1,118 @@
+//Cloudy
+skybox CLOUDBOX
+{ 
+   CLOUDN 
+   CLOUDE
+   CLOUDS
+   CLOUDW
+   CLOUDT
+   CLOUDB
+} 
+
+skybox SWAMP
+{
+SWAMP_N
+SWAMP_E
+SWAMP_S
+SWAMP_W
+SWAMP_T
+SWAMP_B
+}
+
+// Brass torch
+flickerlight2 BRASSTORCH
+{
+    color 1.0 0.7 0.0
+    size 40
+    secondarySize 48
+    interval 0.1
+    offset 0 32 0
+}
+
+object BrassTorchDoom
+{
+    frame BRTR { light BRASSTORCH }
+}
+
+// Twined torch
+flickerlight2 TWINETORCH
+{
+    color 1.0 0.7 0.0
+    size 46
+    secondarySize 52
+    interval 0.1
+    offset 0 64 0
+}
+
+object ZTwinedTorchDoom
+{
+    frame TWTRA { light TWINETORCH }
+    frame TWTRB { light TWINETORCH }
+    frame TWTRC { light TWINETORCH }
+    frame TWTRD { light TWINETORCH }
+    frame TWTRE { light TWINETORCH }
+    frame TWTRF { light TWINETORCH }
+    frame TWTRG { light TWINETORCH }
+    frame TWTRH { light TWINETORCH }
+}
+
+object ZTwinedTorchUnlitDoom
+{
+    frame TWTRA { light TWINETORCH }
+    frame TWTRB { light TWINETORCH }
+    frame TWTRC { light TWINETORCH }
+    frame TWTRD { light TWINETORCH }
+    frame TWTRE { light TWINETORCH }
+    frame TWTRF { light TWINETORCH }
+    frame TWTRG { light TWINETORCH }
+    frame TWTRH { light TWINETORCH }
+}
+
+flickerlight2 WALLTORCH2
+{
+    color 1.0 0.7 0.0
+    size 24
+    secondarySize 28
+    interval 0.1
+    offset 0 24 0
+}
+
+object ZWallTorchDoom
+{
+    frame WLTRA { light WALLTORCH2 }
+    frame WLTRB { light WALLTORCH2 }
+    frame WLTRC { light WALLTORCH2 }
+    frame WLTRD { light WALLTORCH2 }
+    frame WLTRE { light WALLTORCH2 }
+    frame WLTRF { light WALLTORCH2 }
+    frame WLTRG { light WALLTORCH2 }
+    frame WLTRH { light WALLTORCH2 }
+}
+
+
+object ZWallTorchUnlitDoom
+{
+    frame WLTRA { light WALLTORCH2 }
+    frame WLTRB { light WALLTORCH2 }
+    frame WLTRC { light WALLTORCH2 }
+    frame WLTRD { light WALLTORCH2 }
+    frame WLTRE { light WALLTORCH2 }
+    frame WLTRF { light WALLTORCH2 }
+    frame WLTRG { light WALLTORCH2 }
+    frame WLTRH { light WALLTORCH2 }
+}
+
+// Candles
+flickerlight2 HCANDLES
+{
+    color 1.0 1.0 0.0
+    size 16
+    secondarySize 20
+    interval 0.1
+}
+
+object ZCandleDoom
+{
+    frame CNDL { light HCANDLES }
+}
+

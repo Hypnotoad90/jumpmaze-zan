@@ -1,0 +1,1 @@
+server int jm_util_ishosted = 0;

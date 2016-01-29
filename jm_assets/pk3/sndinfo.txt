@@ -1,0 +1,175 @@
+; Jumpmaze 1
+
+DSBOSPN     DSBOSPN 
+
+DSBOSDTH    DSBOSDTH
+
+DSBOSSIT    DSBOSSIT
+
+DSBOSPIT    DSBOSPIT
+
+$musicvolume D_Cloud9 6.4
+
+$random electric/spawn { electric/spawn1 electric/spawn2 electric/spawn3 }
+electric/spawn1		DSLIGHT1
+electric/spawn2		DSLIGHT2
+electric/spawn3		DSLIGHT3
+electric/hit		DSLGHTHT
+
+DSCYBSIT    DSCYBSIT
+GLASS	    DSGLASS  	//Glass smashing
+TRAIN	    DSTRAIN	//Train running at full speed
+SUBWAY	    DSSUBWAY	//General subway ambience
+MUDKIP	    MUDKIP
+
+$Playersound player male *gibbed "Splat"
+$volume "Falling1" 5.0
+$ambient 53 TRAIN SURROUND CONTINUOUS 0.4
+$ambient 98 TRAIN POINT CONTINUOUS 1.0
+$ambient 146 SUBWAY POINT CONTINUOUS 1.0
+$ambient 147 SUBWAY SURROUND CONTINUOUS 1.0
+
+
+; Jumpmaze 2
+
+JM2HSWIN JM2HSWIN
+JM2HSLOS JM2HSLOS
+world/waterfall WATERFL
+AAAAH FALL1
+YOUTUBE YOUTUBE
+HISSYY dshsysit
+MUDKIP MUDKIP
+MKCDOWN1 MKCDOWN1
+MKCDOWN2 MKCDOWN2
+
+; Platform move
+
+WaterMove               brook1
+SwampBubble             bubblamb
+PlatformStop            dorstp1b
+PlatformStart           dorstp3
+DoorOpen                drltch3a
+DoorCloseLight          dorstp4
+StoneMove               stnmv4
+
+; Switches
+
+Switch2                 swtch6
+RopePull                swtchrp1
+
+; Things
+
+BatScream               bats
+PlayerPoisonCough       pois2
+PoisonShroomDeath       puff1
+ThrustSpikeRaise        spike3
+ThrustSpikeLower        spike2
+Ignite                  torch2
+TreeBreak               treebrk
+PotteryExplode          potbrk1
+FireDemonDeath		fired3
+
+; Ambient
+
+Ambient5		Frogs
+Ambient4		katydid
+Ambient10               drop2
+
+; Terrain
+
+world/WaterSplash       gloop1
+world/SludgeGloop       muck5
+
+; Pig
+
+PigActive1              pigrunt1
+PigActive2              squeal1
+PigPain                 pigpain2
+PigAttack               bite4
+PigDeath                pigdth2
+
+CheckPointAlert		puzslv1
+CompleteAlert		complete
+TeleFogHexen            tport1
+
+$playeralias	player	male	*poison		PlayerPoisonCough
+$playeralias	player	female	*poison		PlayerPoisonCough
+$playeralias	player	other	*poison		PlayerPoisonCough
+
+$AMBIENT 201 Ambient5 POINT RANDOM 10.0 20.0 1.0
+$AMBIENT 200 Ambient4 POINT RANDOM 10.0 20.0 1.0
+$AMBIENT 203 Ambient10 POINT RANDOM 10.0 20.0 1.0
+$AMBIENT 202 WaterMove POINT continuous 1.0
+$AMBIENT 204 SwampBubble POINT continuous 1.0
+
+
+$limit Ingite 0
+
+; airship crap
+
+glass/break		GLASSBRK
+shackdoor		DSSDOOR
+
+$ambient 19 ambientsound19 point 1.0 continuous 60
+ambientsound19			DSAMB19
+
+; map60
+
+PTSNORE PTSNORE
+PTHOHOHO PTHOHOHO
+PTSPLASH PTSPLASH
+PTJINGLE PTJINGLE
+
+; bloody
+
+SCREAM_M SCREAM_M
+SCREAM_F SCREAM_F
+AHH AHH
+SCREAM_4 SCREAM_4
+PTBOUNC1 PTBOUNC1
+PTBOUNC2 PTBOUNC2
+ELECTRIC ELECTRIC
+MADLAUGH MADLAUGH
+GHOSTSCM GHOSTSCM
+
+; core dump
+
+JM2OUCH JM2OUCH
+JM2HONK JM2HONK
+JM2VENT JM2VENT
+JM2GMOTR JM2GMOTR
+
+; JUMPFACT
+
+BOING BOING
+WATERFAL WATERFAL
+WATERN WATERN
+SND_LAVA SND_LAVA
+
+$AMBIENT 151 SND_LAVA POINT CONTINUOUS 1.0
+$AMBIENT 152 WATERFAL POINT CONTINUOUS 1.0
+$AMBIENT 153 WATERN POINT CONTINUOUS 1.0
+
+cma/active LAUGH
+cma/pain PAIN
+cma/death DEATH
+
+chubs/see CHUB1
+chubs/pain CHUB3
+chubs/death CHUB4
+chubs/active CHUB5
+
+; sweetdreams
+
+BOOBY BOOBY
+
+; vivid
+
+EXPLSN EXPLSN1
+BOING BOING_SP
+BOING2 BOING_X
+WIND WIND
+TRAFFIC TRAFFIC
+WATERFLO WATERFLO
+FSTWATER FSTWATER
+ELSPARK ESPARK1

@@ -1,0 +1,60 @@
+WARP2 FLAT WFWATER1
+WARP2 FLAT SLIME1
+WARP2 FLAT SFLR6_4
+WARP2 FLAT SFLR6_1
+WARP2 FLAT N_SKIN03
+
+warp flat TWARP04
+
+Texture DNSCRN27
+    pic DNSCRN28 tics 5
+    pic DNSCRN29 tics 5
+
+texture W_241
+    pic W_242 tics 4
+    pic W_243 tics 4
+    pic W_244 tics 4
+
+texture W_249
+    pic W_249 tics 4
+    pic W_250 tics 4
+    pic W_251 tics 4
+
+switch w_169
+on sound Switch2
+pic w_170 tics 0
+off sound Switch2
+pic w_169 tics 0
+
+switch w_174
+on sound RopePull
+pic w_176 tics 0
+off sound RopePull
+pic w_174 tics 0
+
+cameratexture CAMERA 192 128
+warp2 flat HWICE
+
+
+switch CGSWC01A on sound Switch1 pic CGSWC01B tics 0
+switch CGSWC01B off sound Switch2 pic CGSWC01A tics 0
+
+switch CGSWC02A on sound Switch1 pic CGSWC02B tics 0
+switch CGSWC02B off sound Switch2 pic CGSWC02A tics 0
+
+
+texture bbfall1
+pic bbfall1 tics 8
+pic bbfall2 tics 8
+pic bbfall3 tics 8
+pic bbfall4 tics 8
+
+flat blblood1
+pic blblood1 tics 8
+pic blblood2 tics 8
+pic blblood3 tics 8
+
+flat pinkw1 range pinkw3 tics 8
+texture pinkfa1 range pinkfa4 tics 8
+texture riwasl1 range riwasl3 tics 8
+texture lewasl1 range lewasl3 tics 8

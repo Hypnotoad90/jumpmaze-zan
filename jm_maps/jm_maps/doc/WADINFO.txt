@@ -1,0 +1,107 @@
+******************************************************************
+******************************************************************
+
+Jump Maze,
+A Platformer's Playground.
+
+A Cyber Studios(TM) Production
+Created by James Esquibel. (also known as Cyberimp666)
+
+
+            Date Created :   January 6, 2008
+          Date Completed :   August 10, 2009
+            Map Rotation :   1-32.
+            Mode of play :   Singleplayer, Cooperative, Survival
+Recommended Player Limit :   1-6, any higher will usually result in  
+                             flamefests due to crowded areas.  
+      Mode of Difficulty :   Varied
+
+Very Easy maps -- 3
+     Easy maps -- 7
+ Moderate maps -- 9
+     Hard maps -- 6
+Very Hard maps -- 5
+   Secret maps -- 2
+----------------------
+
+    Total maps -- 32
+
+Welcome to the Jump Maze Information Entry!
+
+/////////////////////////////////////////////////////
+///////---===Map Authors and Information===---///////
+/////////////////////////////////////////////////////
+
+
+	This wad consists of 32 maps. Many thanks to contributers who have helped make
+this WAD what it is now. These maps focus on your skills on jumping through different
+types of jump skills such as bunny hopping and bridge jumping.
+
+
+"Storage Facility" completed by Rabbit Lord
+"Keo's Domain - Jumper's Path" completed by Keo
+"Canyons, Caves, and Lava. Oh My!" completed by Firewolf
+"Volcano Hallway" and "Doomfiend's Blue Domain" completed by Doomfiend
+"Escape From Lab 9" and "Life of a Test Subject" completed by Ruin
+"Gosimer's Jumpmaze" and "4-Halls of Death" completed by Gosimer
+"Cloud 9" completed by Anna
+"Mando's Express" completed by Mandolore
+"Phendrana" completed by Odysseus and Epic
+"Thumper's Perils of a Toxicity" completed by Thumper
+
+----------------------------------
+
+"Tech Facility Music - TechnoOwnage - Jimmy91
+Placement and team timers - Wario
+Mudkip Sprite - FuzzballFox
+Mudkip Texture - Recolored by James
+Heart Sprite - Edited by James
+Thunder spark sprite - Recolored hexen thunder sprite.
+"Mando's Express" - Runaway Train, base layout -- njtrain.wad by Enjay
+NJ Textures - Enjay
+Rope textures - Xaser - Zen Dynamics mod
+Lizzaroro - For creating the M_DOOM image (Jumpmaze logo)
+MxMaster - For Interpics to the maps "Hell's Fury", "Up the Frozen River",
+           and "Doomfiend's Blue Domain".
+The Player - For beta testing, and for the interpic to the map "Welcome to the Void"
+ID Software
+Carnevil and the ST Staff
+
+* DISCLAIMER *
+This PWAD contains select texture(s) and flat(s) that can originally be found
+in GothicDM or Gothic2. Credit and thanks go out to the artist(s) of said
+flat(s) and texture(s) and also to the rest of the Gothic Crew (1997/98). The
+ORIGINAL GothicDM(2).ZIP can be found at CDROM.COM. Each said PKZIP archive
+contains thirty-two professional quality levels and music.
+http://cdrom.com/pub/idgames/levels/doom2/deathmatch/megawads/gothicdm.zip
+http://cdrom.com/pub/idgames/levels/doom2/deathmatch/megawads/gothic2.zip
+----------------------------------
+
+Beta testers and helpers
+
+Fuzzballfox
+Kevin
+Moti
+Proton
+Prey-K
+
+------------------------------------
+Notes
+
+M_Episod is blank and used to remove the "which episode" text
+that conflicted with the episode list.
+M_Skull1 and 2 are the Rocket sprites used in Rocket Jump Extreme.
+IMAGE33 is the doom2 Bossback image created by ID Software.
+
+
+
+
+* Copyright / Permissions *
+
+
+ 	Users of this wad may NOT use these levels as a base to 
+build additional levels unless given permission from original authors.
+You may distribute this wad in any format(Internet, Diskette, CD, etc)
+as long as you include this file intact. 
+You may NOT claim this wad as your own creation.(Stating the obvious to the few)
+

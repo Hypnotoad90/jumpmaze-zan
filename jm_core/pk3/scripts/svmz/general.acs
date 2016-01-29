@@ -1,0 +1,28 @@
+// Basic data used throughout the Survival Maze project.
+
+// The smallest minimum escapee requirement possible.
+#define SVMZ_ESCAPEE_MIN 1
+// Percentage of total players that will be used to determine
+// the minimum escapee requirement.
+#define SVMZ_REQ_PERCENT 0.67
+// The number of players that must be present on map start for 
+// extra time to be added for each extra player.
+#define SVMZ_EXTRA_TIME_PLAYERS_NEEDED 1
+// The number of seconds to add to the timer for each extra player.
+#define SVMZ_EXTRA_PLAYER_TIME 12
+// Minimum start time percentage of the par time.
+#define SVMZ_TIME_MIN_PERCENT 0.15
+
+// Extra times given by the Time Boost items.
+#define SVMZ_TIME_BOOST1 1
+#define SVMZ_TIME_BOOST2 3
+#define SVMZ_TIME_BOOST3 10
+
+#define SVMZ_RESULT_NONE 0
+#define SVMZ_RESULT_LOSE 1
+#define SVMZ_RESULT_WIN 2
+
+// Hud message IDs:
+#define SVMZ_LINE_NOTICE 17200
+#define SVMZ_LINE_STATS 17201
+#define SVMZ_LINE_TIMER 17202

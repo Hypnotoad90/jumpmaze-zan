@@ -1,0 +1,6 @@
+define CLOUDN 256 256
+define CLOUDE 256 256
+define CLOUDS 256 256
+define CLOUDW 256 256
+define CLOUDT 256 256
+define CLOUDB 256 256

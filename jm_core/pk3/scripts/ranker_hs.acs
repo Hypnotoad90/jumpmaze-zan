@@ -1,0 +1,184 @@
+// Helps both the rankers with handling the high score.
+//
+// Author: 
+// Positron (modified by Hypnotoad)
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "jmrhighs"
+#include "zcommon.acs"
+
+#import "constants.acs"
+#import "utility.acs"
+#import "luk.acs"
+
+#libdefine JRH_LINE_NOTICE 27233
+#libdefine JRH_LINE_NOTICE_Y 0.55
+
+#libdefine JRH_TBL_SHOW_TIME 8.0
+
+// High score loading status.
+#libdefine JRH_STATUS_NONE 0
+#libdefine JRH_STATUS_LOADED 1
+#libdefine JRH_STATUS_WORKING 2
+#libdefine JRH_STATUS_ERROR 3
+
+bool isTeamMap;
+
+int _jrh_load_status = JRH_STATUS_NONE;
+// Stores a ranker's high score load script number so other files can wait
+// for the ranker to complete loading the high score.
+int _jrh_script_load = 0;
+// Script of the ranker that shows the high score details table.
+int _jrh_script_details = 0;
+bool _jrh_is_cheater[ MAX_PLAYERS ];
+bool _jrh_manual_disable = false;
+
+// High score finish time. We put some of the finish time handling here
+// because both rankers use the same code.
+int _jrh_tics = VALUE_NONE;
+
+function int JrhGetLoadStatus( void ) {
+   return _jrh_load_status;
+}
+
+function void JrhSetLoadStatus( int status ) {
+   _jrh_load_status = status;
+}
+
+function int JrhGetLoadScript( void ) {
+   return _jrh_script_load;
+}
+
+function void JrhSetLoadScript( int num ) {
+   _jrh_script_load = num;
+}
+
+function void JrhSetDetailsScript( int num ) {
+   _jrh_script_details = num;
+}
+
+function bool JrhIsAutoShowDetailsTable( void ) {
+   return getCvar( "jm_show_rdetails" );
+}
+
+function bool JrhIsCheater( int player ) {
+   return ( _jrh_is_cheater[ player ] || JrhIsCheatsEnabled() );
+}
+
+function void JrhMarkAsCheater( int player ) {
+   _jrh_is_cheater[ player ] = true;
+}
+
+function bool JrhIsCheatsEnabled( void ) {
+   return getCvar( "sv_cheats" );
+}
+
+// Checks whether the high score is enabled. 
+function bool JrhIsEnabled( void ) {
+   return ( is_online() && GetCVar("jm_enabledb") && ( ! _jrh_manual_disable ) ); 
+}
+
+function void JrhDisable( void ) {
+   _jrh_manual_disable = true;
+}
+
+function int JrhGetFinishTime( void ) {
+   return _jrh_tics;
+}
+
+function void JrhSetFinishTime( int tics ) {
+   _jrh_tics = tics;
+}
+
+function bool JrhIsSet( void ) {
+   return _jrh_tics != VALUE_NONE;
+}
+
+function bool JrhIsNew( int newTime ) {
+   return ( _jrh_tics == VALUE_NONE || newTime < _jrh_tics );
+}
+
+function bool JRSIsReallyNew(int newTime) { //added by Hypnotoad, check in case the DB was updated with a new SOLO record
+	int dbtime = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), "jrs_hs_time");
+	return (dbtime == 0 || newTime < dbtime);
+}
+
+function bool JRTIsReallyNew(int newTime) { //added by Hypnotoad, check in case the DB was updated with a new TEAM record
+	int dbtime = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), "jrt_hs_time");
+	return (dbtime == 0 || newTime < dbtime);
+}
+
+function bool JMRIsReallyNew(int newTime) { //added by Hypnotoad, check in case the DB was updated with a new JMRUN record
+	int dbtime = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), "jmr_hs_time");
+	return (dbtime == 0 || newTime < dbtime);
+}
+
+script 999 ( void ) NET {
+   JrhShowDetails( JRH_TBL_SHOW_TIME );
+}
+
+// Shows high score details table.
+function void JrhShowDetails( int showTime ) {
+   setFont( "SMALLFONT" );
+
+   // High score disabled.
+   if ( ! JrhIsEnabled() ) {
+      hudMessage(
+         s : "\ciThe high score is disabled\c-" ;
+         HUDMSG_PLAIN, JRH_LINE_NOTICE, 0, 1.5, JRH_LINE_NOTICE_Y, 3.0
+      );
+   }
+   // High score loading.
+   /*else if ( JrhGetLoadStatus() != JRH_STATUS_LOADED ) {
+      // High score is loading.
+      if ( JrhGetLoadStatus() == JRH_STATUS_WORKING ) {
+         hudMessage( 
+            s : "\ciThe high score is loading. Please retry in a bit\c-" ;
+            HUDMSG_PLAIN, JRH_LINE_NOTICE, 0, 1.5, JRH_LINE_NOTICE_Y, 3.0
+         );
+      }
+      // Error.
+      else {
+         hudMessage( 
+            s : "\ciThe high score failed to load\c-" ;
+            HUDMSG_PLAIN, JRH_LINE_NOTICE, 0, 1.5, JRH_LINE_NOTICE_Y, 3.0
+         );
+      }
+   }*/
+   // No high score set.
+   else if ( ! JrhIsSet() ) {
+      hudMessage( 
+         s : "\ciNo high score is set for the map\c-" ;
+         HUDMSG_PLAIN, JRH_LINE_NOTICE, 0, 1.5, JRH_LINE_NOTICE_Y, 3.0
+      );
+   }
+   // Show.
+   else {
+      acs_ExecuteAlways( _jrh_script_details, 0, showTime );
+   }
+}
+
+//for converting map name to upper case
+
+#define CASE_DIFFERENCE ('A' - 'a')
+int g_toUpperBuffer[1024];
+
+function str toUpper (str s)
+{
+    int i, c;
+
+    for (i = 0; GetChar(s,i) != '\0'; ++i)
+    {
+        c = GetChar (s, i);
+
+        if (c >= 'a' && c <= 'z')
+            g_toUpperBuffer[i] = c + CASE_DIFFERENCE;
+        else
+            g_toUpperBuffer[i] = c;
+    }
+
+    g_toUpperBuffer[i] = '\0';
+    return strparam (a:g_toUpperBuffer);
+}

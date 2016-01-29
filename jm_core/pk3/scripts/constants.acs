@@ -1,0 +1,26 @@
+// Useful named constants.
+//
+// Author: 
+// Positron
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "constant"
+
+#libdefine TICS_IN_SECOND 35
+#libdefine SECONDS_IN_MINUTE 60
+#libdefine MAX_PLAYERS 32
+#libdefine VALUE_NONE -1
+#libdefine TOTAL_MONTHS 12
+
+// Byte angles:
+// Viewing through Doom Builder 2, left is West and right is East.
+#libdefine ANGLE_EAST 0
+#libdefine ANGLE_NORTHEAST 32
+#libdefine ANGLE_NORTH 64
+#libdefine ANGLE_NORTHWEST 96
+#libdefine ANGLE_WEST 128
+#libdefine ANGLE_SOUTHWEST 160
+#libdefine ANGLE_SOUTH 192
+#libdefine ANGLE_SOUTHEAST 224

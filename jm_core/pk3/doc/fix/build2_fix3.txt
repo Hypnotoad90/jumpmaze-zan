@@ -1,0 +1,16 @@
+Jumpmaze 2 v5 - Build 2 - Fix 3
+===============================================================================
+
+- Removed 'has' from some standard notification messages.
+- Fixed the rocket launcher problem on other maps due to some configuration
+  done for MAP54.
+- Fixed the high score code of the solo ranker, where the code executed even 
+  though luk was off.
+- Added some code to disallow players from the high score run if any cheating
+  attempts are detected.
+- Patched the over-the-gate cheating attempt at start of map MAP35.
+- Patched the cheating attempt where players could climb on top of one another
+  to reach the exit on MAP36.
+- Made MAP53 and MAP55 clear the inventory acquired in the previous maps.
+- Fixed the bug that caused players to be invulnerable in later maps after
+  completing MAP52.

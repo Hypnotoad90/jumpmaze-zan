@@ -1,0 +1,159 @@
+// Collection of miscellaneous functions.
+//
+// Author: 
+// Positron
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "utility"
+#include "zcommon.acs"
+
+#import "constants.acs"
+
+// Initialization. This function must be called before the library can be
+// safely used.
+function void UtilityInit( void ) {
+   // Initialization code for is_online().
+   if ( getCVar( "jm_util_ishosted" ) == 0 ) {
+      // Determine whether the start of the game was single player.
+      // If not, then we are hosting.
+      if ( ! is_single_player() ) {
+         setcvar( "jm_util_ishosted", 1);
+      }
+      else {
+         // Since the value 0 is used to determine if the console
+         // variable is empty, we need to use a different value
+         // to indicate when the game is not hosted.
+         setcvar( "jm_util_ishosted", 2 );
+      }
+   }
+}
+
+// States whether the current game is hosted.
+function bool is_online( void ) {
+   return getCVar( "jm_util_ishosted" ) == 1;
+}
+
+// Convert a par time string into seconds.
+function int par_to_seconds( str par ) {
+   int index = strlen( par ) - 1;
+   int character;
+
+   // We are going to parse the par time backwards starting from
+   // the seconds field because it's easier to implement this way.
+
+   // Seconds:
+
+   int base = 1;
+   int seconds = 0;
+
+   while ( index >= 0 ) {
+      character = getChar( par, index );
+      // We end the loop if we stumble upon a minute/second 
+      // field seperator.
+      if ( character == ':' ) {
+         break;
+      }
+
+      if ( character >= '0' && character <= '9' ) {
+         seconds += ( character - '0' ) * base;
+         base *= 10;
+      }
+
+      index -= 1;
+   }
+
+   // Minutes:
+
+   base = 1;
+   int minutes = 0;
+
+   while ( index >= 0 ) {
+      character = getChar( par, index );
+      if ( character >= '0' && character <= '9' ) {
+         minutes += ( character - '0' ) * base;
+         base *= 10;
+      }
+
+      index -= 1;
+   }
+
+   return ( minutes * SECONDS_IN_MINUTE ) + seconds;
+}
+
+function str number_prefix( int number ) {
+   if ( number >= 0 && number <= 9 ) {
+      return "0";
+   }
+
+   return "";
+}
+
+function str ordinal_suffix( int value ) {
+   if ( value == 11 || value == 12 || value == 13 ) {
+      return "th";
+   }
+
+   switch ( value % 10 ) {
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+      case 4: return "th";
+   }
+
+   return "th";
+}
+
+// Handy function to clear messages from the screen.
+function void clear_message( int messageId ) {
+   hudMessage(
+      s : "" ;
+      HUDMSG_PLAIN, messageId, 0, 0, 0, 1.0
+   );
+}
+
+function void clear_message_bold( int messageId ) {
+   hudMessageBold(
+      s : "" ;
+      HUDMSG_PLAIN, messageId, 0, 0, 0, 1.0
+   );
+}
+
+function bool is_survival_mode( void ) {
+   return getCVar( "survival" );
+}
+
+function bool is_single_player( void ) {
+   return ( gameType() == GAME_SINGLE_PLAYER );
+}
+
+// Function to calculate the centiseconds from any remaining tics
+// after subtracting full seconds from the total tics.
+function int cal_cseconds( int remainderTics ) {
+   int centiseconds = 0;
+
+   if ( remainderTics > 0 ) {
+      // TODO: Explain this algorithm better than this comment!
+      int percent = 10000 / ( ( TICS_IN_SECOND * 100 ) / remainderTics );
+      centiseconds = ( 1000 * percent ) / 1000;
+   }
+
+   return centiseconds;
+}
+
+// This function converts a numeric month representation into
+// its corresponding string name.
+
+str util_months_names[ TOTAL_MONTHS ] = {
+   "January", "February", "March", "April", "May", "June", 
+   "July", "August", "September", "October", "November", "December"
+};
+
+function str conv_month_string( int month ) {
+   if ( month >= 1 && month <= TOTAL_MONTHS ) {
+      return util_months_names[ month - 1 ];
+   }
+
+   return "";
+}

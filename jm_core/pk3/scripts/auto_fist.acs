@@ -1,0 +1,34 @@
+// If enabled, automatically switches the player's weapon to the fist upon
+// respawning. This removes the need for manual switching, which can become
+// tedious in maps with death pits.
+//
+// To enable, create a console variable with name "jm_auto_fist" and set its
+// value to 1; to disable, remove above console variable or set its value to 0.
+//
+// Author: 
+// Positron
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "autofist"
+#include "zcommon.acs"
+
+#import "client.acs"
+
+script 995 ENTER {
+   acs_ExecuteAlways( 996, 0 );
+}
+
+script 996 RESPAWN {
+   // Small delay to make sure the clearInventory() script has finished
+   // executing. I don't like this solution but it will do for now.
+   delay( 2 );
+   ClientExecute( playerNumber(), 997 );
+}
+
+script 997 ( void ) {
+   if ( getCVar( "jm_auto_fist" ) ) {
+      consoleCommand( "use fist" );
+   }
+}

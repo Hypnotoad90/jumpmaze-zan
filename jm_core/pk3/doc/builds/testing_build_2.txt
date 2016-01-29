@@ -1,0 +1,53 @@
+BUILD 2 test:
+Performed on: October 27 - present
+===============================================================================
+
+General
+-------------------------------------------------------------------------------
+- luk library sends an extra string segment retrieval query. 
+  [ DONE ]
+- Par time does not show up at times.
+- Survival Maze does not exit when the minimum escapees are recalculated after
+  a player disconnects, even if the recalculation yields the required
+  minimum escapees.
+- High score is not disabled on solo maps when luk is off.
+
+
+MAP38
+-------------------------------------------------------------------------------
+- After finishing, the map start message reappears when luk is disabled.
+
+
+MAP45
+-------------------------------------------------------------------------------
+- The rank script is not activated. 
+  [ GONE FOR NOW ]
+
+
+MAP47
+-------------------------------------------------------------------------------
+- Add z-height to the teleport destinations at the second section with the
+  red pillars.
+  [ DONe ]
+- Add z-height to the teleport destinations at the end.
+  [ DONE ]
+
+
+MAP49
+-------------------------------------------------------------------------------
+- The rank script is not activated. 
+  [ GONE FOR NOW ]
+- Fix the double exit message.
+
+
+MAP55
+-------------------------------------------------------------------------------
+- Needs clear inventory on start up.
+
+
+MAP57
+-------------------------------------------------------------------------------
+- Include all the textures for the animated computer graphic in the 
+  computer room.
+- The computer to the right of the garage gate switch at the end has wrong
+  texture. 

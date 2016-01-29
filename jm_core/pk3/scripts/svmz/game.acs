@@ -1,0 +1,370 @@
+// Survival Maze main game file. Please see the survival_maze.txt readme file
+// to learn more about Survival Maze.
+//
+// Authors: 
+// Positron, Marine (Initial idea)
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "srvlmaze"
+#include "zcommon.acs"
+
+#import "../constants.acs"
+#import "../utility.acs"
+
+// Game files:
+#include "general.acs"
+#include "escapee.acs"
+#include "timer.acs"
+#include "item.acs"
+
+#define SVMZ_STATS_REFRESH_TIME 8  // In seconds.
+
+int _svmz_result = SVMZ_RESULT_NONE;
+int _svmz_min_escapees = SVMZ_ESCAPEE_MIN;
+int _svmz_is_alive[ MAX_PLAYERS ];
+
+function bool SvmzIs( void ) {
+   return is_survival_mode();
+}
+
+// Initializes the server to play Survival Maze.
+function bool SvmzInit( void ) {
+   bool is_restart_needed = false;
+   if (getCVar( "jm_countdown" ) != 0)
+   {
+		consoleCommand( "jm_countdown 0" );
+   }
+   if ( ! getCVar( "survival" ) ) {
+      consoleCommand( "survival true" );
+      is_restart_needed = true;
+   }
+	
+   // I would like to get rid of the countdown entirely but it can't
+   // be done at this time.
+   if ( getCVar( "sv_survivalcountdowntime" ) != 3 ) {
+      consoleCommand( "sv_survivalcountdowntime 3" );
+      is_restart_needed = true;
+   }
+
+   // Survival Maze is a one-life game for now.
+   if ( getCVar( "sv_maxlives" ) != 1 ) {
+      consoleCommand( "sv_maxlives 1" );
+      is_restart_needed = true;
+   }
+
+   // if ( ! getCVar( "sv_disallowsuicide" ) ) {
+   //    consoleCommand( "sv_disallowsuicide true" );
+   // }
+
+   return is_restart_needed;
+}
+
+// Main game script.
+script 900 ( int par ) {
+   // Bail out if we don't have a single player playing, like on
+   // an empty server.
+   int num_players = playerCount();
+   if ( num_players == 0 ) {
+      terminate;
+   }
+
+   // Determine minimum escapee requirement.
+   SvmzChooseMinEscapees();
+
+   // Display escapee statistics.
+   acs_Execute( 901, 0 );
+
+   // Initialize timer.
+   SvmzTimerInit( SvmzCalcStartTime( par, num_players ) );
+   SvmzTimerDisplay();
+
+   bool is_won = false;
+   int tics_passed = 0;
+
+   // Main game loop.
+   while ( true ) {
+      // Wining condition.
+      if ( SvmzEscapeeGetCount() == SvmzGetMinEscapees() ) {
+         is_won = true;
+         break;
+      }
+
+      // Minimum-alive-players-needed check.
+      // We need two conditions here. The first condition checks the actual
+      // count of players currently alive. This is needed to prevent the game
+      // ending because of players getting telefragged at map start. The
+      // second condition is our own tracking of alive players. We adjust
+      // that count manually so we have a chance to readjust the minimum
+      // escapee requirement when an alive player disconnects. If we solely
+      // rely on the first condition, a race condition is created: the
+      // DISCONNECT script might not finish readjusting the minimum 
+      // requirement before this condition is checked.
+      if ( playerCount() < SvmzGetMinEscapees() &&
+         SvmzGetNumAlive() < SvmzGetMinEscapees() ) {
+         // Print a message to all players indicating the failure.
+         if ( num_players >= 2 ) {
+            SvmzDisplayMinEscapeesFail();
+         }
+
+         break;
+      }
+
+      // Update timer if we have time left.
+      if ( SvmzTimerGetTimeLeft() > 0 ) {
+         if ( tics_passed == TICS_IN_SECOND ) {
+            tics_passed = 0;
+
+            SvmzTimerDecrease();
+            SvmzTimerDisplay();
+         }
+
+         tics_passed += 1;
+      }
+      // Otherwise, bail out.
+      else {
+         SvmzTimerDisplay();
+         break;
+      }
+
+      // Loop every tic so we can check the above conditions quickly.
+      delay( 1 );
+   }
+
+   // Win.
+   if ( is_won ) {
+      SvmzSetResult( SVMZ_RESULT_WIN );
+      acs_Execute( 908, 0 );
+   }
+   // Lose.
+   else {
+      SvmzSetResult( SVMZ_RESULT_LOSE );
+
+      // If all players spectated or disconnected, remove the statistics
+      // display script.
+      if ( playerCount() == 0 ) {
+         acs_Terminate( 901, 0 );
+
+         clear_message_bold( SVMZ_LINE_STATS );
+         clear_message_bold( SVMZ_LINE_TIMER );
+      }
+   }
+}
+
+// Calculates initial time.
+function int SvmzCalcStartTime( str par, int totalPlayers ) {
+   // The starting time is based on the par time of the map.
+   int par_in_seconds = par_to_seconds( par );
+
+   // To increase the challenge, we reduce the starting time by the total
+   // number of seconds we can get from collecting all of the
+   // Time Boost items to.
+   int total_boost_time = 
+      thingCountName( "SvmzTimeBoost1", 0 ) * SVMZ_TIME_BOOST1 +
+      thingCountName( "SvmzTimeBoost2", 0 ) * SVMZ_TIME_BOOST2 +
+      thingCountName( "SvmzTimeBoost3", 0 ) * SVMZ_TIME_BOOST3;
+   int start_time = par_in_seconds - total_boost_time / 2;
+
+   // Make sure we have a decent amount of time.
+   int min_time = ( par_in_seconds * SVMZ_TIME_MIN_PERCENT ) >> 16;
+   if ( start_time < min_time ) {
+      start_time = min_time;
+   }
+
+   // Add extra time for each extra player.
+   int extra_players = totalPlayers - SVMZ_EXTRA_TIME_PLAYERS_NEEDED;
+   if ( extra_players > 0 ) {
+      start_time += extra_players * SVMZ_EXTRA_PLAYER_TIME;
+   }
+
+   return start_time;
+}
+
+// Selects and sets the minimum escapee requirement.
+function void SvmzChooseMinEscapees( void ) {
+   int num_escapees = 0;
+   int num_players = playerCount();
+
+   switch ( num_players ) {
+      case 0: break;
+      case 1: num_escapees = 1; break;
+      case 2: num_escapees = 2; break;
+      default:
+         num_escapees = ( num_players * SVMZ_REQ_PERCENT ) >> 16;
+         break;
+   }
+
+   // Take any Escapee Reduce items into account.
+   num_escapees -= SvmzItemGetNumImpunityPicked();
+
+   SvmzSetMinEscapees( num_escapees );
+}
+
+function void SvmzSetMinEscapees( int numEscapees ) {
+   if ( numEscapees >= SVMZ_ESCAPEE_MIN ) {
+      _svmz_min_escapees = numEscapees;
+   }
+}
+
+// Returns minimum escapee requirement.
+function int SvmzGetMinEscapees( void ) {
+   return _svmz_min_escapees;
+}
+
+// Escapee statistics message display script.
+script 901 ( void ) {
+   while ( true ) {
+      SvmzDisplayEscapeeStats();
+      delay( TICS_IN_SECOND * SVMZ_STATS_REFRESH_TIME );
+   }
+}
+
+script 902 ENTER {
+   if ( ! SvmzIs() ) {
+      terminate;
+   }
+
+   SvmzSetIsAlive( playerNumber(), true );
+
+   // Wait for the main game script to finish.
+   scriptWait( 900 );
+
+   // Kill player if game was lost.
+   if ( SvmzGetResult() == SVMZ_RESULT_LOSE ) {
+      damageThing( 1000 );
+   }
+}
+
+script 903 DEATH {
+   if ( ! SvmzIs() ) {
+      terminate;
+   }
+
+   SvmzSetIsAlive( playerNumber(), false );
+}
+
+script 904 RESPAWN {
+   if ( ! SvmzIs() ) {
+      terminate;
+   }
+
+   SvmzSetIsAlive( playerNumber(), true );
+}
+
+// If a player disconnects while a game is running, adjust the minimum escapee
+// requirement based on the existing players count. It's either I do this or I
+// kill all players and end the round because there won't be enough remaining
+// players to complete the original requirement.
+script 905 ( int player ) DISCONNECT {
+   // Only proceed if the game is not finished yet.
+   if ( ! SvmzIs() || SvmzGetResult() != SVMZ_RESULT_NONE ) {
+      terminate;
+   }
+
+   // If the player was alive when they disconnected, readjust the minimum
+   // escapee requirement.
+   if ( SvmzIsAlive( player ) ) {
+      SvmzChooseMinEscapees();
+      SvmzSetIsAlive( player, false );
+   }
+
+   if ( SvmzEscapeeIs( player ) ) {
+      SvmzEscapeeRemove( player );
+   }
+
+   SvmzDisplayEscapeeStats();
+}
+
+function void SvmzSetResult( int result ) {
+   _svmz_result = result;
+}
+
+function bool SvmzGetResult( void ) {
+   return _svmz_result;
+}
+
+// Escape line function, where a player is registered as escaped.
+function void SvmzMakeEscapee( void ) {
+   int player = playerNumber();
+
+   if ( ! SvmzEscapeeIs( player ) ) {
+      SvmzEscapeeMake( player );
+      SvmzDisplayEscapeeStats();
+   }
+}
+
+// Exit validation.
+function bool SvmzValidateExit( void ) {
+   bool to_exit = true;
+
+   if ( SvmzGetResult() != SVMZ_RESULT_WIN ) {
+      to_exit = false;
+
+      setFont( "SMALLFONT" );
+      hudMessage(
+         s : "\ciNot enough escapees are present to exit\c-" ;
+         HUDMSG_FADEOUT, SVMZ_LINE_NOTICE, 0, 1.5, 0.15, 3.0, 0.6
+      );
+   }
+
+   return to_exit;
+}
+
+function void SvmzDisplayMinEscapeesFail( void ) {
+   setFont( "SMALLFONT" );
+   hudMessageBold(
+      s : "\cgMinimum players failed to escape the maze\c-" ;
+      HUDMSG_FADEOUT | HUDMSG_LOG, SVMZ_LINE_NOTICE, 
+      0, 1.5, 0.15, 5.0, 0.6
+   );
+}
+
+function void SvmzDisplayEscapeeStats( void ) {
+   int min_escapees = SvmzGetMinEscapees();
+   int num_escapees = SvmzEscapeeGetCount();
+
+   str message_color = "\cc";
+   str count_color = "\ck";
+   str min_color = "\ci";
+   str exit_message = "";
+
+   // Change the color of the statistic to green to indicate success.
+   if ( num_escapees >= min_escapees ) {
+      message_color = "\cd";
+      count_color = "\cq";
+      min_color = "\cq";
+      exit_message = "\n\ckExit enabled";
+   }
+
+   setFont( "SMALLFONT" );
+   hudMessageBold(
+      s : message_color, s : "Escapees: ", 
+      s : count_color, i : num_escapees, 
+      s : message_color, s : " / ",
+      s : min_color, i : min_escapees,
+      s : exit_message,
+      s : "\c-" ;
+      HUDMSG_PLAIN, SVMZ_LINE_STATS, 0, 1.5, 0.05, 0
+   );
+}
+
+function void SvmzSetIsAlive( int player, bool isAlive ) {
+   _svmz_is_alive[ player ] = isAlive;
+}
+
+function bool SvmzIsAlive( int player ) {
+   return _svmz_is_alive[ player ];
+}
+
+function int SvmzGetNumAlive( void ) {
+   int num_alive = 0;
+
+   for ( int num = 0; num < MAX_PLAYERS; num += 1 ) {
+      if ( _svmz_is_alive[ num ] ) {
+         num_alive += 1;
+      }
+   }
+
+   return num_alive;
+}

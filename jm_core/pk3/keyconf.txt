@@ -1,0 +1,17 @@
+clearplayerclasses
+// Jumpmaze specific key configuration.
+addkeysection "Jumpmaze" jumpmazeConf
+
+// Map record details.
+addmenukey "Record Details" "puke 999"
+
+addmenukey "Top 10" "puke 998"
+
+//jumpman
+addplayerclass "DoomPlayerJumper"
+addplayerclass "JumpingDoomguy"
+
+//airship crap
+weaponsection "The Crank Launcher"
+
+setslot 9 "Crank Launcher"

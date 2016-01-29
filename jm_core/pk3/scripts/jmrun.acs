@@ -1,0 +1,1006 @@
+// Zanrun style scripts for Jumpmaze
+// 
+//
+// By Hypnotoad
+// Based on scripts by Positron
+// 
+// 
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "jmrun"
+#include "zcommon.acs"
+
+#import "constants.acs"
+#import "utility.acs"
+#import "timer.acs"
+#import "luk.acs" 
+
+#import "ranker_hs.acs" 
+#import "who_exited.acs"
+
+// Start script number.
+#libdefine JMR_SCRIPT_START 920
+
+// Time to wait in tics before displaying the updated table after a player
+// crosses the finish line.
+#define JMR_SHOW_DELAY_TIME 16
+#define JMR_INDI_TIME_LINEID 732
+
+// Time, in seconds, to wait before automatically showing record details.
+#define JMR_AUTO_SHOW_DELAY 3
+#define JMR_RANK_LIMIT_MIN 3
+#define JMR_RANK_LIMIT_MAX 5
+
+// This variable will store the amount of players to dispaly.
+int _jmr_show_limit = JMR_RANK_LIMIT_MAX;
+// Rank number colors.
+int _jmr_rank_colors[ JMR_RANK_LIMIT_MAX ] = {
+   "f", // Gold
+   "j", // Silver
+   "e", // Brown
+   "n", // Light blue
+   "t", // Purple
+};
+
+// The refresh time is the time in seconds it takes to re-display the table.
+// This is needed to reflect name changes if people who are ranked change 
+// their name. We set it to eight seconds to preserve bandwidth.
+#define JMR_TBL_REFRESH_TIME 8
+#define JMR_TBL_X 250
+#define JMR_TBL_Y 45100
+#define JMR_TBL_LINE_HEIGHT 2900
+// The offset is used to prevent ID conflicts in HudMessages from
+// other scripts.
+#define JMR_TBL_LINEID_OFFSET 733
+
+// Ranked player properties:
+#define JMR_IDX_NUM 0
+#define JMR_IDX_MINUTES 1
+#define JMR_IDX_SECONDS 2
+#define JMR_IDX_CENTISECONDS 3
+
+#define TICRATE 35
+
+#define F_TIME 0
+#define F_NAME 1
+
+#define MAXIDS 4000
+
+#define PLAYERMAX 64
+
+int finaltimes[64][2];
+int alltimes[MAXIDS][2];
+
+// Holds players that completed map.
+bool _jmr_finished[ MAX_PLAYERS ]; 
+// Contains information about a player's finish time.
+int _jmr_table[ JMR_RANK_LIMIT_MAX ][ 4 ];
+int _jmr_table_size = 0;
+
+//jmr starting tic
+int p_starttic[64];
+int p_started[64];
+
+int p_startticC[64];
+int p_startedC[64];
+
+//top times
+int p_top_time[64];
+
+bool roundover;
+
+//timer (shown clientside)
+function void now_time(int p_time) {
+    int mins = to_mins(p_time);
+    int secs = to_secs(p_time);
+    int mils = to_mils(p_time);
+
+    // Any minutes?
+    if (mins == 0) {
+        if (mils < 10) {
+            hudmessage(s:"This Run:\n\cd",d:secs,s:"\cg.00",d:mils;
+                HUDMSG_PLAIN, JMR_TBL_LINEID_OFFSET - 40, CR_WHITE, JMR_TBL_X, 0.6 - JMR_TBL_LINE_HEIGHT, 0);
+        } else if (mils < 100) {
+            hudmessage(s:"This Run:\n\cd",d:secs,s:"\cg.0",d:mils;
+                HUDMSG_PLAIN, JMR_TBL_LINEID_OFFSET - 40, CR_WHITE, JMR_TBL_X, 0.6 - JMR_TBL_LINE_HEIGHT, 0);
+        } else {
+            hudmessage(s:"This Run:\n\cd",d:secs,s:"\cg.",d:mils;
+                HUDMSG_PLAIN, JMR_TBL_LINEID_OFFSET - 40, CR_WHITE, JMR_TBL_X, 0.6 - JMR_TBL_LINE_HEIGHT, 0);
+        }
+    } else {
+        if (secs < 10) {
+            if (mils < 10) {
+                hudmessage(s:"This Run:\n",d:mins,s:"\cd:0",d:secs,s:"\cg.00",d:mils;
+                    HUDMSG_PLAIN, JMR_TBL_LINEID_OFFSET - 40, CR_WHITE, JMR_TBL_X, 0.6 - JMR_TBL_LINE_HEIGHT, 0);
+            } else if (mils < 100) {
+                hudmessage(s:"This Run:\n",d:mins,s:"\cd:0",d:secs,s:"\cg.0",d:mils;
+                    HUDMSG_PLAIN, JMR_TBL_LINEID_OFFSET - 40, CR_WHITE, JMR_TBL_X, 0.6 - JMR_TBL_LINE_HEIGHT, 0);
+            } else {
+                hudmessage(s:"This Run:\n",d:mins,s:"\cd:0",d:secs,s:"\cg.",d:mils;
+                    HUDMSG_PLAIN, JMR_TBL_LINEID_OFFSET - 40, CR_WHITE, JMR_TBL_X, 0.6 - JMR_TBL_LINE_HEIGHT, 0);
+            }
+        } else {
+            if (mils < 10) {
+                hudmessage(s:"This Run:\n",d:mins,s:"\cd:",d:secs,s:"\cg.00",d:mils;
+                    HUDMSG_PLAIN, JMR_TBL_LINEID_OFFSET - 40, CR_WHITE, JMR_TBL_X, 0.6 - JMR_TBL_LINE_HEIGHT, 0);
+            } else if (mils < 100) {
+                hudmessage(s:"This Run:\n",d:mins,s:"\cd:",d:secs,s:"\cg.0",d:mils;
+                    HUDMSG_PLAIN, JMR_TBL_LINEID_OFFSET - 40, CR_WHITE, JMR_TBL_X, 0.6 - JMR_TBL_LINE_HEIGHT, 0);
+            } else {
+                hudmessage(s:"This Run:\n",d:mins,s:"\cd:",d:secs,s:"\cg.",d:mils;
+                    HUDMSG_PLAIN, JMR_TBL_LINEID_OFFSET - 40, CR_WHITE, JMR_TBL_X, 0.6 - JMR_TBL_LINE_HEIGHT, 0);
+            }
+        }
+    }
+}
+
+function void best_time(int p_time) {
+    int mins = to_mins(p_time);
+    int secs = to_secs(p_time);
+    int mils = to_mils(p_time);
+
+    // Any minutes?
+    if (mins == 0) {
+        if (mils < 10) {
+            hudmessage(s:"Your Best This Session:\n",d:secs,s:".00",d:mils;
+                HUDMSG_PLAIN, 300, CR_WHITE, JMR_TBL_X, 0.5, 0);
+        } else if (mils < 100) {
+            hudmessage(s:"Your Best This Session:\n",d:secs,s:".0",d:mils;
+                HUDMSG_PLAIN, 300, CR_WHITE, JMR_TBL_X, 0.5, 0);
+        } else {
+            hudmessage(s:"Your Best This Session:\n",d:secs,s:".",d:mils;
+                HUDMSG_PLAIN, 300, CR_WHITE, JMR_TBL_X, 0.5, 0);
+        }
+    } else {
+        if (secs < 10) {
+            if (mils < 10) {
+                hudmessage(s:"Your Best This Session:\n",d:mins,s:":0",d:secs,s:".00",d:mils;
+                    HUDMSG_PLAIN, 300, CR_WHITE, JMR_TBL_X, 0.5, 0);
+            } else if (mils < 100) {
+                hudmessage(s:"Your Best This Session:\n",d:mins,s:":0",d:secs,s:".0",d:mils;
+                    HUDMSG_PLAIN, 300, CR_WHITE, JMR_TBL_X, 0.5, 0);
+            } else {
+                hudmessage(s:"Your Best This Session:\n",d:mins,s:":0",d:secs,s:".",d:mils;
+                    HUDMSG_PLAIN, 300, CR_WHITE, JMR_TBL_X, 0.5, 0);
+            }
+        } else {
+            if (mils < 10) {
+                hudmessage(s:"Your Best This Session:\n",d:mins,s:":",d:secs,s:".00",d:mils;
+                    HUDMSG_PLAIN, 300, CR_WHITE, JMR_TBL_X, 0.5, 0);
+            } else if (mils < 100) {
+                hudmessage(s:"Your Best This Session:\n",d:mins,s:":",d:secs,s:".0",d:mils;
+                    HUDMSG_PLAIN, 300, CR_WHITE, JMR_TBL_X, 0.5, 0);
+            } else {
+                hudmessage(s:"Your Best This Session:\n",d:mins,s:":",d:secs,s:".",d:mils;
+                    HUDMSG_PLAIN, 300, CR_WHITE, JMR_TBL_X, 0.5, 0);
+            }
+        }
+    }
+}
+
+function int to_mins(int tics) {
+    int mins = tics / (TICRATE * 60);
+    return mins;
+}
+
+function int to_secs(int tics) {
+    int secs = (tics / TICRATE) % 60;
+    return secs;
+}
+
+function int to_mils(int tics) {
+    int mils = tics % TICRATE;
+    mils = ((mils * 1000) / TICRATE);
+    return mils;
+}
+
+// Start.
+script JMR_SCRIPT_START ( void ) {
+   isTeamMap = false;
+   /*
+   acs_terminate(851);
+   acs_terminate(852);
+   acs_terminate(853);
+   acs_terminate(854);
+   setPlayerProperty( 1, 0, PROP_TOTALLYFROZEN );*/
+   if ( is_online() ) { //checks if the game is being hosted, found in utility.acs
+      // Load high score.
+      if ( JrhIsEnabled() ) { //checks if hosted and not manually disabled, located in ranker_hs. 
+         JrhSetLoadScript( 925 ); //sets _jrh_script_load value, located in ranker_hs
+         JrhSetDetailsScript( 926 ); //sets _jrh_script_details value, located in ranker_hs, value is used in JrhShowDetails
+         acs_ExecuteWait( 925, 0 ); //executes high score loading script,
+      }
+		delay(16);
+		JMRShowTable();
+      // Run table refresh script.
+      //acs_Execute( blah, 0 ); //right below!
+   }
+}
+
+function void JMRStartTimer (int timelimit)
+{
+	acs_execute(909,0,timelimit);
+}
+
+script 909 (int timelimit)
+{
+	int seclimit = timelimit*60;
+	while( seclimit > 0)
+	{
+		TimerShowTime(seclimit);
+		delay(35);
+		seclimit--;
+	}
+	acs_execute(921,0);
+}
+
+function void JMRFinish( void ) { //finish line
+	if (p_starttic[playernumber()] != 0 && p_started[playernumber()] == 1)
+	{
+		int finish_time = Timer() - p_starttic[playernumber()];
+		int player = playerNumber();
+
+		if ( player >= 0  ) { 
+		JMRRemember( player, true ); 
+		if (p_top_time[playernumber()] == 0 || finish_time <= p_top_time[playernumber()])
+		{
+			p_top_time[playernumber()] = finish_time;
+			best_time(p_top_time[playernumber()]);
+		}
+			// In multiplayer, register player in table.
+			if ( is_online() ) { //check if online etc
+				acs_ExecuteAlways( 922, 0, player, finish_time ); //right below
+				checkpbJMR (finish_time, playerNumber());
+			}
+		// In single player, show individual time.
+			else {
+				JMRShowIndividualTime( finish_time ); //?
+			}	
+		}
+		p_starttic[playernumber()] = 0;
+		p_started[playernumber()] = 0;
+		acs_execute(928,0,playernumber(), finish_time);
+	}
+}
+
+function bool JMRIsFinished( int player ) {
+   return _jmr_finished[ player ];
+}
+
+function void JMRRemember( int player, bool toRemember ) {
+   _jmr_finished[ player ] = toRemember;
+}
+
+// Adds player to table.
+script 922 ( int player, int playerTime ) {
+         if ( JrhIsEnabled() && JrhIsNew( playerTime ) ) { //JrhIsNew --> checks whether the the record has been set and if the time is lower than _jrh_tics, located in ranker_hs, 
+            // Make sure no cheating has occured.
+			if (PlayerIsLoggedIn(player) == 0)
+			{
+				print(s:"\cgPlease login to set records on zanrun maps!");
+			}
+			else if (!JMRIsReallyNew(playerTime)) //make sure another server didn't update the record with a new high score
+				print(s:"Record not saved: faster time found on database (probably from another server)");
+            else if ( ! JrhIsCheater( player ) ) { //value probably set via map script
+               JMRHsSave( player, playerTime ); 
+               JMRHsAnnounceNew(); //shows message and plays sound
+               // Reload high score
+               acs_ExecuteWait( 925, 0 ); 
+            }
+            // Otherwise, tell everybody a nice message.
+            else {
+               JMRHsAnnounceCheat(); 
+            }
+         }
+      //}
+   
+
+   // Display.
+
+   // Small delay to replicate old script's delay effect.
+   delay( 16 );
+
+   // Show updated table if modified and show-limit isn't passed.
+   //if ( is_added && _jmr_table_size <= _jmr_show_limit ) {
+      JMRShowTable();
+   //}
+   // Otherwise, show individual time for player.
+   //else {
+      //JMRShowIndividualTime( playerTime );
+   //}
+}
+
+function int JMRGetPosition( int player ) {
+   for ( int pos = 0; pos < _jmr_table_size; pos += 1 ) {
+      if ( _jmr_table[ pos ][ JMR_IDX_NUM ] == player ) {
+         return pos;
+      }
+   }
+
+   return VALUE_NONE;
+}
+
+script 923 ( int player ) DISCONNECT {
+   if ( JMRIsFinished( player ) ) {
+      JMRRemember( player, false ); //forget playernum for hs table
+	  p_starttic[player] = 0;
+      //JMRRemoveFromTable( player );
+      //delay( JMR_SHOW_DELAY_TIME );
+      //JMRShowTable();
+   }
+}
+
+script 924 DEATH
+{
+	p_starttic[playernumber()] = 0;
+}
+
+function void JMRStartLine( int player )
+{
+	if (p_starttic[playernumber()] != 0)
+		return;
+	p_starttic[playernumber()] = Timer();
+	p_started[playernumber()] = 1;
+	acs_execute(927,0,playernumber());
+}
+
+script 927 (int player) CLIENTSIDE
+{
+    if (consoleplayernumber() != playernumber())
+        terminate;
+    p_startticC[player] = Timer();
+    p_startedC[player] = 1;
+    while(p_startedC[player] == 1)
+    {
+        now_time(timer() - p_startticC[player]);
+        delay(1);
+    }
+}
+
+script 928 (int player, int time) CLIENTSIDE
+{
+    if (consoleplayernumber() != playernumber())
+        terminate;
+    p_startticC[player] = 0;
+    p_startedC[player] = 0;
+	now_time(time);
+}
+
+function void JMRExitLine (void) //leave race
+{
+	if (p_started[playernumber()] != 0)
+	{
+		p_starttic[playernumber()] = 0;
+        p_started[playernumber()] = 0;
+		acs_execute(928,0,playernumber(),0);
+	}
+}
+
+function void JMRRemoveFromTable( int player ) {
+   int pos = JMRGetPosition( player );
+   if ( pos != VALUE_NONE ) {
+      // We indicate that a player has disconnected by
+      // removing the player's number with a predefined value.
+      _jmr_table[ pos ][ JMR_IDX_NUM ] = VALUE_NONE;
+   }
+}
+
+function void JMRShowTable( void ) {
+   // We need to set the font to small. Otherwise, the font will
+   // vary at different times due to the jumpmaze timer.
+   setFont( "SMALLFONT" );
+
+   // Determine the starting height of the table based on the current
+   // rank limit.
+   int line_height = JMR_TBL_Y + 
+      ( ( JMR_RANK_LIMIT_MAX - _jmr_show_limit ) * JMR_TBL_LINE_HEIGHT );
+   int line_id = JMR_TBL_LINEID_OFFSET;
+
+   // We only display the high score if we have one.
+   if ( JrhIsSet() ) { //check high score is set
+      int record_line_height = line_height - JMR_TBL_LINE_HEIGHT;
+      JMRHsShowFinishTime( line_id, record_line_height ); //uses variables from ranker_hs
+      line_id += 1;
+   }
+	/*
+   // Determine the amount of lines to display.
+   int places_to_display = _jmr_table_size;
+   if ( places_to_display > _jmr_show_limit ) {
+      places_to_display = _jmr_show_limit;
+   }
+
+   for ( int place = 0; place < places_to_display; place += 1 ) {
+      int player = _jmr_table[ place ][ JMR_IDX_NUM ];
+      str suffix = ordinal_suffix( place + 1 );
+
+      int minutes = _jmr_table[ place ][ JMR_IDX_MINUTES ];
+      str minutes_p = number_prefix( minutes );
+      int seconds = _jmr_table[ place ][ JMR_IDX_SECONDS ];
+      str seconds_p = number_prefix( seconds );
+      int centiseconds = _jmr_table[ place ][ JMR_IDX_CENTISECONDS ];
+      str centiseconds_p = number_prefix( centiseconds );
+
+      // Present players:
+      if ( player != VALUE_NONE ) {
+         hudMessageBold(
+            s : "\c", s : _jmr_rank_colors[ place ],
+            i : place + 1, s : suffix, s : ":\c- ",
+            n : player + 1,
+            s : "\n\ciTime: \cb",
+            s : minutes_p, i : minutes, 
+            s : ":",
+            s : seconds_p, i : seconds,
+            s : "\cs.",
+            s : centiseconds_p, i : centiseconds,
+            s : "\c-" ;
+            HUDMSG_PLAIN, line_id, 0, JMR_TBL_X, line_height, 0
+         );
+      }
+      // Disconnected players:
+      else {
+         hudMessageBold( 
+            s : "\c", s : _jmr_rank_colors[ place ],
+            i : place + 1, s : suffix, 
+            s : ": \cgDisconnected\c-\n",
+            s : "\ciTime: \cb",
+            s : minutes_p, i : minutes,
+            s : ":",
+            s : seconds_p, i : seconds,
+            s : "\cs.",
+            s : centiseconds_p, i : centiseconds,
+            s : "\c-" ;
+            HUDMSG_PLAIN, line_id, 0, JMR_TBL_X, line_height, 0
+         );
+      }
+
+      line_height += JMR_TBL_LINE_HEIGHT;
+      line_id += 1;
+   }*/
+}
+
+function void JMRClearTable( void ) {
+   int lines_to_clear = _jmr_show_limit;
+
+   // Clear the extra record time line.
+   if ( JrhIsSet() ) {
+      lines_to_clear += 1;
+   }
+
+   for ( int line = 0; line < lines_to_clear; line += 1 ) {
+      // We clear the previous rendition by using the same
+      // message ID, but this time, using a blank string.
+      clear_message_bold( JMR_TBL_LINEID_OFFSET + line );
+   }
+}
+
+function void JMRShowIndividualTime( int timeInTics ) {
+   setFont( "SMALLFONT" );
+
+   // Calculate the individual time to display:
+   int time = timeInTics / TICS_IN_SECOND;
+   int minutes = time / SECONDS_IN_MINUTE;
+   int seconds = time % SECONDS_IN_MINUTE;
+   int centiseconds = cal_cseconds( timeInTics % TICS_IN_SECOND );
+
+   hudMessage(
+      s : "\crTime: \cc", 
+      s : number_prefix( minutes ), i : minutes, 
+      s : ":", 
+      s : number_prefix( seconds ), i : seconds,
+      s : "\cu.",
+      s : "", s : number_prefix( centiseconds ), i : centiseconds, 
+      s : "\c-" ;
+      HUDMSG_PLAIN, JMR_INDI_TIME_LINEID, 0, JMR_TBL_X, 
+      JMR_TBL_Y + ( JMR_TBL_LINE_HEIGHT * JMR_RANK_LIMIT_MAX ), 0
+   );
+}
+
+function void JMRClearIndividualTime( void ) {
+   clear_message( JMR_INDI_TIME_LINEID ); 
+}
+
+// High Score (DB-specific functions and scripts)
+// ---------------------------------------------------------------------------
+
+#define JMR_HS_TBL_X -1.75
+#define JMR_HS_TBL_Y 0.7
+#define JMR_HS_TBL_LINE JRH_LINE_NOTICE
+#define JMR_HS_TBL_LINE_HEIGHT 1000
+#define JMR_HS_TBL_SHOW_TIME 8.0
+
+// luk database record keys.
+str JMR_HS_RTIME = "JMR_hs_time"; 
+str JMR_HS_RAUTHOR = "JMR_hs_author";
+str JMR_HS_RDATE = "JMR_hs_rdate";
+
+// High score author.
+int _jmr_hs_author[100];
+
+// High score finish time.
+int _jmr_hs_minutes = VALUE_NONE;
+int _jmr_hs_seconds = VALUE_NONE;
+int _jmr_hs_centiseconds = VALUE_NONE;
+
+// High score date. 
+int _jmr_hs_year = 0;
+int _jmr_hs_month = 0;
+int _jmr_hs_day = 0;
+
+// High score loading. LUK INTERFACING HERE
+script 925 ( void ) {
+   JMRHsSetFinishTime(GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RTIME)); //REPLACED WITH DB
+   JMRHsSetAuthor(); 
+	int packed_data = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RDATE);
+	
+	if (packed_data != 0)
+	{
+		// Packed date is of this format: YYYYMMDD
+		_jmr_hs_day = packed_data % 100;
+		packed_data /= 100;
+		_jmr_hs_month = packed_data % 100;
+		packed_data /= 100;
+		_jmr_hs_year = packed_data;
+	}
+}
+
+// Sets the finish time, in tics, of the high score and converts it into more
+// familiar units like minutes and seconds.
+function void JMRHsSetFinishTime( int tics ) {
+   if ( tics > 0 ) {
+      int seconds = tics / TICS_IN_SECOND;
+
+      _jmr_hs_minutes = seconds / SECONDS_IN_MINUTE;
+      _jmr_hs_seconds = seconds % SECONDS_IN_MINUTE;
+      _jmr_hs_centiseconds = cal_cseconds( tics % TICS_IN_SECOND );
+
+      JrhSetFinishTime( tics );
+   }
+}
+
+// Sets the author of the high score
+function void JMRHsSetAuthor( void ) {
+	str authstring = GetDBEntryString(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RAUTHOR);
+    for ( int i = 0; i < StrLen(authstring); ++i ) { _jmr_hs_author[ i ] = GetChar( authstring, i ); }
+	_jmr_hs_author[ StrLen(authstring) ] = 0;
+}
+
+// Saves high score and all of its details in permanent storage.
+function void JMRHsSave( int player, int tics ) { 
+	BeginDBTransaction();
+   SetDBEntryString(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RAUTHOR, StrParam(n:player + 1));
+   //SetDBEntryString("test1", "test1", "test1");
+   SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RTIME, tics);
+	if (getcvar("jm_date") != 0)
+	{
+		SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RDATE, getcvar("jm_date"));
+	}
+   EndDBTransaction();
+}
+
+function void JMRHsShowFinishTime( int lineId, int lineHeight ) {
+   setFont( "SMALLFONT" );
+   hudMessageBold(
+      s : "\cnRecord: \cb",
+      s : number_prefix( _jmr_hs_minutes ), i : _jmr_hs_minutes, 
+      s : ":", 
+      s : number_prefix( _jmr_hs_seconds ), i : _jmr_hs_seconds, 
+      s : "\cs.",
+      s : number_prefix( _jmr_hs_centiseconds ), i : _jmr_hs_centiseconds, 
+      s : "\c-" ;
+      HUDMSG_PLAIN, lineId, 0, JMR_TBL_X, lineHeight, 0
+   );
+}
+
+function void JMRHsAnnounceNew( void ) {
+   setFont( "SMALL" );
+   hudMessageBold(
+      s : "\cd", n : 0, s : "\cd set a new map record!\c-" ;
+      HUDMSG_FADEOUT | HUDMSG_LOG, 1900, 0, 1.5, 0.15, 5.0, 1.0
+   );
+   ambientSound( "JM2HSWIN", 127 );
+}
+
+function void JMRHsAnnounceCheat( void ) {
+   hudMessageBold( 
+      s : "\cgClever \cc", n : 0, s : "\cg tried to cheat to the ",
+      s : "high score\c-" ;
+      HUDMSG_FADEOUT | HUDMSG_LOG, 1900, 0, 1.5, 0.15, 5.0, 1.0
+   );
+   ambientSound( "JM2HSLOS", 127 );
+}
+
+script 926 ( int showTime ) {
+   int y = JMR_HS_TBL_Y;
+   int line_id = JMR_HS_TBL_LINE;
+
+   setFont( "SMALLFONT" );
+
+   // Header:
+   hudMessage(
+      s : "\ciRecord details\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JMR_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JMR_HS_TBL_LINE_HEIGHT * 2;
+   line_id += 1;
+
+   // Record date:
+   hudMessage(
+      s : "\ckDate Set:\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JMR_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JMR_HS_TBL_LINE_HEIGHT;
+   line_id += 1;
+	
+	if (_jmr_hs_year != 0)
+	{
+		hudMessage(
+		s : "\cc", s : conv_month_string( _jmr_hs_month ), 
+		s : " ", i : _jmr_hs_day, s : ", ", i : _jmr_hs_year, s : "\c-" ;
+		HUDMSG_FADEOUT, line_id, 0, JMR_HS_TBL_X, y, showTime, 1.0
+		);
+	}
+	else
+	{
+		hudMessage(
+		s : " Date unavailable" ;
+		HUDMSG_FADEOUT, line_id, 0, JMR_HS_TBL_X, y, showTime, 1.0
+		);
+	}
+   
+   
+
+   y += JMR_HS_TBL_LINE_HEIGHT * 2;
+   line_id += 1;
+
+   // Record time:
+   hudMessage(
+      s : "\ckFinish Time:\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JMR_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JMR_HS_TBL_LINE_HEIGHT;
+   line_id += 1;
+
+   hudMessage(
+      s : "\cb",
+      s : number_prefix( _jmr_hs_minutes ), i : _jmr_hs_minutes, 
+      s : ":", 
+      s : number_prefix( _jmr_hs_seconds ), i : _jmr_hs_seconds, 
+      s : "\cs.",
+      s : number_prefix( _jmr_hs_centiseconds ), i : _jmr_hs_centiseconds, 
+      s : "\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JMR_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JMR_HS_TBL_LINE_HEIGHT * 2;
+   line_id += 1;
+
+   // Record holder:
+   hudMessage(
+      s : "\ckRecord Holder:\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JMR_HS_TBL_X, y, showTime, 1.0
+   );
+
+   y += JMR_HS_TBL_LINE_HEIGHT;
+   line_id += 1;
+
+   hudMessage(
+      s : "\cc", a : _jmr_hs_author, s : "\c-" ;
+      HUDMSG_FADEOUT, line_id, 0, JMR_HS_TBL_X, y, showTime, 1.0
+   );
+}
+
+//Check PB
+
+function void checkpbJMR (int time, int player)
+{
+	if (!JrhIsEnabled())
+		return;
+	if (PlayerIsLoggedIn(player) == 0)
+	{
+		print(s:"Please login if you want your personal best times saved");
+	}
+	else
+	{
+		str yourname = GetPlayerAccountName(player);
+		str mapname = toUpper(StrParam(n:PRINTNAME_LEVEL));
+		int yourpb = GetDBEntry(StrParam(s:mapname,s:"_pbs"), yourname);
+		if (yourpb == 0 || time < yourpb)
+		{
+			SetDBEntry(StrParam(s:mapname,s:"_pbs"), yourname, time);
+		}
+		acs_executealways(840,0);
+	}
+}
+
+script 921 (void) //displays final scores then exits
+{	
+	delay(1); //note, for whatever reason sync issues required me to put a couple of delays in here
+	roundover = true; //declare the round over for enter and respawn to freeze you
+	delay(5);
+	for (int j = 0;j<=999;j++) {
+		hudmessage(s:""; HUDMSG_PLAIN, j, CR_WHITE, 0, 0, 0); //clear hud messages
+	}
+	SetPlayerProperty(1, 1, PROP_TOTALLYFROZEN); //freeze player
+	for (int herp = 0; herp < PLAYERMAX; herp++) //for each entry in finaltimes
+	{
+		finaltimes[herp][F_TIME] = p_top_time[herp]; //set the value at index "herp" to the top time of player "herp"
+		finaltimes[herp][F_NAME] = herp + 1; //set the player number to be "herp" plus 1, for use with n:
+	}
+	for (int derp = 0; derp < PLAYERMAX; derp++)
+	{
+		if (finaltimes[derp][F_TIME] == 0) //if an entry has a top time of zero...
+			finaltimes[derp][F_TIME] = 99999999; //set it to a huge number (so it doesn't affect sorting)
+	}
+	delay(1);
+	hsort(); //shell sort
+	if (finaltimes[0][F_TIME] == 99999999) //if the highest ranking entry is 99999999 (indicating no time set)
+	{
+		printbold(s:"Wow, nodoby managed to beat the course! You guys suck."); //insult the players for being shit (as nobody managed to get a time)
+		delay(TICRATE*5);
+		JMRExit();
+	}
+	else
+	{
+		finaltime(finaltimes[0][F_TIME], finaltimes[0][F_NAME], 0.2, "\ca1st", 501); //otherwise show the highest ranking entry as first place
+	}
+	if (finaltimes[1][0] == 99999999) //if the second highest ranking entry is 99999999 (indicating no time set)
+	{
+		delay(TICRATE*10); //wait, and then exit, don't display second place as he didn't get a time
+		JMRExit();
+	}
+	else
+	{
+		finaltime(finaltimes[1][F_TIME], finaltimes[1][F_NAME], 0.3, "\cb2nd", 502); //otherwise show second place
+	}
+	if (finaltimes[2][0] == 99999999) //if the third highest ranking entry is 99999999 (indicating no time set) and so on...
+	{
+		delay(TICRATE*10);
+		JMRExit();
+	}
+	else
+	{
+		finaltime(finaltimes[2][F_TIME], finaltimes[2][F_NAME], 0.4, "\cc3rd", 503);
+	}
+	if (finaltimes[3][0] == 99999999)
+	{
+		delay(TICRATE*10);
+		JMRExit();
+	}
+	else
+	{
+		finaltime(finaltimes[3][F_TIME], finaltimes[3][F_NAME], 0.5, "\cd4th", 504);
+	}
+	if (finaltimes[4][0] == 99999999)
+	{
+		delay(TICRATE*10);
+		JMRExit();
+	}
+	else
+	{
+		finaltime(finaltimes[4][F_TIME], finaltimes[4][F_NAME], 0.6, "\ce5th", 505);
+	}
+	delay(TICRATE*10);
+	JMRExit();
+}
+
+script 929 (void)
+{
+	int entries;
+	for (int j = 0;j<=999;j++) {
+		hudmessage(s:""; HUDMSG_PLAIN, j, CR_WHITE, 0, 0, 0); //clear hud messages
+	str mapname = toUpper(StrParam(n:PRINTNAME_LEVEL));
+	int Top5 = SortDBEntries (StrParam(s:mapname,s:"_pbs"), 5, 0, 0 );
+	setfont("BIGFONT");
+	hudmessagebold(s:"All Time Top Five"; HUDMSG_PLAIN, 500, CR_WHITE, 0.5, 0.1, 0);
+	int numEntries = CountDBResults(Top5);
+	if (numEntries == 0) //if there is no top 5
+	{
+		printbold(s:"No personal bests for this map are in the database"); 
+		delay(TICRATE*5);
+		FreeDBResults ( Top5 );
+		JMRExit2();
+	}
+	else
+	{
+		alltime(GetDBResultValue(Top5, 0), GetDBResultKeyString(Top5, 0), 0.2, "\ca1st", 501); //show the highest ranking entry as first place
+	}
+	if (numEntries == 1) 
+	{
+		delay(TICRATE*10); //wait, and then exit, don't display second place as he didn't get a time
+		FreeDBResults ( Top5 );
+		JMRExit2();
+	}
+	else
+	{
+		alltime(GetDBResultValue(Top5, 1), GetDBResultKeyString(Top5, 1), 0.3, "\cb2nd", 502); //otherwise show second place
+	}
+	if (numEntries == 2) 
+	{
+		delay(TICRATE*10);
+		FreeDBResults ( Top5 );
+		JMRExit2();
+	}
+	else
+	{
+		alltime(GetDBResultValue(Top5, 2), GetDBResultKeyString(Top5, 2), 0.4, "\cc3rd", 503);
+	}
+	if (numEntries  == 3)
+	{
+		delay(TICRATE*10);
+		FreeDBResults ( Top5 );
+		JMRExit2();
+	}
+	else
+	{
+		alltime(GetDBResultValue(Top5, 3), GetDBResultKeyString(Top5, 3), 0.5, "\cd4th", 504);
+	}
+	if (numEntries  == 4)
+	{
+		delay(TICRATE*10);
+		FreeDBResults ( Top5 );
+		JMRExit2();
+	}
+	else
+	{
+		alltime(GetDBResultValue(Top5, 4), GetDBResultKeyString(Top5, 4), 0.6, "\ce5th", 505);
+	}
+	delay(TICRATE*10);
+	FreeDBResults ( Top5 );
+	JMRExit2();
+}
+}
+
+//Positron's shell sort
+function void hsort( void ) {
+   // Figure out initial increment.
+   int h = 0;
+   int h_next = 1;
+   do {
+      h = h_next;
+      h_next = 3 * h + 1;
+   } while ( h_next < PLAYERMAX );
+   // Sort.
+   while ( h ) {
+      int sorted = h;
+      while ( sorted < PLAYERMAX ) {
+         int i = sorted;
+         int time = finaltimes[ i ][ F_TIME ];
+         str name = finaltimes[ i ][ F_NAME ];
+         while ( i >= h && time < finaltimes[ i - h ][ F_TIME ] ) {
+            finaltimes[ i ][ F_TIME ] = finaltimes[ i - h ][ F_TIME ];
+            finaltimes[ i ][ F_NAME ] = finaltimes[ i - h ][ F_NAME ];
+            i -= h;
+         }
+         finaltimes[ i ][ F_TIME ] = time;
+         finaltimes[ i ][ F_NAME ] = name;
+         ++sorted;
+      }
+      h = ( h - 1 ) / 3;
+   }
+}
+
+function void JMRExit(void)
+{
+	if (is_online())
+	{
+		acs_execute(929,0);
+	}
+	else
+	{
+		if (getcvar("jm_voter") == 1)
+		{
+			acs_execute(501,0);
+		}
+		else
+		{
+			WhoExitedShowAndExit();
+		}
+	}
+}
+
+function void JMRExit2(void)
+{
+	if (getcvar("jm_voter") == 1)
+	{
+		acs_execute(501,0);
+	}
+	else
+	{
+		WhoExitedShowAndExit();
+	}
+}
+
+function void finaltime(int p_time, int player, int height, str pos, int id) {
+    int mins = to_mins(p_time);
+    int secs = to_secs(p_time);
+    int mils = to_mils(p_time);
+	setfont("bigfont");
+
+    // Any minutes?
+    if (mins == 0) {
+        if (mils < 10) {
+            hudmessagebold(s:pos,s:": ",n:player,s:" - ",d:secs,s:".00",d:mils;
+                HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+        } else if (mils < 100) {
+            hudmessagebold(s:pos,s:": ",n:player,s:" - ",d:secs,s:".0",d:mils;
+                HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+        } else {
+            hudmessagebold(s:pos,s:": ",n:player,s:" - ",d:secs,s:".",d:mils;
+                HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+        }
+    } else {
+        if (secs < 10) {
+            if (mils < 10) {
+                hudmessagebold(s:pos,s:": ",n:player,s:" - ",d:mins,s:":0",d:secs,s:".00",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            } else if (mils < 100) {
+                hudmessagebold(s:pos,s:": ",n:player,s:" - ",d:mins,s:":0",d:secs,s:".0",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            } else {
+                hudmessagebold(s:pos,s:": ",n:player,s:" - ",d:mins,s:":0",d:secs,s:".",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            }
+        } else {
+            if (mils < 10) {
+                hudmessagebold(s:pos,s:": ",n:player,s:" - ",d:mins,s:":",d:secs,s:".00",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            } else if (mils < 100) {
+                hudmessagebold(s:pos,s:": ",n:player,s:" - ",d:mins,s:":",d:secs,s:".0",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            } else {
+                hudmessagebold(s:pos,s:": ",n:player,s:" - ",d:mins,s:":",d:secs,s:".",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            }
+        }
+    }
+}
+
+function void alltime(int p_time, str player, int height, str pos, int id) {
+    int mins = to_mins(p_time);
+    int secs = to_secs(p_time);
+    int mils = to_mils(p_time);
+	setfont("bigfont");
+
+    // Any minutes?
+    if (mins == 0) {
+        if (mils < 10) {
+            hudmessagebold(s:pos,s:": ",s:player,s:" - ",d:secs,s:".00",d:mils;
+                HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+        } else if (mils < 100) {
+            hudmessagebold(s:pos,s:": ",s:player,s:" - ",d:secs,s:".0",d:mils;
+                HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+        } else {
+            hudmessagebold(s:pos,s:": ",s:player,s:" - ",d:secs,s:".",d:mils;
+                HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+        }
+    } else {
+        if (secs < 10) {
+            if (mils < 10) {
+                hudmessagebold(s:pos,s:": ",s:player,s:" - ",d:mins,s:":0",d:secs,s:".00",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            } else if (mils < 100) {
+                hudmessagebold(s:pos,s:": ",s:player,s:" - ",d:mins,s:":0",d:secs,s:".0",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            } else {
+                hudmessagebold(s:pos,s:": ",s:player,s:" - ",d:mins,s:":0",d:secs,s:".",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            }
+        } else {
+            if (mils < 10) {
+                hudmessagebold(s:pos,s:": ",s:player,s:" - ",d:mins,s:":",d:secs,s:".00",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            } else if (mils < 100) {
+                hudmessagebold(s:pos,s:": ",s:player,s:" - ",d:mins,s:":",d:secs,s:".0",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            } else {
+                hudmessagebold(s:pos,s:": ",s:player,s:" - ",d:mins,s:":",d:secs,s:".",d:mils;
+                    HUDMSG_PLAIN, id, CR_WHITE, 0.5, height, 0);
+            }
+        }
+    }
+}

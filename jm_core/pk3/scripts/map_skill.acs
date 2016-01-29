@@ -1,0 +1,18 @@
+// Because there's some issue with the way ACC or ACS handle library string
+// constants, we will define the difficulties as numeric keys that will be
+// used to retrieve the appropriate string value from an array.
+//
+// Author: 
+// Positron
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "jmmskill"
+
+#libdefine MAP_SKILL_UNKNOWN 0
+#libdefine MAP_SKILL_VERY_EASY 1
+#libdefine MAP_SKILL_EASY 2
+#libdefine MAP_SKILL_MODERATE 3
+#libdefine MAP_SKILL_HARD 4
+#libdefine MAP_SKILL_VERY_HARD 5

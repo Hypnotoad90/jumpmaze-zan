@@ -1,0 +1,70 @@
+// Timer and par time.
+//
+// Author: 
+// Positron, based on a script done by Wario.
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "jmtimer"
+#include "zcommon.acs"
+
+#import "constants.acs"
+
+str _timer_par = "";
+// Number of tics that passed before the timer is started. This is used to
+// adjust the finish times when the timer is started manually.
+int _timer_offset = 0;
+
+function void TimerRun( void ) {
+   _timer_offset = timer();
+   // Show the par time and start the timer.
+   acs_Execute( 985, 0 );
+}
+
+function void TimerSetPar( str par ) {
+   _timer_par = par;
+}
+
+script 985 ( void ) {
+   int time = 0;
+
+   while ( true ) {
+      TimerShowTime( time );
+      time += 1;
+
+      delay( TICS_IN_SECOND );
+   }
+}
+
+function void TimerShowTime( int time ) {
+   setFont( "BIGFONT" );
+   hudMessage(
+      i : time / SECONDS_IN_MINUTE, 
+      s : "  :  ", 
+      i : ( time % SECONDS_IN_MINUTE ) / 10, 
+      s : "  ", i : time % 10 ;
+      HUDMSG_PLAIN, 985, CR_BLUE, 0.95, 0.95, 0
+   );
+}
+
+// Show par.
+script 986 OPEN CLIENTSIDE {
+   delay( 2 );
+   consoleCommand( "puke 987" );
+}
+
+script 987 ( void ) NET {
+   if ( _timer_par != "" ) {
+      setFont( "BIGFONT" );
+      hudMessage(
+         s : _timer_par ;
+         HUDMSG_PLAIN, 986, CR_RED, 0.95, 0.90, 0
+      );
+   }
+}
+
+// Returns number of tics passed since timer start.
+function int TimerGetTics( void ) {
+   return timer() - _timer_offset;
+}

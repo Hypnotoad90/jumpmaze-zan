@@ -1,0 +1,346 @@
+gameinfo
+{
+	titletime = 100
+}
+
+clearepisodes
+episode map00
+{
+  name = "Tutorial"
+  key  = "0"
+}
+
+episode map01
+{
+	name = "Jumper's First Steps"
+	key  = "1"
+}
+
+episode map04
+{
+	name = "Learning The Basics"
+	key  = "2"
+}
+
+episode map11
+{
+	name = "Moderate Challenges"
+	key  = "3"
+}
+
+episode map20
+{
+	name = "Advanced Tactics"
+	key  = "4"
+}
+
+episode map26
+{
+	name = "The Path of Perils"
+	key  = "5"
+}
+
+episode map33 {
+  name = "Jumpmaze 2" 
+  key = "6"
+}
+
+defaultmap {
+   evenlighting
+   clipmidtextures
+}
+
+map map00 "Training" {
+  music = "D_CI"
+  sky1 = "stsky10", 0
+  next = "map01"
+  par = 90
+}
+
+map map33 "Jump Trials" {
+  music = "UNATCO"
+  sky1 = "stsky8", 0
+  next = "map34"
+  par  = 330
+}
+
+map map34 "Junglefalls" {
+  next = "map35"
+  music = "D_JUNGLE"
+  sky1 = "stsky9", 0
+  par = 160
+}
+
+map map35 "Rage Maze" {
+  next = "map36"
+  music = "D_WUT"
+  sky1 = "sky1", 0
+  par = 75
+}
+
+map map36 "Goldfinger" {
+  music = "caverns"
+  sky1 = "sky1", 0.0
+  next = "map37"
+  par = 110
+}
+
+map map37 "Volcano Escape" {
+  music = "D_VOLCES"
+  next = "map38"
+  sky1 = "STSKY9", 0.1
+  par = 146
+}
+
+map map38 "Jumpmaze Circuit" {
+  sky1 = "STSKY10", 0.1
+  next = "map39"
+  music = "mkart"
+  par = 130
+}
+
+map map39 "Escape from Hell" {
+  music = "Hellcore"
+  sky1 = "stsky4", 1.1
+  sky2 = "BSKY1", 0.1
+  next = "map40"
+  par = 160
+}
+
+map map40 "Proteh's Chaos Base" {
+  next = "map41"
+  music = "PCB"
+  sky1 = "sky1", 0
+  par = 120
+}
+
+map map41 "Jump City" {
+  music = "AIR"
+  sky1 = "stsky5", 0
+  next = "map42"
+  par  = 105
+}
+
+map MAP42 "Lost Halls" {
+  music = "D_INV1"
+  next = "MAP43"
+  sky1 = "STSKY12", 0
+  par = 147
+}
+
+map map43 "Lava laboratory" {
+  next = "map44"
+  music = "d_lavab"
+  sky1 = "stsky11", 0.0
+  sky2 = "stsky4", 1
+  par = 90
+}
+
+map MAP44 "Jumpmaze-Hq" {
+  sky1 = "SKY06", 0.1
+  music = "D_DMSEC"
+  next = "Map45"
+  par = 119
+}
+
+map MAP45 "Durch Die Holle Gehen" {
+  music = "BEAST"
+  sky1 = "STSKY1", 0
+  next = "map46"
+  par = 350
+}
+
+map MAP46 "Blocks of Doom" {
+  music = "D_TRAPS2"
+  next = "MAP47"
+  sky1 = "STSKY7", 0.1
+  par = 269
+}
+
+map map47 "DrugLab" {
+  next = "map48"
+  music = "D_DLAB"
+  sky1 = "STSKY10"
+  par = 150
+}
+
+map MAP48 "Escaping From The Horror" {
+  music = "D_HORROR"
+  next = "MAP49"
+  sky1 = "STSKY7", 0
+  par = 198
+}
+
+map map49 "Kill Ratio" {
+  next = "map50"
+  music = "D_RATIO"
+  sky1 = "STSKY7", 0.0
+  par = 120
+}
+
+map MAP50 "Space-Station" {
+  sky1 = "SKY06", 0.1
+  music = "howdido"
+  next = "Map51"
+  par = 140
+}
+
+map map51 "Port Town" {
+  next = "map52"
+  music = "F_ZEROPT"
+  sky1 = "SKY07", 0.0
+  intermusic = "D3D"
+  par = 172
+}
+
+map map52 "Vivid Dreams, Sweetheart" {
+  next = "map53"
+  music = "PTBLTGRR"
+  sky1 = "BSKY1", 0.05
+  sky2 = "STSKY8", 0.01
+  par = 168
+}
+
+map map53 "Doomed Cruise" {
+  next = "MAP54"
+  music = "D_JP_BEC"
+  sky1 = "STSKY5", 0.1
+  par = 150
+}
+
+map map54 "Jumping Factory"
+{
+	next = "MAP55"
+	par = 107
+	music = "JFACT"
+	sky1 = "TNT_CL1", 0.12
+}
+
+map map55 "Bloody Donation" {
+  next = "MAP56"
+  music = "PTBLZC"
+  par = 283
+}
+
+map map56 "Red Hot Ride" {
+  next = "MAP57"
+  music = "D_DC"
+  sky1 = "SKY1", 0
+  par = 168
+}
+
+map map57 "Core Dump" {
+  music = "JM2MUSCD"
+  next = "map58"
+  par = 423
+}
+
+map map58 "Red Hot Ride II" {
+  next = "map59"
+  music = "D_DC2"
+  sky1 = "SKY1", 0
+  par = 155
+}
+
+map map59 "Rage Maze 2" {
+  music = "D_trans"
+  sky1 = "stsky10", 0
+  next = "map60"
+  par = 135
+}
+
+map map60 "40 Below Zero" {
+  music = "PTICEAGE"
+  sky1 = "BSKY1", 0.02
+  next = "map61"
+  vertwallshade = 4
+  horizwallshade = 4
+  par = 239
+}
+
+map map61 "Sweet Dreams Wario" {
+  music = "d_sdz"
+  sky1 = "sky1", 0
+  next = "map62"
+  par = 166
+}
+
+map map62 "AAC'S Hive" {
+  next = "map63"
+  music = "D_AAC"
+  sky1 = "STSKY1", 1
+  par = 90
+}
+
+map map63 "Across the Dark Swamp" {
+  next = "map64"
+  music = "SWAMP2"
+  sky1 = "SWAMP", 0
+  outsidefog = "darkgray"
+  par = 598
+}
+
+map map64 "The Last Hurrah" {
+  music = "d_mmen"
+  sky1 = "stsky13", 0
+  sky2 = "BSKY1", 0.1
+  next = "map00"
+  par  = 198
+  intermusic = "bario"
+}
+
+map RJECT01 "Infer's Hell" {
+  next = "RJECT02"
+  music = "D_INFER"
+  sky1 = "STSKY12"
+  par = 210
+}
+
+map RJECT02 "Eternal Void" {
+  music = "KIMUS4"
+  next = "RJECT03"
+  par = 275
+}
+
+map RJECT03 "Gravity Chambers" {
+  music = "D_STW"
+  next = "RJECT04"
+  sky1 = "SKY1", 0
+  par = 283
+}
+
+map RJECT04 "Airship Doomed" {
+  sky1 = "stsky1", 0
+  music = "D_SHIP"
+  next = "RJECT05"
+  par = 352
+}
+
+map RJECT05 "Islands Of Desolation" {
+  sky1 = "stsky8", 0.1
+  music = "th07_01"
+  next = "RJECT06"
+  par = 352
+}
+
+map RJECT06 "Interrogator" {
+  next = "map00"
+  music = "D_INTRR"
+  par = 110
+}
+
+map DRAG "Drag race" {
+  music = "DREAMC"
+  par = 18
+  sky1 = "SKY07", 0.0
+}
+
+map FLOORLAV "Floor is Lava" {
+  music = "d_stalks"
+  par = 40
+  sky1 = "SKY1", 0.0
+}
+
+map SHIT "The Key to Victory" {
+	sky1 = "sky1", 0.1
+}

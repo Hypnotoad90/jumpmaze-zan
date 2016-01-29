@@ -1,0 +1,64 @@
+#Library "TRANSLUCENT"
+#Include "Zcommon.acs"
+
+Int SelfX, SelfY, SelfZ;
+Bool Instance[64] = { False };
+
+Script 694 ENTER CLIENTSIDE
+{
+	If(PlayerNumber() != ConsolePlayerNumber())
+		Terminate;
+	
+	While(True)
+	{
+		SelfX = GetActorX(0);
+		SelfY = GetActorY(0);
+		SelfZ = GetActorZ(0);
+		Delay(1);
+	}
+}
+
+Script 695 ENTER
+{
+	SetActivator(-1);
+	GiveInventory("TranslucentScript", 1);
+}
+
+Script 696 (Int Player) DISCONNECT CLIENTSIDE
+{
+	Instance[Player] = False;
+}
+
+Script 693 (Void) CLIENTSIDE
+{
+	If(!PlayerInGame(PlayerNumber()) || PlayerNumber() == ConsolePlayerNumber() || PlayerNumber() == -1 || Instance[PlayerNumber()])
+		Terminate;
+
+	Instance[PlayerNumber()] = True;
+
+	While(True)
+	{
+		Int DistX, DistY, DistZ, Dist;
+	
+		DistX = (SelfX - GetActorX(0));
+		If(DistX < 0) DistX *= -1;
+		DistY = (SelfY - GetActorY(0));
+		If(DistY < 0) DistY *= -1;
+		DistZ = (SelfZ - GetActorZ(0));
+		If(DistZ < 0) DistZ *= -1;
+		Dist = DistX + DistY + DistZ;
+		
+		If(Dist < 256.0)
+		{
+			SetActorProperty(0, APROP_Alpha, FixedDiv(Dist, 256.0));
+			SetActorProperty(0, APROP_RenderStyle, STYLE_Translucent);
+		}
+		Else
+		{
+			SetActorProperty(0, APROP_Alpha, 1.0);
+			SetActorProperty(0, APROP_RenderStyle, STYLE_Normal);
+		}
+	
+		Delay(1);
+	}
+}

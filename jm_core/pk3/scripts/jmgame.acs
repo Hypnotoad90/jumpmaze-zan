@@ -1,0 +1,317 @@
+// Encapsulates a lot of the Jumpmaze scripts into a single interface to be
+// used by the mapper.
+//
+// Author: 
+// Positron
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "jmgame"
+#include "zcommon.acs"
+
+// General files:
+#import "constants.acs"
+#import "utility.acs"
+#import "timer.acs"
+#import "who_exited.acs"
+// luk ACS library:
+#import "luk.acs" 
+// Rankers:
+#import "ranker_hs.acs"
+#import "ranker_solo.acs"
+#import "ranker_team.acs"
+#import "jmrun.acs"
+// Map message:
+#import "map_skill.acs"
+#import "map_message.acs"
+// Survival Maze:
+#import "svmz/game.acs"
+// Telefrag patch:
+#import "telefrag_patch.acs"
+
+// Game modes:
+#libdefine JMG_MODE_COOP 0
+#libdefine JMG_MODE_SVMZ 1
+
+// Map types:
+#libdefine JMG_MAP_SOLO 0
+#libdefine JMG_MAP_TEAM 1
+#libdefine JMG_MAP_JMRUN 2
+
+// Initialization flags.
+// This flag makes the timer start up manually upon the request of
+// the user. Thanks goes to Frank for the idea. 
+#libdefine JMGF_MANUAL_TIMER 0x1
+
+int _jmg_mode = VALUE_NONE;
+int _jmg_map_type = VALUE_NONE;
+int _jmg_init_flag = 0;
+str _jmg_par = 0;
+str _jmg_points = 0;
+
+function void JmGameInitSolo( str par ) {
+   JmGameInit( JMG_MAP_SOLO, par );
+}
+
+function void JmGameInitJMRun( str par ) {
+   JmGameSetInitFlags( JMGF_MANUAL_TIMER );
+   JmGameInit( JMG_MAP_JMRUN, par );
+}
+
+function void JmGameInitTeam( str par, int totalPoints ) {
+   JmGameInit( JMG_MAP_TEAM, par );
+   _jmg_points = totalPoints;
+}
+
+function void JmGameInit( int mapType, str par ) {
+   int mode;
+
+   // Initialize utility library.
+   UtilityInit();
+
+   // Survival Maze.
+   if ( is_survival_mode() ) {
+      if ( mapType == JMG_MAP_TEAM ) {
+         // Substitute the finish time with our own custom message for
+         // Survival Maze. Since the timer counts down in Survival Maze,
+         // it makes no sense to have the completion time there.
+         JrtSetEndMessage( "Maze Complete" );
+      }
+
+      mode = JMG_MODE_SVMZ;
+
+      // High score feature of rankers isn't for Survival Maze.
+      JrhDisable();
+   }
+   // Coop.
+   else {
+      JmGameInitCoop();
+
+      mode = JMG_MODE_COOP;
+      TimerSetPar( par );
+   }
+
+   _jmg_mode = mode;
+   _jmg_map_type = mapType;
+   _jmg_par = par;
+}
+
+// Initializes engine for Coop games.
+function void JmGameInitCoop( void ) {
+   if ( getCvar( "sv_disallowsuicide" ) ) {
+      consoleCommand( "sv_disallowsuicide false" );
+   }
+}
+
+function void JmGameSetInitFlags( int flags ) {
+   _jmg_init_flag = flags;
+}
+
+function int JmGameGetInitFlags( void ) {
+   return _jmg_init_flag;
+}
+
+function int JmGameGetMapType( void ) {
+   return _jmg_map_type;
+}
+
+function void JmGameRun( void ) {
+   if ( _jmg_mode == JMG_MODE_COOP ) {
+      // If the manual timer start flag is present, leave the duty of
+      // starting the timer to user.
+      if ( JmGameGetInitFlags() & JMGF_MANUAL_TIMER ) {
+         // Show initial time.
+         TimerShowTime( 0 );
+      }
+      else {
+         TimerRun();
+      }
+
+      // Start ranker.
+      if ( _jmg_map_type == JMG_MAP_SOLO ) {
+         // Solo ranker.
+         acs_Execute( JRS_SCRIPT_START, 0 );
+      }
+	  else if ( _jmg_map_type == JMG_MAP_JMRUN )
+	  {
+		 acs_Execute( JMR_SCRIPT_START, 0 );
+	  }
+      else {
+         acs_Execute( JRT_SCRIPT_START, 0, _jmg_points );
+      }
+   }
+   else if ( _jmg_mode == JMG_MODE_SVMZ ) {
+      JmGameRunSvmz( "map map01" );
+   }
+   else {
+      JmGameShowInitError();
+   }
+}
+
+function void JmGameRunSvmz( str mapRestartCommand ) {
+   // Initialize the server and restart the map if necessary.
+   if ( SvmzInit() ) {
+      consoleCommand( mapRestartCommand );
+   }
+
+   // We run the team ranker with a custom message that replaces the finish
+   // time in Survival Maze. We do this so players can see their progress
+   // better on a map.
+   if ( _jmg_map_type == JMG_MAP_TEAM ) {
+      // Clear the points table from the previous round if the players failed
+      // to complete the map. Otherwise, the previous points table will
+      // overlap with the new one.
+      JrtClearPointsTable();
+      acs_Execute( JRT_SCRIPT_START, 0, _jmg_points );
+   }
+
+   acs_Execute( 900, 0, _jmg_par );
+}
+
+function void JmGameStartTimer( void ) {
+   if ( JmGameGetInitFlags() & JMGF_MANUAL_TIMER ) {
+	  if ( _jmg_map_type != JMG_MAP_JMRUN )
+		TimerRun();
+   }
+   else {
+      printBold( s : "\ciJmGameStartTimer(): Timer is not set to manual\c-" );
+   }
+}
+
+function void JmGameSetMapMessage( str name, str author, int skill ) {
+   MmSet( name, author, skill, _jmg_par );
+}
+
+function void JmGameAddPoint( void ) {
+   if ( _jmg_map_type == JMG_MAP_TEAM ) {
+      acs_ExecuteAlways( JRT_SCRIPT_POINT, 0 );
+   }
+   else {
+      printBold( s : "\ciCan't give points on a non-team map\c-" );
+   }
+}
+
+function void JmGameFinishLine( void ) {
+   if ( _jmg_mode == JMG_MODE_COOP ) {
+      if ( _jmg_map_type == JMG_MAP_SOLO ) {
+         JrsFinish();
+      }
+	  else if ( _jmg_map_type == JMG_MAP_JMRUN ) {
+         JMRFinish();
+      }
+      else {
+         JmGameAddPoint();
+      }
+   }
+   else if ( _jmg_mode == JMG_MODE_SVMZ ) {
+      SvmzMakeEscapee();
+      if ( _jmg_map_type == JMG_MAP_TEAM ) {
+         JmGameAddPoint();
+      }
+   }
+   else {
+      JmGameShowInitError();
+   }
+}
+
+function void JmGameStartLine( int player ) {
+   if ( _jmg_mode == JMG_MODE_COOP ) {
+      if ( _jmg_map_type == JMG_MAP_JMRUN ) {
+         JMRStartLine(player);
+		 }
+	}
+}
+
+function void JmGameLeaveLine (void)
+{
+	if ( _jmg_mode == JMG_MODE_COOP ) {
+      if ( _jmg_map_type == JMG_MAP_JMRUN ) {
+         JMRExitLine();
+		 }
+	}		
+}
+
+function void JmGameStartCountdown (int time)
+{
+	if ( _jmg_mode == JMG_MODE_COOP ) {
+      if ( _jmg_map_type == JMG_MAP_JMRUN ) {
+         JMRStartTimer(time);
+		 }
+	}
+}	
+
+// Used to manually label a player a cheater, disallowing them from the 
+// high score. It's only useful with the solo ranker.
+function void JmGameDisallowPlayerHs( int player ) {
+   JrhMarkAsCheater( player );
+}
+
+function void JmGameExit( void ) {
+   if ( _jmg_mode == JMG_MODE_SVMZ ) {
+      if ( ! SvmzValidateExit() ) {
+         return;
+      }
+   }
+	if (getcvar("jm_voter") == 1)
+	{
+		acs_execute(501,0);
+	}
+	else
+	{
+		WhoExitedShowAndExit();
+	}
+}
+
+function bool JmGameIsValidExit( void ) {
+   if ( _jmg_mode == JMG_MODE_SVMZ ) {
+      if ( ! SvmzValidateExit() ) {
+         return false;
+      }
+   }
+
+   return true;
+}
+
+function void JmGameShowInitError( void ) {
+   printBold( s : "\ciScripts were not initialized!\c-" );
+}
+
+// I don't like having race conditions, so we're going to centralize the
+// player scripts into one place and execute all other scripts from these
+// single scripts.
+
+// script 930 ENTER {
+// 
+// }
+
+// DEATH script executor.
+script 931 DEATH {
+   int player = playerNumber();
+
+   // Telefrag patch. We don't want it in Survival Maze.
+   if ( _jmg_mode == JMG_MODE_COOP && 
+      ! getCvar( "jm_disable_telepatch" ) ) {
+      // This function changes the activator of the script, so we better
+      // have this block of code as the last block of the script.
+      TelePatchOnDeath( player );
+   }
+}
+
+// RESPAWN script executor.
+script 932 RESPAWN {
+   int player = playerNumber();
+
+   // Telefrag patch.
+   if ( _jmg_mode == JMG_MODE_COOP ) {
+      TelePatchOnRespawn( player );
+   }
+}
+
+// DISCONNECT script executor.
+script 933 ( int player ) DISCONNECT {
+   // Telefrag patch.
+   if ( _jmg_mode == JMG_MODE_COOP ) {
+      TelePatchOnDisconnect( player );
+   }
+}

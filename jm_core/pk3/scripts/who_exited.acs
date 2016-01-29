@@ -1,0 +1,35 @@
+// Shows in the console the name of the player who exited the map.
+//
+// Author: 
+// Positron
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "jmwhoxit"
+#include "zcommon.acs"
+
+#import "constants.acs"
+#import "utility.acs"
+
+function void WhoExitedShow( void ) {
+   hudMessageBold( 
+      s : "\cc",
+      n : playerNumber() + 1,
+      s : "\cg exited the level\c-" ;
+      HUDMSG_FADEINOUT | HUDMSG_LOG,
+      // We avoid displaying the message on screen
+      // by setting a long fade in time.
+      0, 0, 0, 0, 1, 1000.0, 0
+   );
+}
+
+function void WhoExitedShowAndExit( void ) {
+   // We only show message in multiplayer because it's already
+   // shown in single player.
+   if ( is_online() ) {
+      WhoExitedShow();
+   }
+
+   exit_Normal( 0 );
+}
