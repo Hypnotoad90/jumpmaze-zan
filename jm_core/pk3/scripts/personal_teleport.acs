@@ -1,0 +1,16 @@
+#library "ptport"
+#include "zcommon.acs"
+
+int tdestinations[64];
+
+script 833 (void)
+{
+	if (tdestinations[playernumber()] == 0)
+	{
+		print(s:"No teleport location set");
+	}
+	else
+	{
+		teleport (tdestinations[playernumber()], 0, 0);
+	}
+}
