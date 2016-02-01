@@ -31,5 +31,5 @@ acc "scripts/client.acs" "acs/client.o"
 acc "scripts/personal_teleport.acs" "acs/ptport.o"
 acc "scripts/jpxmapinfo.acs" "acs/JPXINFO.o"
 acc "scripts/svmz/game.acs" "acs/srvlmaze.o"
-%SEVENZAEXE% a -tzip "%OUTDIR%\jm_core-%FILEVERSION%.pk3" * -r -xr!*.dbs -xr!*.backup1 -xr!*.backup2 -xr!*.backup3 -xr!*.bak
+%SEVENZAEXE% a -tzip "%OUTDIR%\jm_core%FILEVERSION%.pk3" * -r -xr!*.dbs -xr!*.backup1 -xr!*.backup2 -xr!*.backup3 -xr!*.bak
 POPD
