@@ -14,6 +14,9 @@ IF /I "%PROCESSOR_ARCHITECTURE%"=="x32" (
     SET ARCH=64
 )
 
-SET PATH=%CD%\utilities
+SET PATH=%CD%\utilities;%PATH%
 SET SEVENZAEXE=%CD%\utilities\7za%ARCH%.exe
 SET START=%CD%
+
+SET USEGIT=1
+IF /I "%1"=="/nogit" SET USEGIT=0

@@ -14,3 +14,7 @@
 
 # Compiled ACS
 *.o
+
+# Auto-generated files
+utilities/zz_autogen_commit.bat
+utilities/zz_autogen_version.bat
