@@ -1,0 +1,11 @@
+*.o
+*.bak
+*.dbs 
+*.bak 
+*.backup1 
+*.backup2 
+*.backup3
+jm_core-dev.pk3
+jm_assets-dev.pk3
+jm_maps-dev.pk3
+jm2_maps-dev.pk3
