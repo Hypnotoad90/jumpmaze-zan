@@ -8,6 +8,7 @@
 
 # Compiled PK3s
 *.pk3
+out/
 
 # 7-Zip tempory files
 *.tmp
