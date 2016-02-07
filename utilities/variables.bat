@@ -25,7 +25,11 @@ IF /I "%1"=="/NOVERSION" (
 	SET OUTDIR=%START%\debug
 	SET USEVERSION=0
 ) ELSE ( 
-	SET OUTDIR=%START%\release
+	IF %USEGIT%==1 (
+		SET OUTDIR=%START%\release_beta
+	) ELSE (
+		SET OUTDIR=%START%\release
+	)
 	SET USEVERSION=1	
 )
 

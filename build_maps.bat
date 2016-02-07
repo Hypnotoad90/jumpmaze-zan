@@ -1,10 +1,12 @@
 @ECHO OFF
 
 SET JM_MAPS_VERSION=
-SET JM2_MAPS_VERSION=-rc3
+SET JM2_MAPS_VERSION=-rc4
 
 CALL "%CD%\utilities\variables.bat" %*
+CALL "%CD%\utilities\mkvers.bat" %*
 
+if %USEGIT%==1 SET JM2_MAPS_VERSION=-rc4%FILEVERSION%
 if %USEVERSION%==0 SET JM2_MAPS_VERSION=-dev
 if %USEVERSION%==0 SET JM_MAPS_VERSION=-dev
 

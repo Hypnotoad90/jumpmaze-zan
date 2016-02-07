@@ -22,5 +22,7 @@ IF %USEVERSION%==1 (
     :: Odd workaround so that the commit hash is added correctly.
     IF %USEGIT%==1 SET FILEVERSION=-%VERSION_STRING%-%COMMIT_HASH%
 ) ELSE (
-    SET FILEVERSION=-dev
+	IF %USEVERSION%==0 (
+		SET FILEVERSION=-dev
+	)
 )

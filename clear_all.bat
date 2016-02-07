@@ -1,0 +1,13 @@
+DEL /F /Q "%CD%\debug\jm2_maps-*.pk3"
+DEL /F /Q "%CD%\debug\jm_maps*.pk3"
+DEL /F /Q "%CD%\debug\jm_assets-*.pk3"
+DEL /F /Q "%CD%\debug\jm_core-*.pk3"
+DEL /F /Q "%CD%\release\jm2_maps-*.pk3"
+DEL /F /Q "%CD%\release\jm_maps*.pk3"
+DEL /F /Q "%CD%\release\jm_assets-*.pk3"
+DEL /F /Q "%CD%\release\jm_core-*.pk3"
+DEL /F /Q "%CD%\release_beta\jm2_maps-*.pk3"
+DEL /F /Q "%CD%\release_beta\jm_maps*.pk3"
+DEL /F /Q "%CD%\release_beta\jm_assets-*.pk3"
+DEL /F /Q "%CD%\release_beta\jm_core-*.pk3"
+:: we specify file names to be safe
