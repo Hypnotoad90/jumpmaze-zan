@@ -3,7 +3,7 @@
 SET JM_MAPS_VERSION=
 SET JM2_MAPS_VERSION=-rc3
 
-CALL "%CD%\utilities\variables.bat"
+CALL "%CD%\utilities\variables.bat" %*
 
 if %USEVERSION%==0 SET JM2_MAPS_VERSION=-dev
 if %USEVERSION%==0 SET JM_MAPS_VERSION=-dev
