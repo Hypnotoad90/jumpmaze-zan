@@ -5,7 +5,9 @@
 
 script 899 ENTER
 {
-	if (!(GetLevelInfo(LEVELINFO_LEVELNUM)>=33 && GetLevelInfo(LEVELINFO_LEVELNUM)<=64) && StrCmp(StrParam(n:PRINTNAME_LEVEL),"DRAG")) {
+	if (!(GetLevelInfo(LEVELINFO_LEVELNUM)>=33 && GetLevelInfo(LEVELINFO_LEVELNUM)<=64) && StrIcmp(StrParam(n:PRINTNAME_LEVEL),"DRAG")
+	&& StrIcmp(StrParam(n:PRINTNAME_LEVEL),"HYP04")
+	&& StrIcmp(StrParam(n:PRINTNAME_LEVEL),"HYP05")) {
 		SetActorProperty(0,APROP_Health,100);
 		SetActorProperty(0,APROP_Invulnerable,0);
 		SetActorProperty(0,APROP_NoTarget,0);

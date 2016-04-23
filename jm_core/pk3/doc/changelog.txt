@@ -4,6 +4,9 @@
 *                                                                             *
 *******************************************************************************
 
+NOTE: THIS CHANGELOG IS NO LONGER USED, FOR MORE ACCURATE CHANGES VISIT THIS
+ADDRESS - https://github.com/Hypnotoad90/jumpmaze-zan/commits/master 
+
 Release Candidate [Jroc]
 ===============================================================================
 

@@ -8,8 +8,6 @@ DSBOSSIT    DSBOSSIT
 
 DSBOSPIT    DSBOSPIT
 
-$musicvolume D_Cloud9 6.4
-
 $random electric/spawn { electric/spawn1 electric/spawn2 electric/spawn3 }
 electric/spawn1		DSLIGHT1
 electric/spawn2		DSLIGHT2
