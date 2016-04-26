@@ -1,0 +1,132 @@
+// Enables extra admin functionality
+//
+// Author: 
+// Hypnotoad
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "admin"
+#include "zcommon.acs"
+
+#import "jmgame.acs"
+
+#define ADMN_MORPH 0
+#define ADMN_INITFLY 1
+#define ADMN_FLY 2
+#define CHK_FLY 3
+#define ADMN_UNFLY 4
+#define ADEBUG 10
+
+global bool 50:admins[];
+global int 49:adminsFly[];
+//global bool 48:adminsClip[];
+global int 47:firstadmin;
+
+script 989 (int option, int who)
+{
+	/*if (option == ADEBUG)
+	{
+		if (who == 0)
+		{
+			log(s:"Current state: SPAWN");
+			HudMessageBold(s:"Current state: SPAWN"; HUDMSG_PLAIN, 1, CR_RED, 0.5, 0.5, 1.0);
+		}
+		else if (who == 1)
+		{
+			log(s:"Current state: SEE");
+			HudMessageBold(s:"Current state: SEE"; HUDMSG_PLAIN, 1, CR_RED, 0.5, 0.5, 1.0);
+		}
+		terminate;
+	}*/
+	if (option == CHK_FLY)
+	{
+		//log(s:"Checking flight");
+		if (adminsFly[playernumber()] == 1)
+			SetResultValue(1);
+		else
+			SetResultValue(0);
+		terminate;
+	}
+	else if (option == ADMN_INITFLY)
+	{
+		UnMorphActor(0, TRUE);
+		delay(1);
+		int success = MorphActor(0,"AdminMini", "", 0x7fffffff, MRF_NEWTIDBEHAVIOUR | MRF_WHENINVULNERABLE, "", "");
+		//PrintBold(d:success);
+		terminate;
+	}
+	else if (option == ADMN_UNFLY)
+	{
+		UnMorphActor(0, TRUE);
+		delay(1);
+		int success2 = MorphActor(0,"Admin", "", 0x7fffffff, MRF_NEWTIDBEHAVIOUR | MRF_WHENINVULNERABLE, "", "");
+		//PrintBold(d:success2);
+		terminate;
+	}
+	int _who;
+	if (who == 0)
+		_who = firstadmin;
+	else
+		_who = who;
+	if (option == ADMN_MORPH && !admins[_who])
+	{
+		if (StrCmp (GetPlayerAccountName(_who), "hypnotoad") != 0)
+		{
+			PrintBold(s:"Access Denied!");
+			terminate;
+		}
+		admins[_who] = TRUE;
+		firstadmin = _who;
+	}
+	else if (option == ADMN_FLY && admins[_who] && PlayerInGame(_who))
+	{
+		if (!adminsFly[_who])
+		{
+			log(s:"Amin has turned flight on");
+			adminsFly[_who] = 1;
+		}
+		else
+		{
+			log(s:"Amin has turned flight off");
+			adminsFly[_who] = 0;
+		}
+			
+	}
+}
+
+script 992 ENTER
+{
+	if (admins[playernumber()])
+	{
+		if (StrCmp (GetPlayerAccountName(PlayerNumber()), "hypnotoad") == 0)
+		{
+			printbold(n:0, s:" has activated his admin powers!");
+			delay(4);
+			MorphActor(0,"Admin", "", 0x7fffffff, MRF_NEWTIDBEHAVIOUR | MRF_WHENINVULNERABLE, "", "");
+			JmGameDisallowPlayerHs(PlayerNumber());
+			delay(5);
+			GiveInventory("Cell", 600);
+			GiveInventory("Clip", 600);
+			delay(5);
+			GiveInventory("Railgun", 1);
+		}
+		else
+		{
+			print(s:"You are not authorized for Admin mode");
+			admins[playernumber()] = FALSE;
+			adminsFly[PlayerNumber()] = 0;
+			firstadmin = 0;
+		}
+	}
+}
+
+script 993 (int disc) DISCONNECT
+{
+	if (admins[disc])
+	{
+		admins[disc] = FALSE;
+		adminsFly[disc] = 0;
+		firstadmin = 0;
+	}
+}

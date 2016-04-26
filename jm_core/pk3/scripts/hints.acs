@@ -1,0 +1,66 @@
+// Displays Hints
+//
+// Author: 
+// Hypnotoad
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "hints"
+#include "zcommon.acs"
+
+#define MAXHINTS 7
+
+str hints[MAXHINTS] = {"When playing online, to log in and have your times and rankings tracked, you must first register on the auth\n
+server (e.g. for Grandvoid this is: grandvoid.sickedwick.net/auth), then in console type login <username> <password>",
+"For Grandvoid, everyone's personal best times, rankings and overall/global rankings can be viewed at: http://grandvoid.sickedwick.net/jmstats",
+"Struggling to keep up in multiplayer? Google Zandronum sr50 for a trick that might help.",
+"Visit #doomjump on the Zandronum irc network to chat with fellow jumpers!",
+"Use chasecam ('chase' in console) if you need help seeing where you are on a small platform.",
+"Source repositories for this project can be found at https://github.com/Hypnotoad90/jumpmaze-zan and https://github.com/Hypnotoad90/jmce",
+"If you're finding the maps too difficult, change to MAP00, a tutorial and training map to learn the basics."};
+	
+script 994 OPEN CLIENTSIDE
+{
+	//Because random seeding is apparently reset on the client after map change, I have to do my own (borrowed from prophunt)
+
+	int intpos = GetActorX(0) + GetActorY(0) + GetActorZ(0) >> 16;
+	int byteangle = GetActorAngle(0) >> 8;
+	int iterations2 = GetCvar("jm_oldseed") + GetSectorLightLevel (0) + intpos + byteangle + random(1,20);
+	int iterations = abs(iterations2) % 1000;
+	if (iterations == 0)
+		iterations++;
+	int hint;
+	
+	
+	for(int h = 0; h < iterations; h++)
+	{
+		hint = Random(0,MAXHINTS - 1);
+		h++;
+	}
+	
+	if (GetLevelInfo(LEVELINFO_LEVELNUM) == 33)
+		delay(35*20);
+	if (GetCVar("jm_disablehints") == 1)
+		Terminate;
+	delay( 35 * 8 );
+	HudMessage(s:"Hint ",d:hint + 1,s:"/",d:MAXHINTS,s:": ",s:hints[hint],s:"\n\cg(to turn off hints, type set jm_disablehints 1, followed by archivecvar jm_disablehints).";HUDMSG_PLAIN | HUDMSG_LOG, 839, CR_LIGHTBLUE, 1.5, 0.75, 10.0);
+	str seedcommand = strparam(s:"set jm_oldseed ", d:random(1,timer() % 60));
+    ConsoleCommand(seedcommand);
+	while(TRUE)
+	{
+		delay( 35 * 60 * 2 );
+		if (GetCVar("jm_disablehints") == 1)
+			Terminate;
+		hint = Random(0,MAXHINTS - 1);
+		HudMessage(s:"Hint ",d:hint + 1,s:"/",d:MAXHINTS,s:": ",s:hints[hint];HUDMSG_PLAIN | HUDMSG_LOG, 839, CR_LIGHTBLUE, 1.5, 0.75, 10.0);
+	}
+}
+
+function int abs (int x)
+{
+    if (x < 0)
+        return -x;
+
+    return x;
+}

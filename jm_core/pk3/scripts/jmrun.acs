@@ -698,7 +698,7 @@ script 926 ( int showTime ) {
 
 function void checkpbJMR (int time, int player)
 {
-	if (!JrhIsEnabled())
+	if (!JrhIsEnabled() || JrhIsCheater( player ))
 		return;
 	if (PlayerIsLoggedIn(player) == 0)
 	{

@@ -610,7 +610,7 @@ script 840 ENTER
 
 function void checkpb (int time, int player)
 {
-	if (is_online() == false || !JrhIsEnabled())
+	if (is_online() == false || !JrhIsEnabled() || JrhIsCheater( player ))
 		return;
 	if (PlayerIsLoggedIn(player) == 0)
 	{

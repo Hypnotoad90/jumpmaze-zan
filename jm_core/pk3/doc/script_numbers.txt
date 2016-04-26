@@ -25,5 +25,7 @@ scripts/
    jmrun: 909, 920, 921, 922, 923, 924, 925, 926, 927, 928, 929
    TranslucentPlayers.pk3: 694, 695, 696, 693
    jpxmapinfo.acs: 501
+   admin.acs: 989, 992, 993
+   hints.acs: 994
 
 Hypnojump: 833, 832

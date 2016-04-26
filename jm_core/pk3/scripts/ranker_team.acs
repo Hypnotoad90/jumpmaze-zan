@@ -49,6 +49,8 @@ int _jrt_time_centiseconds = 0;
 
 str _jrt_end_message = "";
 
+bool _jrt_cheater_active = false;
+
 // Start.
 script JRT_SCRIPT_START ( int totalPoints ) {
    // Don't go over the maximum score points we can support.
@@ -80,6 +82,9 @@ script JRT_SCRIPT_START ( int totalPoints ) {
 script JRT_SCRIPT_POINT ( void ) {
    if ( _jrt_points_left > 0 ) {
       JrtAddPointToPlayer( playerNumber() );
+	  
+	  if (JrhIsCheater( playerNumber() ))
+		_jrt_cheater_active = true;
 
       // When all points have been awarded, calculate finish time.
       if ( JrtGetPointsLeft() == 0 ) {
@@ -93,7 +98,7 @@ script JRT_SCRIPT_POINT ( void ) {
 				terminate;
 			
             // Only proceed if map was completed without cheats.
-            if ( ! JrhIsCheatsEnabled() ) {
+            if ( ! JrhIsCheatsEnabled() && !_jrt_cheater_active) {
                JrtHsSave( finish_time );
                JrtHsAnnounceNew();
                // Load new high score.

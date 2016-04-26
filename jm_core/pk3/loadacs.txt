@@ -3,3 +3,5 @@ jm2_cdwn
 sflags
 TRANSLUCENT
 invclear
+admin
+hints
