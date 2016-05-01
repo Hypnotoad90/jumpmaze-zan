@@ -3,6 +3,9 @@
 CALL "%CD%\utilities\variables.bat" %*
 CALL "%CD%\utilities\mkvers.bat" %*
 
+CALL "%CD%\utilities\variables.bat" %*
+CALL "%CD%\utilities\mkvers.bat" %*
+
 DEL /F /Q "%OUTDIR%\jm_core-*.pk3"
 
 PUSHD jm_core\pk3
