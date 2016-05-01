@@ -39,7 +39,7 @@ script 989 (int option, int who)
 		}
 		terminate;
 	}*/
-	if (option == CHK_FLY)
+	if (option == CHK_FLY && admins[playernumber()] && PlayerInGame(playernumber()))
 	{
 		//log(s:"Checking flight");
 		if (adminsFly[playernumber()] == 1)
@@ -48,7 +48,7 @@ script 989 (int option, int who)
 			SetResultValue(0);
 		terminate;
 	}
-	else if (option == ADMN_INITFLY)
+	else if (option == ADMN_INITFLY && admins[playernumber()] && PlayerInGame(playernumber()))
 	{
 		UnMorphActor(0, TRUE);
 		delay(1);
@@ -56,7 +56,7 @@ script 989 (int option, int who)
 		//PrintBold(d:success);
 		terminate;
 	}
-	else if (option == ADMN_UNFLY)
+	else if (option == ADMN_UNFLY && admins[playernumber()] && PlayerInGame(playernumber()))
 	{
 		UnMorphActor(0, TRUE);
 		delay(1);
