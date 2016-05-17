@@ -9,7 +9,7 @@
 #library "hints"
 #include "zcommon.acs"
 
-#define MAXHINTS 7
+#define MAXHINTS 9
 
 str hints[MAXHINTS] = {"When playing online, to log in and have your times and rankings tracked, you must first register on the auth\n
 server (e.g. for Grandvoid this is: grandvoid.sickedwick.net/auth), then in console type login <username> <password>",
@@ -18,7 +18,11 @@ server (e.g. for Grandvoid this is: grandvoid.sickedwick.net/auth), then in cons
 "Visit #doomjump on the Zandronum irc network to chat with fellow jumpers!",
 "Use chasecam ('chase' in console) if you need help seeing where you are on a small platform.",
 "Source repositories for this project can be found at https://github.com/Hypnotoad90/jumpmaze-zan and https://github.com/Hypnotoad90/jmce",
-"If you're finding the maps too difficult, change to MAP00, a tutorial and training map to learn the basics."};
+"If you're finding the maps too difficult, change to MAP00, a tutorial and training map to learn the basics.",
+"On a solo map puke 998 to see the Top 10 records for the map you are on, on team maps puke 999 to see the record details.\n
+You can also bind these commands in customize controls, under the Jumpmaze section.",
+"You can initiate a vote to resetar the map by puking 981, and to proceed to the next map by puking 981 1, \n
+You can also bind these commands, as well as vote yes and vote no, in customize controls, under the Jumpmaze section."};
 	
 script 994 OPEN CLIENTSIDE
 {
@@ -26,7 +30,7 @@ script 994 OPEN CLIENTSIDE
 
 	int intpos = GetActorX(0) + GetActorY(0) + GetActorZ(0) >> 16;
 	int byteangle = GetActorAngle(0) >> 8;
-	int iterations2 = GetCvar("jm_oldseed") + GetSectorLightLevel (0) + intpos + byteangle + random(1,20);
+	int iterations2 = GetCvar("jm_oldseed") /*+ GetSectorLightLevel (0) + intpos + byteangle*/ + random(1,20);
 	int iterations = abs(iterations2) % 1000;
 	if (iterations == 0)
 		iterations++;
@@ -45,7 +49,7 @@ script 994 OPEN CLIENTSIDE
 		Terminate;
 	delay( 35 * 8 );
 	HudMessage(s:"Hint ",d:hint + 1,s:"/",d:MAXHINTS,s:": ",s:hints[hint],s:"\n\cg(to turn off hints, type set jm_disablehints 1, followed by archivecvar jm_disablehints).";HUDMSG_PLAIN | HUDMSG_LOG, 839, CR_LIGHTBLUE, 1.5, 0.75, 10.0);
-	str seedcommand = strparam(s:"set jm_oldseed ", d:random(1,timer() % 60));
+	str seedcommand = strparam(s:"set jm_oldseed ", d:random(1,timer() % 1000));
     ConsoleCommand(seedcommand);
 	while(TRUE)
 	{

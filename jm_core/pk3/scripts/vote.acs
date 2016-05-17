@@ -1,0 +1,192 @@
+// Enables simple map restart/nextmap voting - REPLACE WITH VOTEDEF WHEN 3.0 IS RELEASED
+//
+// Author: 
+// Hypnotoad
+//
+// License:
+// Free for any purpose. I'm not liable for any damages.
+
+#library "vote"
+#include "zcommon.acs"
+
+#define HUDID1 1500 //cant be 1 - 9, 960+, 732+, 27233, 412, 985, 986, 11142
+#define HUDID2 1501
+#define HUDID3 1502
+#define HUDID4 1503
+
+#define MAXTYPE 1
+
+int plvote[64];
+bool playervoted[64];
+int votetimer = 0;
+bool voteInProgress = FALSE;
+
+script 981 (int type) NET
+{
+	if (voteInProgress)
+		terminate;
+	if (type > MAXTYPE)
+		terminate;
+	if (!PlayerInGame(PlayerNumber()))
+	{
+		print(s:"You must be in game to initiate a vote");
+		Terminate;
+	}
+	voteInProgress = true;
+	clearVotes();
+	SetHudSize(640, 480, 0);
+	delay(35);
+	Setfont("bigfont");
+    HudMessageBold(n:0, s:" has initiated a vote!";HUDMSG_PLAIN, HUDID4, CR_RED, 320.0, 50.0, 5000.0);
+	SetActivator(-1);
+	Setfont("smallfont");
+	if (type == 0)
+	{
+		HudMessageBold(s:"\ccDo you want to \cdrestart the map? \n \n \ccPuke \cd982 \ccfor \cdYES \n \n \ccPuke \cg983 \ccfor \cgNO";HUDMSG_PLAIN, HUDID1, CR_RED, 320.0, 100.0, 32.0);
+		delay(35);
+		acs_execute(977,0);
+		acs_executewait(976,0, "Restart map", "Do not restart map", 1);
+		acs_terminate(977,0);
+	}
+	else if (type == 1)
+	{
+		HudMessageBold(s:"\ccDo you want to \cdproceed to the next map? \n \n \ccPuke \cd982 \ccfor \cdYES \n \n \ccPuke \cg983 \ccfor \cgNO";HUDMSG_PLAIN, HUDID1, CR_RED, 320.0, 100.0, 32.0);
+		delay(35);
+		acs_execute(977,0);
+		acs_executewait(976,0, "Go to next map", "Do not go to next map", 2);
+		acs_terminate(977,0);
+	}
+	votetimer = 0;
+	clearVotes();
+	voteInProgress = false;
+}
+
+script 977 (void)
+{
+    delay(35);
+    votetimer++;
+    restart;
+}
+
+script 976 (int vote1, int vote2, int round)
+{
+    HudMessageBold(s:"";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
+    HudMessageBold(s:"";HUDMSG_PLAIN, HUDID2, CR_WHITE, 320.0, 200.0, 20.0 );
+    int result1 = 0;
+    int result2 = 0;
+    int novote = 0;
+    SetHudSize(640, 480, 0);
+    //print(d:result1,s:" ",d:result2,s:" ",d:novote,s:" ",d:votetimer,s:" ",d:playervoted[0],d:plvote[0][0]); //debug
+    if (votetimer < 30)
+    {
+		Setfont("smallfont");
+		HudMessageBold(s:"Collecting votes...";HUDMSG_PLAIN, HUDID2, CR_WHITE, 320.0, 200.0, 30.0 );
+		for(int Pln = 0; Pln <64; Pln++)
+		{
+			if(!playeringame(pln))
+			{
+				plvote[pln] = 3;
+				continue;
+			}
+			else if (playervoted[pln] == TRUE)
+			{
+				continue;
+			}
+			else
+			{
+				plvote[pln] = 0;
+			}
+			
+		}
+		for(int Pl = 0; Pl <64; Pl++)
+		{
+			if(plvote[Pl] == 0)
+			{
+				delay(1);
+				restart;
+			}
+		}
+    }
+    HudMessageBold(s:"Voting finished";HUDMSG_PLAIN, HUDID2, CR_WHITE, 320.0, 200.0, 20.0 );
+    for(int P = 0; P <64; P++)
+    {
+        if (plvote[P] == 0)
+            novote++;
+        else if (plvote[P] == 1)
+            result1++;
+        else if (plvote[P] == 2)
+            result2++;
+    }
+    if (novote >= result1 + result2)
+    {
+		clearVoteHud();
+		HudMessageBold(s:"\n\n\nNot enough votes!";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
+		terminate;
+    }
+    else if (result1 > result2)
+    {
+		clearVoteHud();
+        HudMessageBold(s:"\n\n\n",s:vote1,s:" won the vote!";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
+		delay(35*3);
+		if (round == 1)
+			resetmap();
+		else if (round == 2)
+		{
+			if (GetCVar("sv_noexit") == 0)
+				Exit_Normal(0);
+			else
+			{
+				consolecommand("nextmap");
+			}
+		}
+    }
+    else if (result2 > result1)
+    {
+		clearVoteHud();
+        HudMessageBold(s:"\n\n\n",s:vote2,s:" won the vote!";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
+		terminate;
+    }
+    else if (result1 == result2)
+    {
+		clearVoteHud();
+		HudMessageBold(s:"\n\n\nDraw, defaulting to no action.";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
+    }
+    
+}
+
+script 982 (void) NET
+{
+	if (votetimer > 0)
+	{
+		plvote[PlayerNumber()] = 1;
+		playervoted[PlayerNumber()] = TRUE;
+		print(s:"You voted \cdYES");
+	}
+}
+
+script 983 (void) NET
+{
+	if (votetimer > 0)
+	{
+		plvote[PlayerNumber()] = 2;
+		playervoted[PlayerNumber()] = TRUE;
+		print(s:"You voted \cdNO");
+	}
+}
+
+function void clearVoteHud(void)
+{
+	HudMessageBold(s:"";HUDMSG_PLAIN, HUDID1, CR_WHITE, 320.0, 200.0, 20.0 );
+	HudMessageBold(s:"";HUDMSG_PLAIN, HUDID2, CR_WHITE, 320.0, 200.0, 20.0 );
+	HudMessageBold(s:"";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
+	HudMessageBold(s:"";HUDMSG_PLAIN, HUDID4, CR_WHITE, 320.0, 200.0, 20.0 );
+}
+
+function void clearVotes(void)
+{
+	for(int a = 0; a <64; a++)
+    {
+        playervoted[a] = FALSE;
+        plvote[a] = 0;
+    }
+}

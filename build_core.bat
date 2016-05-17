@@ -36,5 +36,6 @@ acc "scripts/svmz/game.acs" "acs/srvlmaze.o"
 acc "scripts/INVCLEAR.acs" "acs/invclear.o"
 acc "scripts/admin.acs" "acs/admin.o"
 acc "scripts/hints.acs" "acs/hints.o"
+acc "scripts/vote.acs" "acs/vote.o"
 %SEVENZAEXE% a -tzip "%OUTDIR%\jm_core%FILEVERSION%.pk3" * -r -xr!*.dbs -xr!*.backup1 -xr!*.backup2 -xr!*.backup3 -xr!*.bak
 POPD

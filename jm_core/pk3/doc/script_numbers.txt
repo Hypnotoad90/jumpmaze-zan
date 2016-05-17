@@ -27,5 +27,6 @@ scripts/
    jpxmapinfo.acs: 501
    admin.acs: 989, 992, 993
    hints.acs: 994
+   vote.acs: 976, 977, 981, 982, 983
 
 Hypnojump: 833, 832

@@ -5,3 +5,4 @@ TRANSLUCENT
 invclear
 admin
 hints
+vote
