@@ -9,6 +9,8 @@
 #library "vote"
 #include "zcommon.acs"
 
+#import "jm2_cdwn.acs"
+
 #define HUDID1 1500 //cant be 1 - 9, 960+, 732+, 27233, 412, 985, 986, 11142
 #define HUDID2 1501
 #define HUDID3 1502
@@ -32,9 +34,41 @@ script 981 (int type) NET
 		print(s:"You must be in game to initiate a vote");
 		Terminate;
 	}
+	if (timerTics() < 35*2 || timerstage < 2)
+	{
+		print(s:"You must wait at least 2 seconds after the map starts before voting");
+		terminate;
+	}
+	if (PlayerCount() == 1)
+	{
+		delay(5);
+		if (type == 0)
+		{
+			ACS_Execute(978,0);
+			delay(1);
+			clearMostHud();
+			resetmap();
+			delay(1);
+			terminate;
+		}
+		else if (type == 1)
+		{
+			if (GetCVar("sv_noexit") == 0)
+				Exit_Normal(0);
+			else
+			{
+				consolecommand("nextmap");
+			}
+			delay(1);
+			terminate;
+		}
+	}
 	voteInProgress = true;
 	clearVotes();
 	SetHudSize(640, 480, 0);
+	plvote[PlayerNumber()] = 1;
+	playervoted[PlayerNumber()] = TRUE;
+	print(s:"You voted \cdYES \c*(by default)");
 	delay(35);
 	Setfont("bigfont");
     HudMessageBold(n:0, s:" has initiated a vote!";HUDMSG_PLAIN, HUDID4, CR_RED, 320.0, 50.0, 5000.0);
@@ -129,7 +163,15 @@ script 976 (int vote1, int vote2, int round)
         HudMessageBold(s:"\n\n\n",s:vote1,s:" won the vote!";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
 		delay(35*3);
 		if (round == 1)
+		{
+			ACS_Execute(978,0);
+			clearVoteHud();
+			delay(1);
+			clearMostHud();
 			resetmap();
+			delay(1);
+			terminate;
+		}
 		else if (round == 2)
 		{
 			if (GetCVar("sv_noexit") == 0)
@@ -174,12 +216,40 @@ script 983 (void) NET
 	}
 }
 
+script 978 (void) CLIENTSIDE
+{
+	clearMostHud();
+}
+
 function void clearVoteHud(void)
 {
 	HudMessageBold(s:"";HUDMSG_PLAIN, HUDID1, CR_WHITE, 320.0, 200.0, 20.0 );
 	HudMessageBold(s:"";HUDMSG_PLAIN, HUDID2, CR_WHITE, 320.0, 200.0, 20.0 );
 	HudMessageBold(s:"";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
 	HudMessageBold(s:"";HUDMSG_PLAIN, HUDID4, CR_WHITE, 320.0, 200.0, 20.0 );
+}
+
+function void clearMostHud(void) //clear 1 - 100, 900+, 700+, 27233, 412, 985, 986, 11142
+{
+	for (int a = 0; a < 100; a++)
+	{
+		HudMessageBold(s:"";HUDMSG_PLAIN, a, CR_WHITE, 320.0, 200.0, 20.0 );
+	}
+	for (int b = 900; b < 999; b++)
+	{
+		HudMessageBold(s:"";HUDMSG_PLAIN, b, CR_WHITE, 320.0, 200.0, 20.0 );
+	}
+	for (int c = 690; c < 799; c++)
+	{
+		HudMessageBold(s:"";HUDMSG_PLAIN, c, CR_WHITE, 320.0, 200.0, 20.0 );
+	}
+	HudMessageBold(s:"";HUDMSG_PLAIN, 27233, CR_WHITE, 320.0, 200.0, 20.0 );
+	HudMessageBold(s:"";HUDMSG_PLAIN, 412, CR_WHITE, 320.0, 200.0, 20.0 );
+	HudMessageBold(s:"";HUDMSG_PLAIN, 985, CR_WHITE, 320.0, 200.0, 20.0 );
+	HudMessageBold(s:"";HUDMSG_PLAIN, 986, CR_WHITE, 320.0, 200.0, 20.0 );
+	HudMessageBold(s:"";HUDMSG_PLAIN, 11142, CR_WHITE, 320.0, 200.0, 20.0 );
+	HudMessageBold(s:"";HUDMSG_PLAIN, 839, CR_WHITE, 320.0, 200.0, 20.0 );
+	HudMessageBold(s:"";HUDMSG_PLAIN, 300, CR_WHITE, 320.0, 200.0, 20.0 );
 }
 
 function void clearVotes(void)
@@ -189,4 +259,9 @@ function void clearVotes(void)
         playervoted[a] = FALSE;
         plvote[a] = 0;
     }
+}
+
+function int timerTics(void)
+{
+	return timer() - cdownOffset;
 }
