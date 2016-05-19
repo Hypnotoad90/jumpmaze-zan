@@ -1,4 +1,5 @@
 Cooperative 
 {
 addflag MAPRESETS
+addflag MAPRESET_RESETS_MAPTIME
 }
