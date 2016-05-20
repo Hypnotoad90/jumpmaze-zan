@@ -109,6 +109,7 @@ script 976 (int vote1, int vote2, int round)
     int result1 = 0;
     int result2 = 0;
     int novote = 0;
+	bool voteFinished = true;
     SetHudSize(640, 480, 0);
     //print(d:result1,s:" ",d:result2,s:" ",d:novote,s:" ",d:votetimer,s:" ",d:playervoted[0],d:plvote[0][0]); //debug
     if (votetimer < 30)
@@ -132,13 +133,33 @@ script 976 (int vote1, int vote2, int round)
 			}
 			
 		}
+		
+		int tempresult1 = 0;
+		int tempresult2 = 0;
+		int tempnovote = 0;
+		
 		for(int Pl = 0; Pl <64; Pl++)
 		{
-			if(plvote[Pl] == 0)
+			if (plvote[Pl] == 0)
 			{
-				delay(1);
-				restart;
+				tempnovote++;
+				voteFinished = false;
 			}
+			else if (plvote[Pl] == 1)
+				tempresult1++;
+			else if (plvote[Pl] == 2)
+				tempresult2++;
+		}
+		if (!voteFinished)
+		{
+			if ( tempresult1 > (tempresult2 + tempnovote) || tempresult2 > (tempresult1 + tempnovote) )
+				voteFinished = TRUE;
+		}
+
+		if (!voteFinished)
+		{
+			delay(1);
+			restart;
 		}
     }
     HudMessageBold(s:"Voting finished";HUDMSG_PLAIN, HUDID2, CR_WHITE, 320.0, 200.0, 20.0 );
