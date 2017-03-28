@@ -329,6 +329,12 @@ map RJECT06 "Interrogator" {
   par = 110
 }
 
+map GRAV "Gravity Chambers Redux" {
+  music = "D_STW"
+  par = 120
+  sky1 = "SKY1", 0.02
+}
+
 map DRAG "Drag race" {
   music = "DREAMC"
   par = 18
