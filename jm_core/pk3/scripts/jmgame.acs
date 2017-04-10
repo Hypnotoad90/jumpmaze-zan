@@ -179,8 +179,8 @@ function void JmGameStartTimer( void ) {
    }
 }
 
-function void JmGameSetMapMessage( str name, str author, int skill ) {
-   MmSet( name, author, skill, _jmg_par );
+function void JmGameSetMapMessage( str author, int skill ) { //TODO: Remove name from parameters
+   MmSet( author, skill, _jmg_par );
 }
 
 function void JmGameAddPoint( void ) {

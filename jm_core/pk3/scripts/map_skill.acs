@@ -10,7 +10,8 @@
 
 #library "jmmskill"
 
-#libdefine MAP_SKILL_UNKNOWN 0
+#libdefine MAP_SKILL_UNSET -1
+#libdefine MAP_SKILL_VARIED 0
 #libdefine MAP_SKILL_VERY_EASY 1
 #libdefine MAP_SKILL_EASY 2
 #libdefine MAP_SKILL_MODERATE 3
