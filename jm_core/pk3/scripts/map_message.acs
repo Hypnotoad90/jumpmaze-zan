@@ -131,6 +131,7 @@ script 988 ENTER CLIENTSIDE {
 }
 
 function void MmDisplayClassic( void ) {
+   setFont( "SMALL" );
    if (_mm_skilldisable) {
       Print(
 	     s : "Par Time \n\ch", a : _mm_par
@@ -144,31 +145,29 @@ function void MmDisplayClassic( void ) {
 }
 
 function void MmDisplayStandard( void ) {
+   setFont("SMALL");
    if ( _mm_skilldisable ) {
       if ( _mm_showrec ) {
-         setFont( "SMALL" );
          hudMessage( 
             s : "\cf", n : PRINTNAME_LEVELNAME, s : " - ", 
             n : PRINTNAME_LEVEL, s: " - ",
             s : "Author: ", s : _mm_author, s : "\n\n",
             s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\n\n",
             s : "\ciMap record set by:\c-\n", a : _jrs_hs_author, s : "\c-" ;
-            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, 0, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
+            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
          );
       }
       else {
-         setFont( "SMALL" );
          hudMessage( 
             s : "\cf", n : PRINTNAME_LEVELNAME, s : " - ", 
             n : PRINTNAME_LEVEL, s: " - ",
             s : "Author: ", s : _mm_author, s : "\n\n",
             s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\c-" ;
-            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, 0, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
+            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
          );
       }
    } else {
       if ( _mm_showrec ) {
-         setFont( "SMALL" );
          hudMessage( 
             s : "\cf", n : PRINTNAME_LEVELNAME, s : " - ", 
             n : PRINTNAME_LEVEL, s: " - ",
@@ -176,18 +175,17 @@ function void MmDisplayStandard( void ) {
             s : "\ciLevel of Difficulty\n", s : _mm_skill, s : "\n\n",
             s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\n\n",
             s : "\ciMap record set by:\c-\n", a : _jrs_hs_author, s : "\c-" ;
-            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, 0, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
+            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
          );
       }
       else {
-         setFont( "SMALL" );
          hudMessage( 
             s : "\cf", n : PRINTNAME_LEVELNAME, s : " - ", 
             n : PRINTNAME_LEVEL, s: " - ",
             s : "Author: ", s : _mm_author, s : "\n\n",
             s : "\ciLevel of Difficulty\n", s : _mm_skill, s : "\n\n",
             s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\c-" ;
-            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, 0, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
+            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
          );
       }
    }
