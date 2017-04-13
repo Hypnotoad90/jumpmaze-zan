@@ -11,5 +11,7 @@ script 861 OPEN
 			ConsoleCommand("sv_chasecam 1");
 		if (getCvar("Compat_NoGravity_Spheres") == 0)
 			ConsoleCommand("Compat_NoGravity_Spheres 1");
+		if (getCvar("Compat_SkulltagJumping") == 0)
+			ConsoleCommand("Compat_SkulltagJumping 1");
 	}
 }
