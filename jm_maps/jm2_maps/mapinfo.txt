@@ -324,9 +324,16 @@ map RJECT05 "Islands Of Desolation" {
 }
 
 map RJECT06 "Interrogator" {
-  next = "map00"
+  next = "RJECT07"
   music = "D_INTRR"
   par = 110
+}
+
+map RJECT07 "Gravity Station" {
+  next = "map00"
+  music = "D_ESTINY"
+  sky1 = "stsky8", 0
+  par = 146
 }
 
 map GRAV "Gravity Chambers Redux" {
