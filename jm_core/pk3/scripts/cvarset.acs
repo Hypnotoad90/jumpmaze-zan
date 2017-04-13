@@ -1,0 +1,23 @@
+
+//Made by Wirtualnosc
+#library "cvarset"
+#include "zcommon.acs"
+
+#define CVARCOUNT 4
+str cvarlist[CVARCOUNT] = {
+	"jm_introformat",
+	"jm_auto_fist",
+	"jm_disablehints",
+	"jm_countdown",
+};
+
+script 862 OPEN CLIENTSIDE
+{
+	for (int i=0; i<CVARCOUNT; i++) {
+		if (GetCVar(cvarlist[i]) == 0) {
+			//Might not exist - let's archive
+			ConsoleCommand(StrParam(s:"set ",s:cvarlist[i],s:" 0"));
+			ConsoleCommand(StrParam(s:"archivecvar ",s:cvarlist[i]));
+		}
+	}
+}

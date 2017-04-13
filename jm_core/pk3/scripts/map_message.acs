@@ -19,8 +19,8 @@
 #import "ranker_solo.acs"
 
 // Intro format numbers used by CVar jm_introformat.
-#define MMIF_CLASSIC 0
-#define MMIF_STANDARD 1
+#define MMIF_STANDARD 0
+#define MMIF_CLASSIC 1
 #define MMIF_JUMPIX 2
 #define MMIF_RETROMAZE 3
 #define MMIF_HYPNOJUMP 4

@@ -5,3 +5,4 @@ startreset
 admin
 hints
 vote
+cvarset

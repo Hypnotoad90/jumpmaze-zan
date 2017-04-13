@@ -27,5 +27,6 @@ scripts/
    admin.acs: 989, 992, 993
    hints.acs: 994
    vote.acs: 976, 977, 981, 982, 983
+   cvarset.acs: 862
 
 Hypnojump: 833, 832
