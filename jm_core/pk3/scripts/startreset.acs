@@ -1,0 +1,29 @@
+
+// Made by Wirtualnosc
+#library "startreset"
+#include "zcommon.acs"
+
+script 899 ENTER
+{
+	SetActorProperty(0,APROP_Gravity,1.0);
+	SetActorProperty(0,APROP_Health,100);
+	SetActorProperty(0,APROP_Invulnerable,0);
+	SetActorProperty(0,APROP_DamageFactor,1.0);
+	SetActorProperty(0,APROP_NoTarget,0);
+	SetPlayerProperty(0, 0, PROP_FROZEN);
+	SetPlayerProperty(0, 0, PROP_FLY);
+	Thing_Stop(0);
+	
+	//Don't change inventory on jumpmaze 2 and other specific maps. These maps WILL have to clean things up for themselves
+	str lumpname = StrParam(n:PRINTNAME_LEVEL);
+	if (!(GetLevelInfo(LEVELINFO_LEVELNUM)>=33 && GetLevelInfo(LEVELINFO_LEVELNUM)<=64) &&
+		StrICmp(lumpname, "DRAG") &&
+		StrICmp(lumpname, "HYP04") &&
+		StrICmp(lumpname, "HYP05")
+	) {
+		ClearInventory();
+		Delay(1);
+		GiveInventory("Fist",1);
+		GiveInventory("Pistol",1);
+	}
+}

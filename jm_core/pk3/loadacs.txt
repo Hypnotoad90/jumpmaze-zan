@@ -1,7 +1,7 @@
 autofist
 sflags
 TRANSLUCENT
-invclear
+startreset
 admin
 hints
 vote
