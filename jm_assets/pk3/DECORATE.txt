@@ -2489,3 +2489,15 @@ ACTOR NewStalagmite 9941
     Stop
   }
 }
+
+ACTOR BetterBossBrain : BossBrain replaces BossBrain
+{
+  -SHOOTABLE
+  States
+  {
+  Death: //Just in case
+    BBRN A 100 A_BrainScream
+    BBRN AA 10
+    Stop
+  }
+}
