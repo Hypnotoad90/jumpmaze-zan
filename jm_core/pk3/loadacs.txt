@@ -6,3 +6,4 @@ admin
 hints
 vote
 cvarset
+pickup
