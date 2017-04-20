@@ -417,13 +417,16 @@ function void JrsHsSetAuthor( void ) {
 
 // Saves high score and all of its details in permanent storage. REPLACED WITH ZAN DB
 function void JrsHsSave( int player, int tics ) { 
-	BeginDBTransaction();
+   int cdate = 0;
+   cdate += GetTimeProperty(SystemTime(), TM_YEAR);
+   cdate *= 100;
+   cdate += GetTimeProperty(SystemTime(), TM_MONTH) + 1;
+   cdate *= 100;
+   cdate += GetTimeProperty(SystemTime(), TM_DAY);
+   BeginDBTransaction();
    SetDBEntryString(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RAUTHOR, StrParam(n:player + 1));
    SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RTIME, tics);
-	if (getcvar("jm_date") != 0)
-	{
-		SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RDATE, getcvar("jm_date"));
-	}
+   SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RDATE, cdate);
    EndDBTransaction();
 }
 
