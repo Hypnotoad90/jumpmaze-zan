@@ -106,8 +106,8 @@ script 980 (int mmif) NET { //NET to make it work with script 988. Shouldn't be 
             // We don't need to display the record holder's name in the map message
             // if the record details auto show feature is enabled. This only applies
             // to the solo ranker.
-            _mm_showrec = (JmGameGetMapType() == JMG_MAP_SOLO && JrhIsSet() && !JrhIsAutoShowDetailsTable());
          }
+         _mm_showrec = (JmGameGetMapType() == JMG_MAP_SOLO && JrhIsSet() && !JrhIsAutoShowDetailsTable());
 		 // Auto show high score details table if enabled. We put this code
          // here so we can show the details table at the same time as the
          // map message appears.
@@ -131,7 +131,6 @@ script 988 ENTER CLIENTSIDE {
 }
 
 function void MmDisplayClassic( void ) {
-   setFont( "SMALL" );
    if (_mm_skilldisable) {
       Print(
 	     s : "Par Time \n\ch", a : _mm_par
@@ -246,7 +245,6 @@ function void MmDisplayRetromaze( void ) {
    HudMessage(s: "\cj", n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, 0.7, 5 << 16);
    SetFont("DOOMFONT");
    HudMessage(s: "\cjby: ", s: _mm_author; HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, 0.71, 5 << 16);
-   //TODO: fixer (that or just could edit retrojm maps?)
    HudMessage(s: "\cjDifficulty: ", s: _mm_skillretro; HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID+2, CR_WHITE, 1.5, 0.72, 5 << 16);
 }
 
