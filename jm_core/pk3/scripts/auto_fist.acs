@@ -6,7 +6,7 @@
 // value to 1; to disable, remove above console variable or set its value to 0.
 //
 // Author: 
-// Positron
+// Positron (edited by Wirtualnosc)
 //
 // License:
 // Free for any purpose. I'm not liable for any damages.
@@ -15,6 +15,7 @@
 #include "zcommon.acs"
 
 #import "client.acs"
+#import "jm2_cdwn.acs"
 
 script 995 ENTER {
    acs_ExecuteAlways( 996, 0 );
@@ -24,6 +25,8 @@ script 996 RESPAWN {
    // Small delay to make sure the clearInventory() script has finished
    // executing. I don't like this solution but it will do for now.
    delay( 2 );
+   // If countdown is enabled, make sure that fist is switched only after it is done.
+   while (timerstage != 2) { delay(1); };
    ClientExecute( playerNumber(), 997 );
 }
 
