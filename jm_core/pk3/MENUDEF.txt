@@ -3,9 +3,10 @@ OptionValue "JMIntroFormat"
 	100, "None"
 	0, "Standard"
 	1, "Classic"
-	2, "Jumpix"
-	3, "Retromaze"
-	4, "Hypnojump"
+	2, "Detailed"
+	3, "Jumpix"
+	4, "Retromaze"
+	5, "Hypnojump"
 }
 
 OptionMenu "JMMain"
