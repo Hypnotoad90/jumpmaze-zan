@@ -10,7 +10,7 @@ int cdownOffset;
 script 851 OPEN
 {
 	cdownOffset = timer();
-	if ( getCvar( "jm_countdown" ) == 0 || JmGameGetMapType() == 2 ) 
+	if ( getCvar( "jm_countdown" ) == 0) 
 	{
 		timerstage = 2;
 		terminate;
@@ -24,8 +24,14 @@ script 851 OPEN
 
 script 852 OPEN
 {
-	if ( getCvar( "jm_countdown" ) == 1 && JmGameGetMapType() != 2 ) 
+	if ( getCvar( "jm_countdown" ) == 1) 
 	{
+		delay(1);
+		if (JmGameGetMapType() == 2) {
+			timerstage = 2;
+			JmGameStartTimer();
+			terminate;
+		}
 		setfont("bigfont");
 		delay(35*getCvar( "jm_countdown" ));
 		AmbientSound("MKCDOWN1", 127);
