@@ -21,9 +21,10 @@
 // Intro format numbers used by CVar jm_introformat.
 #define MMIF_STANDARD 0
 #define MMIF_CLASSIC 1
-#define MMIF_JUMPIX 2
-#define MMIF_RETROMAZE 3
-#define MMIF_HYPNOJUMP 4
+#define MMIF_DETAIL 2
+#define MMIF_JUMPIX 3
+#define MMIF_RETROMAZE 4
+#define MMIF_HYPNOJUMP 5
 
 #define MM_TOTAL_DIFFICULTIES 6
 
@@ -119,6 +120,7 @@ script 980 (int mmif) NET { //NET to make it work with script 988. Shouldn't be 
       //Get player's CVar and select appropriate display.
 	  if (mmif == MMIF_CLASSIC) { Delay(66); MmDisplayClassic(); }
 	  else if (mmif == MMIF_STANDARD) { Delay(66); MmDisplayStandard(); }
+	  else if (mmif == MMIF_DETAIL) { Delay(35); MmDisplayDetail(); }
 	  else if (mmif == MMIF_JUMPIX) { Delay(20); MmDisplayJumpix(); }
 	  else if (mmif == MMIF_RETROMAZE) { Delay(35); MmDisplayRetromaze(); }
 	  else if (mmif == MMIF_HYPNOJUMP) { MmDisplayHypnojump(); }
@@ -197,6 +199,40 @@ function void MmDisplayStandard( void ) {
          );
       }
    }
+}
+
+function void MmDisplayDetail( void ) {
+	//Text setup
+	str mapdetails = StrParam(s:"\cuShort name: \cj", n:PRINTNAME_LEVEL, s:"\n\cuAuthor: ", s:_mm_author);
+	if (JmGameGetMapType() == JMG_MAP_TEAM) {
+		mapdetails = StrParam(s:mapdetails, s:"\n\cuMap type: \cqTeam");
+	} else {
+		mapdetails = StrParam(s:mapdetails, s:"\n\cuMap type: \ciSolo");
+	}
+	if (!_mm_skilldisable) {
+		mapdetails = StrParam(s:mapdetails, s:"\n\cuDifficulty: ", s:_mm_skill, s:"\n");
+	}
+	mapdetails = StrParam(s:mapdetails, s:"\cuPar time: \cn", a:_mm_par);
+	if ( _mm_showrec ) {
+		mapdetails = StrParam(s:mapdetails, s:"\n\cuRecord holder: \c-", a:_jrs_hs_author);
+	}
+	if ( JrhIsSet() ) {
+		//Calculate record time
+		int rectime = JrhGetFinishTime();
+		int minutes = rectime / (SECONDS_IN_MINUTE*TICS_IN_SECOND);
+		int seconds = (rectime / TICS_IN_SECOND) % SECONDS_IN_MINUTE;
+		int cseconds = cal_cseconds( rectime % TICS_IN_SECOND );
+		mapdetails = StrParam(s:mapdetails, s:"\n\cuRecord time: \cp", 
+				s:number_prefix(minutes), i:minutes, s:":",
+				s:number_prefix(seconds), i:seconds, s:".",
+				s:number_prefix(cseconds), i:cseconds);
+	}
+	
+	//Print everything
+	SetFont("BIGFONT");
+	HudMessage(s:"\cu", n:PRINTNAME_LEVELNAME; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, 0.31, MM_DISPLAY_TIME, 1.0);
+	SetFont("SMALL");
+	HudMessage(s:mapdetails; HUDMSG_TYPEON | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, 0.35, MM_DISPLAY_TIME, 0.005, 0.75);
 }
 
 function void MmDisplayJumpix( void ) {
