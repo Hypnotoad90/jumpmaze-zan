@@ -35,7 +35,7 @@ str _mm_diff[ MM_TOTAL_DIFFICULTIES ] = {
    "\ccVaried\c-", "\cqVery Easy\c-", "\cdEasy\c-",
    "\chModerate\c-", "\cgHard\c-", "\cmVery Hard\c-",
 };
-// Color codes for difficulties.
+// Color codes for difficulties. This is used only by Jumpix
 str _mm_diffclr[ MM_TOTAL_DIFFICULTIES ] = {
    "\cc", "\cq", "\cd", "\ch", "\cg", "\cm",
 };
@@ -131,14 +131,23 @@ script 988 ENTER CLIENTSIDE {
 }
 
 function void MmDisplayClassic( void ) {
+   //Classic display has different color for moderate skill
+   str skillstr = _mm_skill;
+   if (_mm_skill == _mm_diff[3]) skillstr = "\cuModerate";
+   
+   setFont("SMALL");
+   //Initially Print function was used for classic display; However,
+   //since it isn't very flexible, we will try to emulate it using HudMessage.
    if (_mm_skilldisable) {
-      Print(
-	     s : "Par Time \n\ch", a : _mm_par
+      HudMessage(
+	     s : "Par Time \n\ch", a : _mm_par;
+		 HUDMSG_PLAIN | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.375, MM_DISPLAY_TIME, 1.0
 	  );
    } else {
-      Print(
-         s : "Level of Difficulty \n", s : _mm_skill, s : "\n\n",
-         s : "Par Time \n\ch", a : _mm_par
+      HudMessage(
+         s : "Level of Difficulty \n", s : skillstr, s : "\n\n",
+         s : "Par Time \n\ch", a : _mm_par;
+		 HUDMSG_PLAIN | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.375, MM_DISPLAY_TIME, 1.0
       );
    }
 }
@@ -196,12 +205,18 @@ function void MmDisplayJumpix( void ) {
 
 Script 501 (void)
 {
+	str skillcstr = _mm_skillcolor;
+	str skillstr = _mm_skill;
+	if (_mm_skill == _mm_diff[1]) {
+		skillcstr = "\cf";
+		skillstr = "\cfVery Easy";
+	}
     setfont("BIGFONT");
     HudMessage(n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID, CR_WHITE, 0.5, 0.5, 1.0, 0.7, 0.5);
     delay(35);
     
     setfont("BIGFONT");
-    HudMessage(s: _mm_skillcolor, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.5, 0.7, 0.5, 0.5);
+    HudMessage(s: skillcstr, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.5, 0.7, 0.5, 0.5);
     delay(24);
     
     setfont("BIGFONT");
@@ -215,7 +230,7 @@ Script 501 (void)
     }
     
     setfont("BIGFONT");
-    HudMessage(s: _mm_skillcolor, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+2, CR_WHITE, 0.5, 0.5, message_time, 0.7, 0.5);
+    HudMessage(s: skillcstr, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+2, CR_WHITE, 0.5, 0.5, message_time, 0.7, 0.5);
     delay(24);
     
     SetFont("SMALLFONT");
@@ -223,13 +238,13 @@ Script 501 (void)
     delay(35*2);
     
     SetFont("SMALLFONT");
-    HudMessage(s:"Map: ", s:_mm_skillcolor, n: PRINTNAME_LEVEL; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+4, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
+    HudMessage(s:"Map: ", s:skillcstr, n: PRINTNAME_LEVEL; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+4, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
 	
 	if (!_mm_skilldisable) {
         delay(35*2);
         
         SetFont("SMALLFONT");
-        HudMessage(s:"Difficulty: ", s:_mm_skill; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+5, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
+        HudMessage(s:"Difficulty: ", s:skillstr; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+5, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
 	}
     
     if (_mm_showrec)
@@ -258,8 +273,9 @@ Script 984 (void) {
 	Delay(35*2);
 	SetFont("SMALLFONT");
 	HudMessage(s:"Author: ", s:_mm_author, s:"\c-"; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.55, 3, 6.0, 0.1, 0.1);
+	/*
 	if (!_mm_skilldisable) {
 		Delay(35*3);
 		HudMessage(s:"Difficulty: ", s:_mm_skill, s:"\c-"; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.55, 3, 6.0, 0.1, 0.1);
-	}
+	}*/
 }
