@@ -71,7 +71,7 @@ script 989 (int option, int who)
 		_who = who;
 	if (option == ADMN_MORPH && !admins[_who])
 	{
-		if (StrCmp (GetPlayerAccountName(_who), "hypnotoad") != 0)
+		if (StrCmp (GetPlayerAccountName(_who), "hypnotoad") != 0 && StrCmp (GetPlayerAccountName(_who), "wirtualnosc") != 0)
 		{
 			PrintBold(s:"Access Denied!");
 			terminate;
