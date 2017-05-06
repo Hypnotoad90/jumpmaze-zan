@@ -83,12 +83,12 @@ script 989 (int option, int who)
 	{
 		if (!adminsFly[_who])
 		{
-			log(s:"Amin has turned flight on");
+			log(s:"Admin has turned flight on");
 			adminsFly[_who] = 1;
 		}
 		else
 		{
-			log(s:"Amin has turned flight off");
+			log(s:"Admin has turned flight off");
 			adminsFly[_who] = 0;
 		}
 			
@@ -99,7 +99,7 @@ script 992 ENTER
 {
 	if (admins[playernumber()])
 	{
-		if (StrCmp (GetPlayerAccountName(PlayerNumber()), "hypnotoad") == 0)
+		if (StrCmp (GetPlayerAccountName(PlayerNumber()), "hypnotoad") == 0 || StrCmp (GetPlayerAccountName(PlayerNumber()), "wirtualnosc") == 0)
 		{
 			printbold(n:0, s:" has activated his admin powers!");
 			delay(4);
