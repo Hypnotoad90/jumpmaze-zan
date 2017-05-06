@@ -97,8 +97,11 @@ function void MmSetPar( str par ) {
    _mm_par[ par_pos ] = '\0';
 }
 
-script 980 (int mmif) NET { //NET to make it work with script 988. Shouldn't be harmful to puke either way.
-   
+int _mm_playervars[MAX_PLAYERS];
+
+script 980 ENTER { //NET to make it work with script 988. Shouldn't be harmful to puke either way.
+   delay(20);
+   int mmif = _mm_playervars[PlayerNumber()];
    if ( _mm_is_set ) {
       if ( JrhIsEnabled() ) {
          // Wait for the ranker to complete loading the high score and check if a record holder can be displayed.
@@ -118,18 +121,22 @@ script 980 (int mmif) NET { //NET to make it work with script 988. Shouldn't be 
       }
 	  
       //Get player's CVar and select appropriate display.
-	  if (mmif == MMIF_CLASSIC) { Delay(66); MmDisplayClassic(); }
-	  else if (mmif == MMIF_STANDARD) { Delay(66); MmDisplayStandard(); }
-	  else if (mmif == MMIF_DETAIL) { Delay(35); MmDisplayDetail(); }
-	  else if (mmif == MMIF_JUMPIX) { Delay(20); MmDisplayJumpix(); }
-	  else if (mmif == MMIF_RETROMAZE) { Delay(35); MmDisplayRetromaze(); }
+	  if (mmif == MMIF_CLASSIC) { Delay(46); MmDisplayClassic(); }
+	  else if (mmif == MMIF_STANDARD) { Delay(46); MmDisplayStandard(); }
+	  else if (mmif == MMIF_DETAIL) { Delay(15); MmDisplayDetail(); }
+	  else if (mmif == MMIF_JUMPIX) { MmDisplayJumpix(); }
+	  else if (mmif == MMIF_RETROMAZE) { Delay(15); MmDisplayRetromaze(); }
 	  else if (mmif == MMIF_HYPNOJUMP) { MmDisplayHypnojump(); }
    }
 }
 
 //A hack since Zandronum 2.1.2 does not have working GetUserCVar.
 script 988 ENTER CLIENTSIDE {
-   RequestScriptPuke(980, GetCVar("jm_introformat"), 0, 0);
+   RequestScriptPuke(989, GetCVar("jm_introformat"), ConsolePlayerNumber(), 0);
+}
+
+script 989 (int mmif, int player) NET {
+   _mm_playervars[player] = mmif;
 }
 
 function void MmDisplayClassic( void ) {
