@@ -17,7 +17,7 @@ scripts/
    ranker_solo.acs: 840, 841, 842, 843, 950, 951, 952, 953, 954, 955, 956, 998
    ranker_team.acs: 960, 961, 962, 963, 964, 965, 966
    luk.acs: 970, 971, 972, 973, 974, 975
-   map_message.acs: 501, 980, 984, 988
+   map_message.acs: 501, 980, 984, 988, 989
    timer.acs: 985, 986, 987
    script_trigger.acs: 990, 991
    auto_fist.acs: 995, 996
