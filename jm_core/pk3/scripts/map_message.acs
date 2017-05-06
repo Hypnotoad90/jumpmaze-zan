@@ -132,10 +132,10 @@ script 980 ENTER { //NET to make it work with script 988. Shouldn't be harmful t
 
 //A hack since Zandronum 2.1.2 does not have working GetUserCVar.
 script 988 ENTER CLIENTSIDE {
-   RequestScriptPuke(989, GetCVar("jm_introformat"), ConsolePlayerNumber(), 0);
+   RequestScriptPuke(979, GetCVar("jm_introformat"), ConsolePlayerNumber(), 0);
 }
 
-script 989 (int mmif, int player) NET {
+script 979 (int mmif, int player) NET {
    _mm_playervars[player] = mmif;
 }
 
