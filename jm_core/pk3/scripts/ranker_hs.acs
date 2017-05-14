@@ -1,7 +1,7 @@
 // Helps both the rankers with handling the high score.
 //
 // Author: 
-// Positron (modified by Hypnotoad)
+// Positron (modified by Hypnotoad & Wirtualnosc)
 //
 // License:
 // Free for any purpose. I'm not liable for any damages.
@@ -12,6 +12,7 @@
 #import "constants.acs"
 #import "utility.acs"
 #import "luk.acs"
+#import "jmgame.acs"
 
 #libdefine JRH_LINE_NOTICE 27233
 #libdefine JRH_LINE_NOTICE_Y 0.55
@@ -182,3 +183,181 @@ function str toUpper (str s)
     g_toUpperBuffer[i] = '\0';
     return strparam (a:g_toUpperBuffer);
 }
+
+//LEADERBOARD STUFF
+//- Some constants
+#define LB_ENTRIES_PER_PAGE 30
+#define LB_HUDMSG_ID 900
+//- Script numbers (pukeable)
+#define LB_TOGGLE 891
+#define LB_UP 892
+#define LB_DOWN 893
+#define LB_SPECIAL 894
+#define LB_ONCONNECT 898
+//- Script numbers (non-pukeable)
+#define LB_INIT 881
+#define LB_CLIENTINIT 882
+#define LB_UPDATE 883
+//- Player leaderboard menu data
+bool lb_playeropen[MAX_PLAYERS];
+int lb_playeroffset[MAX_PLAYERS];
+//- Entry count
+int lb_count = 0;
+
+script LB_INIT OPEN {
+	//Clear menu data
+	for (int i=0; i<MAX_PLAYERS; i++) {
+		lb_playeropen[i] = false;
+		lb_playeroffset[i] = 0;
+	} //TODO: more cases
+	ACS_Execute( LB_UPDATE, 0 );
+}
+
+script LB_CLIENTINIT OPEN CLIENTSIDE {
+	RequestScriptPuke(LB_ONCONNECT, 0, 0, 0);
+}
+
+script LB_UPDATE (void) {
+	if (!is_online() || !JrhIsEnabled() || JmGameGetMapType() == JMG_MAP_TEAM)
+		terminate;
+	//Get entry count for current map
+	str mappbs = StrParam(s:toUpper(StrParam(n:PRINTNAME_LEVEL)),s:"_pbs");
+	int res = GetDBEntries(mappbs);
+	lb_count = CountDBResults(res);
+	FreeDBResults(res);
+}
+
+function void DisplayLeaderboard(void) {
+	int player = PlayerNumber();
+	if (lb_playeropen[player]) {
+		if (!is_online()) {
+			print(s:"Leaderboards can be used only in online games");
+			lb_playeropen[player] = false;
+			return;
+		} else if (!JrhIsEnabled()) {
+			print(s:"Leaderboards are disabled");
+			lb_playeropen[player] = false;
+			return;
+		} else if (JmGameGetMapType() == JMG_MAP_TEAM) {
+			print(s:"Leaderboards cannot be used on team maps");
+			lb_playeropen[player] = false;
+			return;
+		}
+		//Prepare leaderboard
+		ACS_Execute(LB_UPDATE, 0);
+		int offset = lb_playeroffset[player];
+		//- Some sanity checks here (if for some reason other scripts screwed up)
+		if (offset < 0 || offset >= lb_count) {
+			lb_playeroffset[player] = 0;
+			offset = 0;
+		}
+		//- Get all the stuff from database
+		int limit = LB_ENTRIES_PER_PAGE;
+		str mappbs = StrParam(s:toUpper(StrParam(n:PRINTNAME_LEVEL)),s:"_pbs");
+		int lbres = SortDBEntries( mappbs, limit, offset, 0 );
+		int lbreslen = CountDBResults(lbres);
+		if (lbreslen < limit) limit = lbreslen;
+		str shownnames = "";
+		str showntimes = "";
+		for (int i=0; i<limit; i++) {
+			//While we're getting data, we also construct strings on the fly
+			str rankname = GetDBResultKeyString(lbres, i);
+			str playercolor = "\ca";
+			//- If a player is logged in, he will be marked a different color.
+			if (PlayerIsLoggedIn(playernumber()) && GetPlayerAccountName(playernumber()) == rankname)
+				playercolor = "\cf";
+			//- Construct both name and time strings
+			shownnames = StrParam(s:shownnames, s:"\cj", i:(offset+i+1), s:". \t", s:playercolor, s:rankname, s:"\n");
+			int pbtime = GetDBResultValue(lbres, i);
+			int pbmins = (pbtime / (TICS_IN_SECOND * SECONDS_IN_MINUTE));
+			int pbsecs = (pbtime / TICS_IN_SECOND) % SECONDS_IN_MINUTE;
+			int pbcsecs = cal_cseconds(pbtime % TICS_IN_SECOND);
+			showntimes = StrParam(s:showntimes, s:"\cb",
+						s:number_prefix( pbmins ), i:pbmins, s:":",
+						s:number_prefix( pbsecs ), i:pbsecs, s:"\cs.",
+						s:number_prefix( pbcsecs ), i:pbcsecs, s:"\c-\n");
+		}
+		FreeDBResults(lbres);
+		//Display results
+		SetHudSize(640,480,TRUE);
+		SetFont("BIGFONT");
+		HudMessage(s:"\cgJUMPMAZE LEADERBOARDS"; HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+0, CR_RED, 320.4, 8.1, 0.0);
+		SetHudSize(0,0,TRUE);
+		SetFont("SMALLFONT");
+		//- We display those messages with negative coordinates so they can be aligned properly
+		HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, -0.35, -0.15, 0.0);
+		HudMessage(s:showntimes; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, -1.6, -0.15, 0.0);
+	} else {
+		//Hide leaderboard
+		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+0, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+	}
+}
+
+script LB_TOGGLE (void) NET {
+	int player = PlayerNumber();
+	if (lb_playeropen[player]) {
+		//Close
+		lb_playeropen[player] = false;
+		LocalAmbientSound("menu/clear", 127);
+	} else {
+		//Open
+		lb_playeropen[player] = true;
+		LocalAmbientSound("menu/activate", 127);
+		lb_playeroffset[player] = 0;
+	}
+	DisplayLeaderboard();
+}
+
+script LB_UP (int count) NET {
+	int player = PlayerNumber();
+	if (lb_playeropen[player] == false)
+		terminate;
+	if (count <= 0)
+		count = 1;
+	LocalAmbientSound("menu/cursor", 127);
+	lb_playeroffset[player] -= count;
+	if (lb_playeroffset[player] < 0)
+		lb_playeroffset[player] = 0;
+	DisplayLeaderboard();
+}
+
+script LB_DOWN (int count) NET {
+	int player = PlayerNumber();
+	if (lb_playeropen[player] == false)
+		terminate;
+	if (count <= 0)
+		count = 1;
+	LocalAmbientSound("menu/cursor", 127);
+	lb_playeroffset[player] += count;
+	if (lb_playeroffset[player] >= lb_count)
+		lb_playeroffset[player] = lb_count - 1;
+	DisplayLeaderboard();
+}
+
+script LB_SPECIAL (void) NET {
+	int player = PlayerNumber();
+	if (lb_playeropen[player] == false)
+		terminate;
+	if (PlayerIsLoggedIn(playernumber()) == 0)
+		terminate;
+	str mappbs = StrParam(s:toUpper(StrParam(n:PRINTNAME_LEVEL)),s:"_pbs");
+	int count = GetDBEntryRank(mappbs, GetPlayerAccountName(playernumber()), 0);
+	LocalAmbientSound("menu/cursor", 127);
+	lb_playeroffset[player] = count - (LB_ENTRIES_PER_PAGE / 2);
+	if (lb_playeroffset[player] < 0) lb_playeroffset[player] = 0;
+	DisplayLeaderboard();
+}
+
+script LB_ONCONNECT (void) NET {
+	lb_playeropen[PlayerNumber()] = false;
+	lb_playeroffset[PlayerNumber()] = 0;
+}
+
+
+
+
+
+
+
