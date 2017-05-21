@@ -174,12 +174,13 @@ RJECT03 -- Gravity Chambers
 RJECT04 -- Airship Doomed
   Author: Master Garo
   Music:
-    - Kitchen Ace (And Taking Names) (E1M4) by Bobby Prince, Doom 1
-    - Harder, Better, Faster, Strong by Daft Punk 
+    - Sonic 3 & Knuckles - Flying Battery Zone Act 1
+    - Sonic the Hedgehog - Scrap Brain Zone
+    - Sonic 3D Blast - Panic Puppet Zone Act 2
 	
 RJECT05 -- Island's of Desolation
   Author: Propaganda
-  Music: Song from touhou
+  Music: Touhou 7 - Mystic Dream (Menu)
   
 RJECT06 -- Interrogator
   Author: HeavenWraith
@@ -187,6 +188,10 @@ RJECT06 -- Interrogator
     - Battle With Seymour (Black Mages remix) by Uematsu Nobuo, Final Fantasy X
     - Tai ma Gekisen by Takanashi Yasuharu, Fairy Tail soundtrack II
 	
+RJECT07 -- Gravity Station
+  Author: Wirtualnosc
+  Music: Megaman ZX Advent - Destiny
+
 DRAG -- Drag Race
   Author: The Player
   Music: Silence, F Zero X
@@ -194,6 +199,10 @@ DRAG -- Drag Race
 FLOORLAV -- Floor is Lava A.K.A Jroc's Nightmare
   Author: The Player
   Music: "The Healer Stalks" - Bobby Prince
+
+GRAV -- Gravity Chambers Redux
+  Author: Wirtualnosc
+  Music: Descent I, level 3
  
 SHIT -- The Key To Victory
   Author: The Player
@@ -206,6 +215,8 @@ by Positron. Some of the scripts are based on scripts originally implemented
 by Wario. 
 
 Ranker scripts updated by Hypnotoad to utilize Zandronum's new database and accounts system
+
+New scoreboard and map message systems as well as other smaller fixes were implemented by Wirtualnosc.
 
 Survival Maze idea by Marine and expanded/implemented by Positron.
 
