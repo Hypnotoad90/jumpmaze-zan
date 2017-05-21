@@ -5,7 +5,7 @@
 *******************************************************************************
 
 00) MAP00 = Training                 -- The Player                  (Easy)
-01) MAP33 = Jump Trials				 -- The Player					(Varied)
+01) MAP33 = Jump Trials              -- The Player                  (Varied)
 02) MAP34 = Junglefalls              -- Wario                       (Hard)
 03) MAP35 = Rage Maze                -- The Player                  (Moderate)
 04) MAP36 = Goldfinger               -- The Player                  (Moderate)
@@ -41,7 +41,9 @@
   RJECT02 = Eternal Void             -- Gosimer                     (Very Hard)
   RJECT03 = Gravity Chambers         -- Wirtualnosc                 (Very Hard)
   RJECT04 = Airship Doomed           -- DoomKiller                  (Very Hard)
-  RJECT05 = Island's of Desolation   -- Propganda					(Moderate)
+  RJECT05 = Island's of Desolation   -- Propaganda                  (Moderate)
   RJECT06 = Interrogator             -- HeavenWraith                (Hard)
+  RJECT07 = Gravity Station          -- Wirtualnosc                 (Moderate)
   DRAG    = Drag Race                -- The Player                  (Easy)
   FLOORLAV= Floor is Lava            -- The Player                  (Moderate)
+  GRAV    = Gravity Chambers Redux   -- Wirtualnosc                 (Very Hard)
