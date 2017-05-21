@@ -629,6 +629,7 @@ function void checkpb (int time, int player)
 	}
 }
 
+/*
 script 841 OPEN //loead leaderboard
 {
 	if (is_online() == false || !JrhIsEnabled())
@@ -710,6 +711,7 @@ script 841 OPEN //loead leaderboard
 		delay(35*60);
 	}
 }
+*/
 
 script 842 (void)
 {
@@ -756,194 +758,7 @@ script 843 (int gone) DISCONNECT
 
 script 998 (void) NET
 {
-		if (is_online() == false || !JrhIsEnabled())
-			terminate;
-		if (isTeamMap)
-		{
-			print(s:"Top 10 times not available for team maps");
-			terminate;
-		}
-		int line_id = JRS_TBL_LINEID_OFFSET - 2;
-		setFont( "SMALLFONT" );
-		if (first != 0)
-		{
-			hudMessage(
-			s : "\cnTop Times: ";	HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-			hudMessage(
-			s : "\n\n",
-			s : "1st: ",a:firstname,s:" : \cb",s:number_prefix( tomins(first) ), i : tomins(first), s : ":", s : number_prefix( tosecs(first) ), i : tosecs(first), s : "\cs.",s : number_prefix( tocsecs(first) ), i : tocsecs(first), s : "\c-";	HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n",
-			s : "No personal records set yet \cc(note: this is updated every minute)";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
-		if (second != 0)
-		{
-			hudMessage(
-			s : "\n\n\n\n",
-			s : "2nd: ",a:secondname,s:" : \cb",s:number_prefix( tomins(second) ), i : tomins(second), s : ":", s : number_prefix( tosecs(second) ), i : tosecs(second), s : "\cs.",s : number_prefix( tocsecs(second) ), i : tocsecs(second), s : "\c-"; HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
-		if (third != 0)
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n",
-			s : "3rd: ",a:thirdname,s:" : \cb",s:number_prefix( tomins(third) ), i : tomins(third), s : ":", s : number_prefix( tosecs(third) ), i : tosecs(third), s : "\cs.",s : number_prefix( tocsecs(third) ), i : tocsecs(third), s : "\c-";HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
-		if (fourth != 0)
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n",
-			s : "4th: ",a:fourthname,s:" : \cb",s:number_prefix( tomins(fourth) ), i : tomins(fourth), s : ":", s : number_prefix( tosecs(fourth) ), i : tosecs(fourth), s : "\cs.",s : number_prefix( tocsecs(fourth) ), i : tocsecs(fourth), s : "\c-"; HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
-		if (fifth != 0)
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n",
-			s : "5th: ",a:fifthname,s:" : \cb",s:number_prefix( tomins(fifth) ), i : tomins(fifth), s : ":", s : number_prefix( tosecs(fifth) ), i : tosecs(fifth), s : "\cs.",s : number_prefix( tocsecs(fifth) ), i : tocsecs(fifth), s : "\c-"; HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
-		if (sixth != 0)
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "6th: ",a:sixthname,s:" : \cb",s:number_prefix( tomins(sixth) ), i : tomins(sixth), s : ":", s : number_prefix( tosecs(sixth) ), i : tosecs(sixth), s : "\cs.",s : number_prefix( tocsecs(sixth) ), i : tocsecs(sixth), s : "\c-"; HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
-		if (seventh != 0)
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "7th: ",a:seventhname,s:" : \cb",s:number_prefix( tomins(seventh) ), i : tomins(seventh), s : ":", s : number_prefix( tosecs(seventh) ), i : tosecs(seventh), s : "\cs.",s : number_prefix( tocsecs(seventh) ), i : tocsecs(seventh), s : "\c-"; HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
-		if (eighth != 0)
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "8th: ",a:eighthname,s:" : \cb",s:number_prefix( tomins(eighth) ), i : tomins(eighth), s : ":", s : number_prefix( tosecs(eighth) ), i : tosecs(eighth), s : "\cs.",s : number_prefix( tocsecs(eighth) ), i : tocsecs(eighth), s : "\c-"; HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
-		if (ninth != 0)
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "9th: ",a:ninthname,s:" : \cb",s:number_prefix( tomins(ninth) ), i : tomins(ninth), s : ":", s : number_prefix( tosecs(ninth) ), i : tosecs(ninth), s : "\cs.",s : number_prefix( tocsecs(ninth) ), i : tocsecs(ninth), s : "\c-"; HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
-		if (tenth != 0)
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "10th: ",a:tenthname,s:" : \cb",s:number_prefix( tomins(tenth) ), i : tomins(tenth), s : ":", s : number_prefix( tosecs(tenth) ), i : tosecs(tenth), s : "\cs.",s : number_prefix( tocsecs(tenth) ), i : tocsecs(tenth), s : "\c-"; HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			line_id--;
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-		}
-		else
-		{
-			hudMessage(
-			s : "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-			s : "\ccNote, this is updated every minute";
-			HUDMSG_PLAIN, line_id, 0, 0.5, 0.1, 15.0
-			);
-			terminate;
-		}
+	print(s:"This script was replaced by new scoreboard system. Please go into \"options\"->\"customize controls\" to set new keys.");
 }
 
 function int tosecs(int tics)
