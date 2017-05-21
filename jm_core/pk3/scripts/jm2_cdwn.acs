@@ -82,3 +82,11 @@ script 854 RESPAWN
 	}
 	setPlayerProperty( 0, 0, PROP_TOTALLYFROZEN );
 }
+
+script 855 UNLOADING
+{
+	if ( getCvar( "jm_countdown" ) == 1) 
+	{
+		setPlayerProperty( 1, 1, PROP_TOTALLYFROZEN );
+	}
+}

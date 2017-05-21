@@ -4,7 +4,7 @@ to avoid future conflicts. The script numbers are ordered in ascending order.
 ===============================================================================
 
 scripts/
-   jm2_cdwn.acs: 851, 852, 853, 854
+   jm2_cdwn.acs: 851, 852, 853, 854, 855
    sflags.acs: 861
    startreset.acs: 899
    svmz/
