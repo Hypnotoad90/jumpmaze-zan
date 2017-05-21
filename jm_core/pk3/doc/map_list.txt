@@ -41,7 +41,7 @@
   RJECT02 = Eternal Void             -- Gosimer                     (Very Hard)
   RJECT03 = Gravity Chambers         -- Wirtualnosc                 (Very Hard)
   RJECT04 = Airship Doomed           -- DoomKiller                  (Very Hard)
-  RJECT05 = Island's of Desolation   -- Propganda                   (Moderate)
+  RJECT05 = Island's of Desolation   -- Propaganda                  (Moderate)
   RJECT06 = Interrogator             -- HeavenWraith                (Hard)
   RJECT07 = Gravity Station          -- Wirtualnosc                 (Moderate)
   DRAG    = Drag Race                -- The Player                  (Easy)
