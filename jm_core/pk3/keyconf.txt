@@ -1,4 +1,6 @@
 clearplayerclasses
+
+//leaderboard binds
 alias jmhs_toggle "puke 891"
 alias jmhs_up "puke 892"
 alias jmhs_up10 "puke 892 10"
@@ -7,14 +9,20 @@ alias jmhs_down "puke 893"
 alias jmhs_down10 "puke 893 10"
 alias jmhs_down100 "puke 893 100"
 alias jmhs_yourpb "puke 894"
+defaultbind kp5 jmhs_toggle
+defaultbind kp7 jmhs_up
+defaultbind kp8 jmhs_up10
+defaultbind kp9 jmhs_up100
+defaultbind kp1 jmhs_down
+defaultbind kp2 jmhs_down10
+defaultbind kp3 jmhs_down100
+defaultbind kp6 jmhs_yourpb
 
 // Jumpmaze specific key configuration.
 addkeysection "Jumpmaze" jumpmazeConf
 
 // Map record details.
 addmenukey "Record Details" "puke 999"
-
-addmenukey "Top 10" "puke 998"
 
 //voting
 addmenukey "Call vote Reset Map" "puke 981"

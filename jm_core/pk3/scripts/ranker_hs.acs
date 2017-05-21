@@ -258,15 +258,15 @@ function void DisplayLeaderboard(void) {
 		int lbres = SortDBEntries( mappbs, limit, offset, 0 );
 		int lbreslen = CountDBResults(lbres);
 		if (lbreslen < limit) limit = lbreslen;
-		str shownnames = "\n\n\n\n";
+		str shownnames = "\n\n\n";
 		for (int i=0; i<limit; i++) {
 			//While we're getting data, we also construct strings on the fly
 			int rank = offset+i+1;
 			str rankname = GetDBResultKeyString(lbres, i);
-			str playercolor = "\ca";
+			str playercolor = "\ch";
 			//- If a player is logged in, he will be marked a different color.
 			if (PlayerIsLoggedIn(playernumber()) && GetPlayerAccountName(playernumber()) == rankname)
-				playercolor = "\cf";
+				playercolor = "\cv";
 			//- Truncate if too long
 			rankname = StrLeft(rankname, 30);
 			//- Construct left ident
@@ -293,23 +293,26 @@ function void DisplayLeaderboard(void) {
 		}
 		FreeDBResults(lbres);
 		//- Make statinfo string
-		str statinfo = "\n\n\n\n";
+		str statinfo = "\n\n\n";
 		for (i=0; i<LB_ENTRIES_PER_PAGE; i++)
 			statinfo = StrParam(s:statinfo,s:"\n");
 		statinfo = StrParam(s:statinfo,s:"\n\ccFor global leaderboards please visit http://grandvoid.sickedwick.net/jmstats");
 		//Display results
 		FadeTo(0,0,0,0.15,0.0);
+		SetFont("TMSBOARD");
+		HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
 		SetFont("BIGFONT");
-		HudMessage(s:"\cgJUMPMAZE LEADERBOARDS"; HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+0, CR_RED, 1.5, -0.1, 0.0);
+		HudMessage(s:toUpper(StrParam(s:"top times on ",n:PRINTNAME_LEVEL)); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 1.5, -0.1, 0.0);
 		SetFont("CONFONT");
-		HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
-		HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+		HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+		HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
 	} else {
 		//Hide leaderboard
 		FadeTo(0,0,0,0.0,0.0);
-		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+0, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
 		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
 		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
 	}
 }
 
