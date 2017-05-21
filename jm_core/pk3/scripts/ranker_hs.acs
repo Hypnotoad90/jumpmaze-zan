@@ -198,8 +198,9 @@ function str toUpper (str s)
 #define LB_INIT 881
 #define LB_CLIENTINIT 882
 #define LB_UPDATE 883
+#define LB_DISCONNECT 884
 //- Player leaderboard menu data
-bool lb_playeropen[MAX_PLAYERS];
+int lb_playeropen[MAX_PLAYERS];
 int lb_playeroffset[MAX_PLAYERS];
 //- Entry count
 int lb_count = 0;
@@ -209,7 +210,7 @@ script LB_INIT OPEN {
 	for (int i=0; i<MAX_PLAYERS; i++) {
 		lb_playeropen[i] = false;
 		lb_playeroffset[i] = 0;
-	} //TODO: more cases
+	}
 	ACS_Execute( LB_UPDATE, 0 );
 }
 
@@ -229,7 +230,7 @@ script LB_UPDATE (void) {
 
 function void DisplayLeaderboard(void) {
 	int player = PlayerNumber();
-	if (lb_playeropen[player]) {
+	if (lb_playeropen[player] == 1) {
 		if (!is_online()) {
 			print(s:"Leaderboards can be used only in online games");
 			lb_playeropen[player] = false;
@@ -257,38 +258,55 @@ function void DisplayLeaderboard(void) {
 		int lbres = SortDBEntries( mappbs, limit, offset, 0 );
 		int lbreslen = CountDBResults(lbres);
 		if (lbreslen < limit) limit = lbreslen;
-		str shownnames = "";
-		str showntimes = "";
+		str shownnames = "\n\n\n\n";
 		for (int i=0; i<limit; i++) {
 			//While we're getting data, we also construct strings on the fly
+			int rank = offset+i+1;
 			str rankname = GetDBResultKeyString(lbres, i);
 			str playercolor = "\ca";
 			//- If a player is logged in, he will be marked a different color.
 			if (PlayerIsLoggedIn(playernumber()) && GetPlayerAccountName(playernumber()) == rankname)
 				playercolor = "\cf";
-			//- Construct both name and time strings
-			shownnames = StrParam(s:shownnames, s:"\cj", i:(offset+i+1), s:". \t", s:playercolor, s:rankname, s:"\n");
+			//- Truncate if too long
+			rankname = StrLeft(rankname, 30);
+			//- Construct left ident
+			str il;
+			if (rank < 10) il = "   ";
+			else if (rank < 100) il = "  ";
+			else if (rank < 1000) il = " ";
+			else il = "";
+			//- Construct right ident
+			str ir = "";
+			int irspaces = 30 - StrLen(rankname);
+			for (int j=0; j<irspaces; j++)
+				ir = StrParam(s:ir, s:" ");
+			//- Construct a line
 			int pbtime = GetDBResultValue(lbres, i);
 			int pbmins = (pbtime / (TICS_IN_SECOND * SECONDS_IN_MINUTE));
 			int pbsecs = (pbtime / TICS_IN_SECOND) % SECONDS_IN_MINUTE;
 			int pbcsecs = cal_cseconds(pbtime % TICS_IN_SECOND);
-			showntimes = StrParam(s:showntimes, s:"\cb",
+			shownnames = StrParam(s:shownnames, s:"\cj", i:rank, s:". ",
+						s:il, s:playercolor, s:rankname, s:ir, s:" \cb",
 						s:number_prefix( pbmins ), i:pbmins, s:":",
 						s:number_prefix( pbsecs ), i:pbsecs, s:"\cs.",
 						s:number_prefix( pbcsecs ), i:pbcsecs, s:"\c-\n");
 		}
 		FreeDBResults(lbres);
+		//- Make statinfo string
+		str statinfo = "\n\n\n\n";
+		for (i=0; i<LB_ENTRIES_PER_PAGE; i++)
+			statinfo = StrParam(s:statinfo,s:"\n");
+		statinfo = StrParam(s:statinfo,s:"\n\ccFor global leaderboards please visit http://grandvoid.sickedwick.net/jmstats");
 		//Display results
-		SetHudSize(640,480,TRUE);
+		FadeTo(0,0,0,0.15,0.0);
 		SetFont("BIGFONT");
-		HudMessage(s:"\cgJUMPMAZE LEADERBOARDS"; HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+0, CR_RED, 320.4, 8.1, 0.0);
-		SetHudSize(0,0,TRUE);
-		SetFont("SMALLFONT");
-		//- We display those messages with negative coordinates so they can be aligned properly
-		HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, -0.35, -0.15, 0.0);
-		HudMessage(s:showntimes; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, -1.6, -0.15, 0.0);
+		HudMessage(s:"\cgJUMPMAZE LEADERBOARDS"; HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+0, CR_RED, 1.5, -0.1, 0.0);
+		SetFont("CONFONT");
+		HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+		HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
 	} else {
 		//Hide leaderboard
+		FadeTo(0,0,0,0.0,0.0);
 		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+0, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
 		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
 		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
@@ -299,11 +317,11 @@ script LB_TOGGLE (void) NET {
 	int player = PlayerNumber();
 	if (lb_playeropen[player]) {
 		//Close
-		lb_playeropen[player] = false;
+		lb_playeropen[player] = 0;
 		LocalAmbientSound("menu/clear", 127);
 	} else {
 		//Open
-		lb_playeropen[player] = true;
+		lb_playeropen[player] = 1;
 		LocalAmbientSound("menu/activate", 127);
 		lb_playeroffset[player] = 0;
 	}
@@ -312,7 +330,7 @@ script LB_TOGGLE (void) NET {
 
 script LB_UP (int count) NET {
 	int player = PlayerNumber();
-	if (lb_playeropen[player] == false)
+	if (lb_playeropen[player] == 0)
 		terminate;
 	if (count <= 0)
 		count = 1;
@@ -325,7 +343,7 @@ script LB_UP (int count) NET {
 
 script LB_DOWN (int count) NET {
 	int player = PlayerNumber();
-	if (lb_playeropen[player] == false)
+	if (lb_playeropen[player] == 0)
 		terminate;
 	if (count <= 0)
 		count = 1;
@@ -338,7 +356,7 @@ script LB_DOWN (int count) NET {
 
 script LB_SPECIAL (void) NET {
 	int player = PlayerNumber();
-	if (lb_playeropen[player] == false)
+	if (lb_playeropen[player] == 0)
 		terminate;
 	if (PlayerIsLoggedIn(playernumber()) == 0)
 		terminate;
@@ -351,7 +369,7 @@ script LB_SPECIAL (void) NET {
 }
 
 script LB_ONCONNECT (void) NET {
-	lb_playeropen[PlayerNumber()] = false;
+	lb_playeropen[PlayerNumber()] = 0;
 	lb_playeroffset[PlayerNumber()] = 0;
 }
 
