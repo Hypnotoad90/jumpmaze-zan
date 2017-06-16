@@ -237,9 +237,9 @@ function void MmDisplayDetail( void ) {
 	
 	//Print everything
 	SetFont("BIGFONT");
-	HudMessage(s:"\cu", n:PRINTNAME_LEVELNAME; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, 0.31, 5.0, 1.25);
+	HudMessage(s:"\cj", n:PRINTNAME_LEVELNAME; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, 0.31, 7.0, 1.25);
 	SetFont("SMALL");
-	HudMessage(s:mapdetails; HUDMSG_TYPEON | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, 0.35, 5.0, 0.005, 0.75);
+	HudMessage(s:mapdetails; HUDMSG_TYPEON | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, 0.35, 7.0, 0.005, 0.75);
 }
 
 function void MmDisplayJumpix( void ) {
