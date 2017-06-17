@@ -21,7 +21,7 @@ scripts/
    timer.acs: 985, 986, 987
    script_trigger.acs: 990, 991
    auto_fist.acs: 995, 996
-   ranker_hs.acs: 881, 882, 883, 891, 892, 893, 894, 898, 999
+   ranker_hs.acs: 881, 882, 883, 891, 892, 893, 894, 897, 898, 999
    jmrun: 909, 920, 921, 922, 923, 924, 925, 926, 927, 928, 929
    TranslucentPlayers.pk3: 694, 695, 696, 693
    admin.acs: 989, 992, 993
