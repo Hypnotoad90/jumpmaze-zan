@@ -187,12 +187,13 @@ function str toUpper (str s)
 //LEADERBOARD STUFF
 //- Some constants
 #define LB_ENTRIES_PER_PAGE 30
-#define LB_HUDMSG_ID 900
+#define LB_HUDMSG_ID 90
 //- Script numbers (pukeable)
 #define LB_TOGGLE 891
 #define LB_UP 892
 #define LB_DOWN 893
 #define LB_SPECIAL 894
+#define LB_ONCVARUPDATE 897
 #define LB_ONCONNECT 898
 //- Script numbers (non-pukeable)
 #define LB_INIT 881
@@ -202,6 +203,8 @@ function str toUpper (str s)
 //- Player leaderboard menu data
 int lb_playeropen[MAX_PLAYERS];
 int lb_playeroffset[MAX_PLAYERS];
+int lb_playersettings[MAX_PLAYERS];
+int lb_playeractions[MAX_PLAYERS];
 //- Entry count
 int lb_count = 0;
 
@@ -210,12 +213,22 @@ script LB_INIT OPEN {
 	for (int i=0; i<MAX_PLAYERS; i++) {
 		lb_playeropen[i] = false;
 		lb_playeroffset[i] = 0;
+		lb_playersettings[i] = 0;
+		lb_playeractions[i] = 0;
 	}
 	ACS_Execute( LB_UPDATE, 0 );
 }
 
 script LB_CLIENTINIT OPEN CLIENTSIDE {
-	RequestScriptPuke(LB_ONCONNECT, 0, 0, 0);
+	int currentscale = GetCvar("jm_boardscale");
+	RequestScriptPuke(LB_ONCONNECT, currentscale, 0, 0);
+	while (1) {
+		delay(1);
+		if (currentscale != GetCvar("jm_boardscale")) {
+			currentscale = GetCvar("jm_boardscale");
+			RequestScriptPuke(LB_ONCVARUPDATE, currentscale, 0, 0);
+		}
+	}
 }
 
 script LB_UPDATE (void) {
@@ -263,10 +276,10 @@ function void DisplayLeaderboard(void) {
 			//While we're getting data, we also construct strings on the fly
 			int rank = offset+i+1;
 			str rankname = GetDBResultKeyString(lbres, i);
-			str playercolor = "\ch";
+			str playercolor = "\cg";
 			//- If a player is logged in, he will be marked a different color.
 			if (PlayerIsLoggedIn(playernumber()) && GetPlayerAccountName(playernumber()) == rankname)
-				playercolor = "\cv";
+				playercolor = "\ck";
 			//- Truncate if too long
 			rankname = StrLeft(rankname, 30);
 			//- Construct left ident
@@ -298,17 +311,32 @@ function void DisplayLeaderboard(void) {
 			statinfo = StrParam(s:statinfo,s:"\n");
 		statinfo = StrParam(s:statinfo,s:"\n\ccFor global leaderboards please visit http://grandvoid.sickedwick.net/jmstats");
 		//Display results
-		FadeTo(0,0,0,0.15,0.0);
-		SetFont("TMSBOARD");
-		HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
-		SetFont("BIGFONT");
-		HudMessage(s:toUpper(StrParam(s:"top times on ",n:PRINTNAME_LEVEL)); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 1.5, -0.1, 0.0);
-		SetFont("CONFONT");
-		HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
-		HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+		SetHudSize(4,3,true);
+		SetFont("TMSBBACK");
+		HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+5, CR_UNTRANSLATED, 2.0, 1.0, 0.0);
+		SetHudSize(0,0,false);
+		if (lb_playersettings[player] > 0) {
+			SetHudSize(640,480,true);
+			SetFont("TMSBOARD");
+			HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
+			SetFont("BIGFONT");
+			HudMessage(s:toUpper(StrParam(s:"top times on ",n:PRINTNAME_LEVEL)); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 320.0, 50.1, 0.0);
+			SetFont("CONFONT");
+			HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
+			HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
+			SetHudSize(0,0,false);
+		} else {
+			SetFont("TMSBOARD");
+			HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+			SetFont("BIGFONT");
+			HudMessage(s:toUpper(StrParam(s:"top times on ",n:PRINTNAME_LEVEL)); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 1.5, -0.1, 0.0);
+			SetFont("CONFONT");
+			HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+			HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+		}
 	} else {
 		//Hide leaderboard
-		FadeTo(0,0,0,0.0,0.0);
+		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+5, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
 		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
 		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
 		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
@@ -318,6 +346,8 @@ function void DisplayLeaderboard(void) {
 
 script LB_TOGGLE (void) NET {
 	int player = PlayerNumber();
+	if (lb_playeractions[player]) terminate;
+	lb_playeractions[player] = 1;
 	if (lb_playeropen[player]) {
 		//Close
 		lb_playeropen[player] = 0;
@@ -329,10 +359,14 @@ script LB_TOGGLE (void) NET {
 		lb_playeroffset[player] = 0;
 	}
 	DisplayLeaderboard();
+	delay(1);
+	lb_playeractions[player] = 0;
 }
 
 script LB_UP (int count) NET {
 	int player = PlayerNumber();
+	if (lb_playeractions[player]) terminate;
+	lb_playeractions[player] = 1;
 	if (lb_playeropen[player] == 0)
 		terminate;
 	if (count <= 0)
@@ -342,10 +376,14 @@ script LB_UP (int count) NET {
 	if (lb_playeroffset[player] < 0)
 		lb_playeroffset[player] = 0;
 	DisplayLeaderboard();
+	delay(1);
+	lb_playeractions[player] = 0;
 }
 
 script LB_DOWN (int count) NET {
 	int player = PlayerNumber();
+	if (lb_playeractions[player]) terminate;
+	lb_playeractions[player] = 1;
 	if (lb_playeropen[player] == 0)
 		terminate;
 	if (count <= 0)
@@ -355,10 +393,14 @@ script LB_DOWN (int count) NET {
 	if (lb_playeroffset[player] >= lb_count)
 		lb_playeroffset[player] = lb_count - 1;
 	DisplayLeaderboard();
+	delay(1);
+	lb_playeractions[player] = 0;
 }
 
 script LB_SPECIAL (void) NET {
 	int player = PlayerNumber();
+	if (lb_playeractions[player]) terminate;
+	lb_playeractions[player] = 1;
 	if (lb_playeropen[player] == 0)
 		terminate;
 	if (PlayerIsLoggedIn(playernumber()) == 0)
@@ -369,11 +411,19 @@ script LB_SPECIAL (void) NET {
 	lb_playeroffset[player] = count - (LB_ENTRIES_PER_PAGE / 2);
 	if (lb_playeroffset[player] < 0) lb_playeroffset[player] = 0;
 	DisplayLeaderboard();
+	delay(1);
+	lb_playeractions[player] = 0;
 }
 
-script LB_ONCONNECT (void) NET {
+script LB_ONCVARUPDATE (int settings) NET {
+	lb_playersettings[PlayerNumber()] = settings;
+}
+
+script LB_ONCONNECT (int settings) NET {
 	lb_playeropen[PlayerNumber()] = 0;
 	lb_playeroffset[PlayerNumber()] = 0;
+	lb_playersettings[PlayerNumber()] = settings;
+	lb_playeractions[PlayerNumber()] = 0;
 }
 
 

@@ -19,9 +19,9 @@
 #import "ranker_solo.acs"
 
 // Intro format numbers used by CVar jm_introformat.
-#define MMIF_STANDARD 0
+#define MMIF_DETAIL 0
 #define MMIF_CLASSIC 1
-#define MMIF_DETAIL 2
+#define MMIF_STANDARD 2
 #define MMIF_JUMPIX 3
 #define MMIF_RETROMAZE 4
 #define MMIF_HYPNOJUMP 5
@@ -237,9 +237,9 @@ function void MmDisplayDetail( void ) {
 	
 	//Print everything
 	SetFont("BIGFONT");
-	HudMessage(s:"\cu", n:PRINTNAME_LEVELNAME; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, 0.31, 5.0, 1.25);
+	HudMessage(s:"\cj", n:PRINTNAME_LEVELNAME; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, 0.51, 7.0, 1.25);
 	SetFont("SMALL");
-	HudMessage(s:mapdetails; HUDMSG_TYPEON | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, 0.35, 5.0, 0.005, 0.75);
+	HudMessage(s:mapdetails; HUDMSG_TYPEON | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, 0.55, 7.0, 0.005, 0.75);
 }
 
 function void MmDisplayJumpix( void ) {

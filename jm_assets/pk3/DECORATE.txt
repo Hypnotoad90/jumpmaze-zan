@@ -2490,11 +2490,13 @@ ACTOR NewStalagmite 9941
 
 ACTOR BetterBossBrain : BossBrain replaces BossBrain
 {
-  -SHOOTABLE
   States
   {
-  Death: //Just in case
-    BBRN A 100 A_BrainScream
+  Pain:
+    BBRN B 36 A_PlaySound("brain/pain")
+    Goto Spawn
+  Death:
+    BBRN A 100 A_PlaySound("brain/death")
     BBRN AA 10
     Stop
   }
