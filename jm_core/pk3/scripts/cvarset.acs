@@ -3,12 +3,13 @@
 #library "cvarset"
 #include "zcommon.acs"
 
-#define CVARCOUNT 4
+#define CVARCOUNT 5
 str cvarlist[CVARCOUNT] = {
 	"jm_introformat",
 	"jm_auto_fist",
 	"jm_disablehints",
 	"jm_countdown",
+	"jm_boardscale",
 };
 
 script 862 OPEN CLIENTSIDE
