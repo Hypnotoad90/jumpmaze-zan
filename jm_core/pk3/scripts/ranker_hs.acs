@@ -233,6 +233,8 @@ script LB_INIT OPEN {
 					ACS_Execute(LB_DOWN, 0, 3, 0, 0);
 				} else if (k_vert > 0) {
 					ACS_Execute(LB_UP, 0, 3, 0, 0);
+				} else if ((GetPlayerInput(i, INPUT_BUTTONS) & BT_ATTACK) && !(GetPlayerInput(i, INPUT_OLDBUTTONS) & BT_ATTACK)) {
+					ACS_Execute(LB_SPECIAL, 0, 0, 0, 0);
 				}
 			}
 			if (lb_playeractions[i] > 0) {

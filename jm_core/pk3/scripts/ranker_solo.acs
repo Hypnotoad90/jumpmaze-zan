@@ -761,7 +761,7 @@ script 843 (int gone) DISCONNECT
 
 script 998 (void) NET
 {
-	print(s:"This script was replaced by new scoreboard system. Please go into \"options\"->\"customize controls\" to set new keys.");
+	print(s:"This script was replaced by new scoreboard system. Please go into \"options\"->\"customize controls\" to set a new key.");
 }
 
 function int tosecs(int tics)
