@@ -1,22 +1,8 @@
 clearplayerclasses
 
 //leaderboard binds
-alias jmhs_toggle "puke 891"
-alias jmhs_up "puke 892"
-alias jmhs_up10 "puke 892 10"
-alias jmhs_up100 "puke 892 100"
-alias jmhs_down "puke 893"
-alias jmhs_down10 "puke 893 10"
-alias jmhs_down100 "puke 893 100"
-alias jmhs_yourpb "puke 894"
-defaultbind kp5 jmhs_toggle
-defaultbind kp7 jmhs_up
-defaultbind kp8 jmhs_up10
-defaultbind kp9 jmhs_up100
-defaultbind kp1 jmhs_down
-defaultbind kp2 jmhs_down10
-defaultbind kp3 jmhs_down100
-defaultbind kp6 jmhs_yourpb
+defaultbind kp5 "puke 891"
+defaultbind kp6 "puke 894"
 
 // Jumpmaze specific key configuration.
 addkeysection "Jumpmaze" jumpmazeConf
@@ -31,14 +17,8 @@ addmenukey "Vote Yes" "puke 982"
 addmenukey "Vote No" "puke 983"
 
 //leaderboards
-addmenukey "Leaderboards: Toggle" "jmhs_toggle"
-addmenukey "Leaderboards: Go up (1)" "jmhs_up"
-addmenukey "Leaderboards: Go up (10)" "jmhs_up10"
-addmenukey "Leaderboards: Go up (100)" "jmhs_up100"
-addmenukey "Leaderboards: Go down (1)" "jmhs_down"
-addmenukey "Leaderboards: Go down (10)" "jmhs_down10"
-addmenukey "Leaderboards: Go down (100)" "jmhs_down100"
-addmenukey "Leaderboards: Go to your best" "jmhs_yourpb"
+addmenukey "Leaderboards: Toggle" "puke 891"
+addmenukey "Leaderboards: Go to your best" "puke 894"
 
 //jumpman
 addplayerclass "DoomPlayerJumper"
