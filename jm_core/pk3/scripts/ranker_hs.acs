@@ -13,6 +13,7 @@
 #import "utility.acs"
 #import "luk.acs"
 #import "jmgame.acs"
+#import "jm2_cdwn.acs"
 
 #libdefine JRH_LINE_NOTICE 27233
 #libdefine JRH_LINE_NOTICE_Y 0.55
@@ -217,6 +218,32 @@ script LB_INIT OPEN {
 		lb_playeractions[i] = 0;
 	}
 	ACS_Execute( LB_UPDATE, 0 );
+	while (1) {
+		for (i=0; i<MAX_PLAYERS; i++) {
+			SetActivatorToPlayer(i);
+			if (lb_playeropen[i]) {
+				if (PlayerIsSpectator(i)) {
+					lb_playeropen[i] = 0;
+					DisplayLeaderboard();
+					continue;
+				}
+				int k_vert = GetPlayerInput(i, INPUT_FORWARDMOVE);
+				setPlayerProperty( 0, 1, PROP_TOTALLYFROZEN );
+				if (k_vert < 0) {
+					ACS_Execute(LB_DOWN, 0, 3, 0, 0);
+				} else if (k_vert > 0) {
+					ACS_Execute(LB_UP, 0, 3, 0, 0);
+				}
+			}
+			if (lb_playeractions[i] > 0) {
+				lb_playeractions[i]--;
+			}
+		}
+		SetActivator(0, AAPTR_NULL);
+		delay(1);
+		if (cdwn_freeze == 0)
+			setPlayerProperty( 1, 0, PROP_TOTALLYFROZEN );
+	}
 }
 
 script LB_CLIENTINIT OPEN CLIENTSIDE {
@@ -254,6 +281,10 @@ function void DisplayLeaderboard(void) {
 			return;
 		} else if (JmGameGetMapType() == JMG_MAP_TEAM) {
 			print(s:"Leaderboards cannot be used on team maps");
+			lb_playeropen[player] = false;
+			return;
+		} else if (PlayerIsSpectator(player)) {
+			print(s:"Please enter the game to browse leaderboards.");
 			lb_playeropen[player] = false;
 			return;
 		}
@@ -347,7 +378,7 @@ function void DisplayLeaderboard(void) {
 script LB_TOGGLE (void) NET {
 	int player = PlayerNumber();
 	if (lb_playeractions[player]) terminate;
-	lb_playeractions[player] = 1;
+	lb_playeractions[player] = 3;
 	if (lb_playeropen[player]) {
 		//Close
 		lb_playeropen[player] = 0;
@@ -359,14 +390,12 @@ script LB_TOGGLE (void) NET {
 		lb_playeroffset[player] = 0;
 	}
 	DisplayLeaderboard();
-	delay(1);
-	lb_playeractions[player] = 0;
 }
 
 script LB_UP (int count) NET {
 	int player = PlayerNumber();
 	if (lb_playeractions[player]) terminate;
-	lb_playeractions[player] = 1;
+	lb_playeractions[player] = 3;
 	if (lb_playeropen[player] == 0)
 		terminate;
 	if (count <= 0)
@@ -376,14 +405,12 @@ script LB_UP (int count) NET {
 	if (lb_playeroffset[player] < 0)
 		lb_playeroffset[player] = 0;
 	DisplayLeaderboard();
-	delay(1);
-	lb_playeractions[player] = 0;
 }
 
 script LB_DOWN (int count) NET {
 	int player = PlayerNumber();
 	if (lb_playeractions[player]) terminate;
-	lb_playeractions[player] = 1;
+	lb_playeractions[player] = 3;
 	if (lb_playeropen[player] == 0)
 		terminate;
 	if (count <= 0)
@@ -393,14 +420,12 @@ script LB_DOWN (int count) NET {
 	if (lb_playeroffset[player] >= lb_count)
 		lb_playeroffset[player] = lb_count - 1;
 	DisplayLeaderboard();
-	delay(1);
-	lb_playeractions[player] = 0;
 }
 
 script LB_SPECIAL (void) NET {
 	int player = PlayerNumber();
 	if (lb_playeractions[player]) terminate;
-	lb_playeractions[player] = 1;
+	lb_playeractions[player] = 3;
 	if (lb_playeropen[player] == 0)
 		terminate;
 	if (PlayerIsLoggedIn(playernumber()) == 0)
@@ -411,8 +436,6 @@ script LB_SPECIAL (void) NET {
 	lb_playeroffset[player] = count - (LB_ENTRIES_PER_PAGE / 2);
 	if (lb_playeroffset[player] < 0) lb_playeroffset[player] = 0;
 	DisplayLeaderboard();
-	delay(1);
-	lb_playeractions[player] = 0;
 }
 
 script LB_ONCVARUPDATE (int settings) NET {
