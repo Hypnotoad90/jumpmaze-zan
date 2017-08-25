@@ -210,7 +210,7 @@ function void MmDisplayStandard( void ) {
 
 function void MmDisplayDetail( void ) {
 	//Text setup
-	str mapdetails = StrParam(s:"\cuShort name: \cj", n:PRINTNAME_LEVEL, s:"\n\cuAuthor: ", s:_mm_author);
+	str mapdetails = StrParam(s:"\n\n\cuShort name: \cj", n:PRINTNAME_LEVEL, s:"\n\cuAuthor: ", s:_mm_author);
 	if (JmGameGetMapType() == JMG_MAP_TEAM) {
 		mapdetails = StrParam(s:mapdetails, s:"\n\cuMap type: \cqTeam");
 	} else {
@@ -237,9 +237,9 @@ function void MmDisplayDetail( void ) {
 	
 	//Print everything
 	SetFont("BIGFONT");
-	HudMessage(s:"\cj", n:PRINTNAME_LEVELNAME; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, 0.51, 7.0, 1.25);
+	HudMessage(s:"\cj", n:PRINTNAME_LEVELNAME; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, -0.49, 7.0, 1.25);
 	SetFont("SMALL");
-	HudMessage(s:mapdetails; HUDMSG_TYPEON | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, 0.55, 7.0, 0.005, 0.75);
+	HudMessage(s:mapdetails; HUDMSG_TYPEON | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, -0.49, 7.0, 0.005, 0.75);
 }
 
 function void MmDisplayJumpix( void ) {
