@@ -1,0 +1,57 @@
+OptionValue "JMIntroFormat"
+{
+	100, "None"
+	0, "Detailed"
+	1, "Classic"
+	2, "Standard"
+	3, "Jumpix"
+	4, "Retromaze"
+	5, "Hypnojump"
+}
+
+OptionMenu "JMMain"
+{
+	Title "JUMPMAZE SETTINGS"
+	StaticText "Controls"
+	Control "Record Details", "puke 999"
+	Control "Leaderboards", "puke 891"
+	Control "Call vote Reset Map", "puke 981"
+	Control "Call vote Next Map", "puke 981 1"
+	Control "Vote Yes", "puke 982"
+	Control "Vote No", "puke 983"
+	StaticText " "
+	StaticText "User Settings"
+	Option "Scale Leaderboards", "jm_boardscale", "OnOff"
+	Option "Map Introduction Format", "jm_introformat", "JMIntroFormat"
+	Option "Fist Autoswitch", "jm_auto_fist", "OnOff"
+	Option "Disable Hints", "jm_disablehints", "OnOff"
+	StaticText " "
+	StaticText "Singleplayer Settings"
+	Option "Countdown on map start", "jm_countdown", "OnOff"
+}
+
+OptionMenu "OptionsMenu"
+{
+	Title "OPTIONS"
+	Submenu "Multiplayer Options",		"ZA_MultiplayerOptions" // [TP]
+	StaticText " " // [TP]
+	Submenu "Customize Controls",		"CustomizeControls"
+	Submenu "Mouse options",			"MouseOptions"
+	Submenu "Joystick options",			"JoystickOptions"
+	StaticText " "
+	Submenu "Player Setup",				"PlayerMenu"
+	Submenu "Gameplay Options",			"GameplayOptions"
+	Submenu "Compatibility Options",	"CompatibilityOptions"
+	Submenu "Automap Options",			"AutomapOptions"
+	Submenu "HUD Options",				"HUDOptions"
+	Submenu "Miscellaneous Options",	"MiscOptions"
+	Submenu "Sound Options",			"SoundOptions"
+	Submenu "Display Options",			"VideoOptions"
+	Submenu "Set video mode",			"VideoModeMenu"
+	StaticText " "
+	Submenu "Jumpmaze Settings",			"JMMain"
+	StaticText " "
+	SafeCommand "Reset to defaults",	"reset2defaults"
+	SafeCommand	"Reset to last saved",	"reset2saved"
+	Command "Go to console",			"menuconsole"
+}

@@ -1,0 +1,9 @@
+
+//Made by Hypnotoad. Taken from Zanrun
+//
+//This script emulates the item pickup flash and is needed by few Jumpmaze items
+
+script 890 (void) CLIENTSIDE {
+	fadeto(255, 255, 128, 0.125, 0.0);
+	fadeto(255, 255, 128, 0.0, 0.03);
+}

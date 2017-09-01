@@ -475,12 +475,12 @@ ACTOR DerpRune : CustomInventory 32112
 		HASR ABCD 6
 		Loop
     Pickup:
-		TNT1 A 0 A_JumpIfInventory ("RuneSpeed25", 1, "Nope")
-		TNT1 A 1 A_SpawnItem ("HasteRune2", 1)
+		TNT1 A 0 A_JumpIfInventory ("RuneSpeed25", 1, 4)
+		TNT1 A 0 A_PlaySound("misc/p_pkup")
+		TNT1 A 0 ACS_ExecuteAlways(890)
+		TNT1 A 0 A_GiveInventory("HasteRune2", 1)
+		TNT1 A 0
 		fail	
-	Nope:
-		TNT1 A 1 
-		fail
 	}
 }
 
@@ -2413,8 +2413,6 @@ ACTOR TranslucentScript : CustomInventory
 	}
 }
 
-//GRAV
-
 ACTOR WirtRune : CustomInventory 27666
 {
 	+NOGRAVITY
@@ -2424,11 +2422,11 @@ ACTOR WirtRune : CustomInventory 27666
 		HIJR ABCD 6
 		Loop
     Pickup:
-		TNT1 A 0 A_JumpIfInventory ("RuneHighJump", 1, "Nope")
-		TNT1 A 1 A_SpawnItem ("HighJumpRune666", 1)
-		fail	
-	Nope:
-		TNT1 A 1 
+		TNT1 A 0 A_JumpIfInventory ("RuneHighJump", 1, 4)
+		TNT1 A 0 A_PlaySound("misc/p_pkup")
+		TNT1 A 0 ACS_ExecuteAlways(890)
+		TNT1 A 0 A_GiveInventory("HighJumpRune666", 1)
+		TNT1 A 0
 		fail
 	}
 }

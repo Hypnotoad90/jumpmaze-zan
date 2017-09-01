@@ -5,3 +5,5 @@ startreset
 admin
 hints
 vote
+cvarset
+pickup

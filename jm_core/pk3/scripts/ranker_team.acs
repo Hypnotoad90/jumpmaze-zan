@@ -492,6 +492,12 @@ function void JrtHsSetHelperName( int pos ) {
 
 // Saves map run information as high score in permanent storage.
 function void JrtHsSave( int finishTime ) {
+   int cdate = 0;
+   cdate += GetTimeProperty(SystemTime(), TM_YEAR);
+   cdate *= 100;
+   cdate += GetTimeProperty(SystemTime(), TM_MONTH) + 1;
+   cdate *= 100;
+   cdate += GetTimeProperty(SystemTime(), TM_DAY);
    //LukStoreInt( JRT_HS_RTIME, finishTime );
    BeginDBTransaction();
    SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RTIME, finishTime);
@@ -523,11 +529,8 @@ function void JrtHsSave( int finishTime ) {
    }
 
    SetDBEntry( toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RTOTAL_PLAYERS, active );
-   
-	if (getcvar("jm_date") != 0)
-	{
-		SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RDATE, getcvar("jm_date"));
-	}
+
+	SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RDATE, cdate);
 	EndDBTransaction();
 }
 

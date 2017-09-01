@@ -567,15 +567,17 @@ function void JMRHsSetAuthor( void ) {
 }
 
 // Saves high score and all of its details in permanent storage.
-function void JMRHsSave( int player, int tics ) { 
-	BeginDBTransaction();
+function void JMRHsSave( int player, int tics ) {
+   int cdate = 0;
+   cdate += GetTimeProperty(SystemTime(), TM_YEAR);
+   cdate *= 100;
+   cdate += GetTimeProperty(SystemTime(), TM_MONTH) + 1;
+   cdate *= 100;
+   cdate += GetTimeProperty(SystemTime(), TM_DAY);
+   BeginDBTransaction();
    SetDBEntryString(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RAUTHOR, StrParam(n:player + 1));
-   //SetDBEntryString("test1", "test1", "test1");
    SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RTIME, tics);
-	if (getcvar("jm_date") != 0)
-	{
-		SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RDATE, getcvar("jm_date"));
-	}
+   SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JMR_HS_RDATE, cdate);
    EndDBTransaction();
 }
 

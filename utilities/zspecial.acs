@@ -353,6 +353,8 @@ special
 	-127:SystemTime(0),
 	-128:GetTimeProperty(2,3),
 	-129:Strftime(2,3),
+	-130:SetDeadSpectator(2),
+	-131:SetActivatorToPlayer(1),
 	
 	// ZDaemon's
 	-19260:GetTeamScore(1),

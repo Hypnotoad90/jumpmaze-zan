@@ -6,6 +6,7 @@
 
 int timerstage = 0;
 int cdownOffset;
+int cdwn_freeze = 1;
 
 script 851 OPEN
 {
@@ -13,6 +14,7 @@ script 851 OPEN
 	if ( getCvar( "jm_countdown" ) == 0) 
 	{
 		timerstage = 2;
+		cdwn_freeze = 0;
 		terminate;
 	}
 	else 
@@ -30,6 +32,7 @@ script 852 OPEN
 		if (JmGameGetMapType() == 2) {
 			timerstage = 2;
 			JmGameStartTimer();
+			cdwn_freeze = 0;
 			terminate;
 		}
 		setfont("bigfont");
@@ -45,6 +48,7 @@ script 852 OPEN
 		JmGameStartTimer();
 		timerstage++;
 	}
+	cdwn_freeze = 0;
 }
 
 script 853 enter
@@ -87,6 +91,7 @@ script 855 UNLOADING
 {
 	if ( getCvar( "jm_countdown" ) == 1) 
 	{
+		cdwn_freeze = 1;
 		setPlayerProperty( 1, 1, PROP_TOTALLYFROZEN );
 	}
 }
