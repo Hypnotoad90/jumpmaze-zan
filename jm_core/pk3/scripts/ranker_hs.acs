@@ -342,7 +342,7 @@ function void DisplayLeaderboard(void) {
 		str statinfo = "\n\n\n";
 		for (i=0; i<LB_ENTRIES_PER_PAGE; i++)
 			statinfo = StrParam(s:statinfo,s:"\n");
-		statinfo = StrParam(s:statinfo,s:"\n\ccFor global leaderboards please visit http://grandvoid.sickedwick.net/jmstats");
+		statinfo = StrParam(s:statinfo,s:"\n\ccFor global leaderboards please visit http://infernum.space/");
 		//Display results
 		SetHudSize(4,3,true);
 		SetFont("TMSBBACK");
