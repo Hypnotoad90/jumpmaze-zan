@@ -89,8 +89,6 @@ int p_startedC[64];
 //top times
 int p_top_time[64];
 
-bool roundover;
-
 //timer (shown clientside)
 function void now_time(int p_time) {
     int mins = to_mins(p_time);

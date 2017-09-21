@@ -28,6 +28,8 @@
 
 bool isTeamMap;
 
+bool roundover;
+
 int _jrh_load_status = JRH_STATUS_NONE;
 // Stores a ranker's high score load script number so other files can wait
 // for the ranker to complete loading the high score.
@@ -243,7 +245,7 @@ script LB_INIT OPEN {
 		}
 		SetActivator(0, AAPTR_NULL);
 		delay(1);
-		if (cdwn_freeze == 0)
+		if (cdwn_freeze == 0 && roundover == 0)
 			setPlayerProperty( 1, 0, PROP_TOTALLYFROZEN );
 	}
 }
