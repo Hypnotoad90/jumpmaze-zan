@@ -30,28 +30,25 @@ OptionMenu "JMMain"
 	Option "Countdown on map start", "jm_countdown", "OnOff"
 }
 
-OptionMenu "OptionsMenu"
+ListMenu "MainMenu"
 {
-	Title "OPTIONS"
-	Submenu "Multiplayer Options",		"ZA_MultiplayerOptions" // [TP]
-	StaticText " " // [TP]
-	Submenu "Customize Controls",		"CustomizeControls"
-	Submenu "Mouse options",			"MouseOptions"
-	Submenu "Joystick options",			"JoystickOptions"
-	StaticText " "
-	Submenu "Player Setup",				"PlayerMenu"
-	Submenu "Gameplay Options",			"GameplayOptions"
-	Submenu "Compatibility Options",	"CompatibilityOptions"
-	Submenu "Automap Options",			"AutomapOptions"
-	Submenu "HUD Options",				"HUDOptions"
-	Submenu "Miscellaneous Options",	"MiscOptions"
-	Submenu "Sound Options",			"SoundOptions"
-	Submenu "Display Options",			"VideoOptions"
-	Submenu "Set video mode",			"VideoModeMenu"
-	StaticText " "
-	Submenu "Jumpmaze Settings",			"JMMain"
-	StaticText " "
-	SafeCommand "Reset to defaults",	"reset2defaults"
-	SafeCommand	"Reset to last saved",	"reset2saved"
-	Command "Go to console",			"menuconsole"
+	StaticPatch 94, 2, "M_DOOM"
+	Position 97, 72
+	
+	TextItem "$MNU_NEWGAME", "n", "PlayerclassMenu"
+	ifOption(SwapMenu)
+	{
+		TextItem "$MNU_LOADGAME", "l", "LoadGameMenu"
+		TextItem "$MNU_SAVEGAME", "s", "SaveGameMenu"
+		TextItem "Jumpmaze Settings", "j", "JMMain"
+		TextItem "$MNU_OPTIONS","o", "OptionsMenu"
+	}
+	else
+	{
+		TextItem "Jumpmaze Settings", "j", "JMMain"
+		TextItem "$MNU_OPTIONS","o", "OptionsMenu"
+		TextItem "$MNU_LOADGAME", "l", "LoadGameMenu"
+		TextItem "$MNU_SAVEGAME", "s", "SaveGameMenu"
+	}
+	TextItem "$MNU_QUITGAME", "q", "QuitMenu"
 }
