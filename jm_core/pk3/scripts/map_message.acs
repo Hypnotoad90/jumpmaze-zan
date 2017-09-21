@@ -17,6 +17,7 @@
 //#import "luk.acs" no
 #import "ranker_hs.acs"
 #import "ranker_solo.acs"
+#import "jmrun.acs"
 
 // Intro format numbers used by CVar jm_introformat.
 #define MMIF_DETAIL 0
@@ -111,7 +112,7 @@ script 980 ENTER { //NET to make it work with script 988. Shouldn't be harmful t
             // if the record details auto show feature is enabled. This only applies
             // to the solo ranker.
          }
-         _mm_showrec = (JmGameGetMapType() == JMG_MAP_SOLO && JrhIsSet() && !JrhIsAutoShowDetailsTable());
+         _mm_showrec = ((JmGameGetMapType() == JMG_MAP_SOLO || JmGameGetMapType() == JMG_MAP_JMRUN) && JrhIsSet() && !JrhIsAutoShowDetailsTable());
 		 // Auto show high score details table if enabled. We put this code
          // here so we can show the details table at the same time as the
          // map message appears.
@@ -163,49 +164,12 @@ function void MmDisplayClassic( void ) {
 
 function void MmDisplayStandard( void ) {
    setFont("SMALL");
-   if ( _mm_skilldisable ) {
-      if ( _mm_showrec ) {
-         hudMessage( 
-            s : "\cf", n : PRINTNAME_LEVELNAME, s : " - ", 
-            n : PRINTNAME_LEVEL, s: " - ",
-            s : "Author: ", s : _mm_author, s : "\n\n",
-            s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\n\n",
-            s : "\ciMap record set by:\c-\n", a : _jrs_hs_author, s : "\c-" ;
-            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
-         );
-      }
-      else {
-         hudMessage( 
-            s : "\cf", n : PRINTNAME_LEVELNAME, s : " - ", 
-            n : PRINTNAME_LEVEL, s: " - ",
-            s : "Author: ", s : _mm_author, s : "\n\n",
-            s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\c-" ;
-            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
-         );
-      }
-   } else {
-      if ( _mm_showrec ) {
-         hudMessage( 
-            s : "\cf", n : PRINTNAME_LEVELNAME, s : " - ", 
-            n : PRINTNAME_LEVEL, s: " - ",
-            s : "Author: ", s : _mm_author, s : "\n\n",
-            s : "\ciLevel of Difficulty\n", s : _mm_skill, s : "\n\n",
-            s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\n\n",
-            s : "\ciMap record set by:\c-\n", a : _jrs_hs_author, s : "\c-" ;
-            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
-         );
-      }
-      else {
-         hudMessage( 
-            s : "\cf", n : PRINTNAME_LEVELNAME, s : " - ", 
-            n : PRINTNAME_LEVEL, s: " - ",
-            s : "Author: ", s : _mm_author, s : "\n\n",
-            s : "\ciLevel of Difficulty\n", s : _mm_skill, s : "\n\n",
-            s : "\ciPar Time\n", s : "\cn", a : _mm_par, s : "\c-" ;
-            HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0
-         );
-      }
-   }
+   str mapmsg = StrParam(s:"\cf", n:PRINTNAME_LEVELNAME, s:" - ", n:PRINTNAME_LEVEL, s:" - Author: ", s:_mm_author, s:"\n\n");
+   if ( !_mm_skilldisable ) mapmsg = StrParam(s:mapmsg, s:"\ciLevel of Difficulty\n", s:_mm_skill, s:"\n\n");
+   mapmsg = StrParam(s:mapmsg, s:"\ciPar Time\n\cn", a:_mm_par);
+   if ( _mm_showrec && JmGameGetMapType() == JMG_MAP_JMRUN ) mapmsg = StrParam(s:mapmsg, s:"\n\n\ciMap record set by:\c-\n", a:_jmr_hs_author, s:"\c-");
+   if ( _mm_showrec && JmGameGetMapType() == JMG_MAP_SOLO ) mapmsg = StrParam(s:mapmsg, s:"\n\n\ciMap record set by:\c-\n", a:_jrs_hs_author, s:"\c-");
+   hudMessage(s:mapmsg; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0);
 }
 
 function void MmDisplayDetail( void ) {
@@ -220,8 +184,11 @@ function void MmDisplayDetail( void ) {
 		mapdetails = StrParam(s:mapdetails, s:"\n\cuDifficulty: ", s:_mm_skill, s:"\n");
 	}
 	mapdetails = StrParam(s:mapdetails, s:"\cuPar time: \cn", a:_mm_par);
-	if ( _mm_showrec ) {
+	if ( _mm_showrec && JmGameGetMapType() == JMG_MAP_SOLO ) {
 		mapdetails = StrParam(s:mapdetails, s:"\n\cuRecord holder: \c-", a:_jrs_hs_author);
+	}
+	if ( _mm_showrec && JmGameGetMapType() == JMG_MAP_JMRUN ) {
+		mapdetails = StrParam(s:mapdetails, s:"\n\cuRecord holder: \c-", a:_jmr_hs_author);
 	}
 	if ( JrhIsSet() ) {
 		//Calculate record time
@@ -294,7 +261,10 @@ Script 501 (void)
     {
     	delay(35*2);
         setFont( "SMALLFONT" );
-        hudMessage(s:"Record holder: \ca", a : _jrs_hs_author; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+6, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
+		if ( JmGameGetMapType() == JMG_MAP_JMRUN )
+			hudMessage(s:"Record holder: \ca", a : _jmr_hs_author; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+6, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
+		else
+			hudMessage(s:"Record holder: \ca", a : _jrs_hs_author; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+6, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
     }
 }
 
