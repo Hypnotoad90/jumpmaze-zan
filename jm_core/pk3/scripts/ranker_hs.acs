@@ -344,7 +344,11 @@ function void DisplayLeaderboard(void) {
 		str statinfo = "\n\n\n";
 		for (i=0; i<LB_ENTRIES_PER_PAGE; i++)
 			statinfo = StrParam(s:statinfo,s:"\n");
-		statinfo = StrParam(s:statinfo,s:"\n\ccFor global leaderboards please visit http://infernum.space/");
+		str footer = GetCvarString("jm_footer");
+		if ( strcmp( footer, "" ) == 0 || footer == 0 )
+			statinfo = StrParam(s:statinfo,s:"\n\cjPlease set jm_footer CVar to replace this message with a custom one.\nSuch message should preferably contain address at which you can browse\nmore records or where you can create an account.");
+		else
+			statinfo = StrParam(s:statinfo,s:"\n\cj",s:footer);
 		//Display results
 		SetHudSize(4,3,true);
 		SetFont("TMSBBACK");
