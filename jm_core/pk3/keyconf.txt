@@ -20,7 +20,6 @@ addmenukey "Vote No" "puke 983"
 
 //jumpman
 addplayerclass "DoomPlayerJumper"
-addplayerclass "JumpingDoomguy"
 
 //airship crap
 weaponsection "The Crank Launcher"

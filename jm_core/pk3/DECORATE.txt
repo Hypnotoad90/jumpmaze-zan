@@ -1,3 +1,9 @@
+ACTOR DoomPlayerJumper : Doomplayer
+{
+	species "jumper"
+	Player.DisplayName "Marine"
+}
+
 ACTOR Admin : DoomPlayer
 {
 	species "jumper"
@@ -138,6 +144,22 @@ ACTOR AdminMini : DoomPlayer
 		PLY2  R 5 A_SkullPop
 		PLY2  STUVWX 5
 		PLY2  Y -1
+		Stop
+	}
+}
+
+ACTOR TranslucentScript : CustomInventory
+{
+	+INVENTORY.UNDROPPABLE
+	+AUTOACTIVATE
+	Inventory.MaxAmount 0
+	States
+	{
+		Spawn:
+		TNT1 A 0
+		Stop
+		Pickup:
+		TNT1 A 0 ACS_ExecuteAlways(693, 0, 0, 0, 0)
 		Stop
 	}
 }

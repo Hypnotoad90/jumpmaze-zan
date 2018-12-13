@@ -339,42 +339,6 @@ actor SmallMudkip 24621
 
 //new classes
 
-ACTOR DoomPlayerJumper : Doomplayer
-{
-    species "jumper"
-	Player.DisplayName "Marine"
-}
-
-actor JumpingDoomguy : DoomPlayer
-{
-	species "jumper"
-	+NOSKIN
-	Player.DisplayName "Jumping Marine"
-    States
-	{
-    Spawn:
-        PLAY AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_JumpIf(momz >> 0, "Jumping")
-        Loop
-    See:
-        PLAY AAAABBBBCCCCDDDD 1 A_JumpIf(momz >> 0, "Jumping")
-        Loop
-	Jumping:
-        PLAJ A 1
-        PLAJ A 0 A_CheckFloor("Spawn")
-        goto Jumping
-    Missile:
-        PLAY E 12 
-        Goto Spawn
-    Melee:
-        PLAY F 6 BRIGHT
-        Goto Missile
-    Pain:
-        PLAY G 4 
-        PLAY G 4 A_Pain
-        Goto Spawn
-	}
-}
-
 actor Cyberhunter 2143
 {
   spawnid 151
@@ -2395,22 +2359,6 @@ actor Chubs 32017
 
 ACTOR SecretCheck : Inventory
 {
-}
-
-ACTOR TranslucentScript : CustomInventory
-{
-	+INVENTORY.UNDROPPABLE
-	+AUTOACTIVATE
-	Inventory.MaxAmount 0
-	States
-	{
-		Spawn:
-		TNT1 A 0
-		Stop
-		Pickup:
-		TNT1 A 0 ACS_ExecuteAlways(693, 0, 0, 0, 0)
-		Stop
-	}
 }
 
 ACTOR WirtRune : CustomInventory 27666
