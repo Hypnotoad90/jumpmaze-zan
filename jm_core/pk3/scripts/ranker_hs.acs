@@ -317,22 +317,28 @@ function void DisplayLeaderboard(void) {
 				playercolor = "\ck";
 			//- Truncate if too long
 			rankname = StrLeft(rankname, 30);
-			//- Construct left ident
+			//- Get time values
+			int pbtime = GetDBResultValue(lbres, i);
+			int pbmins = (pbtime / (TICS_IN_SECOND * SECONDS_IN_MINUTE));
+			int pbsecs = (pbtime / TICS_IN_SECOND) % SECONDS_IN_MINUTE;
+			int pbcsecs = cal_cseconds(pbtime % TICS_IN_SECOND);
+			//- Construct left indent
 			str il;
 			if (rank < 10) il = "   ";
 			else if (rank < 100) il = "  ";
 			else if (rank < 1000) il = " ";
 			else il = "";
-			//- Construct right ident
+			//- Construct right indent
 			str ir = "";
 			int irspaces = 30 - StrLen(rankname);
+			int pbminscopy = pbmins;
+			while ( pbminscopy >= 100 ) {
+				pbminscopy /= 10;
+				irspaces--;
+			}
 			for (int j=0; j<irspaces; j++)
 				ir = StrParam(s:ir, s:" ");
 			//- Construct a line
-			int pbtime = GetDBResultValue(lbres, i);
-			int pbmins = (pbtime / (TICS_IN_SECOND * SECONDS_IN_MINUTE));
-			int pbsecs = (pbtime / TICS_IN_SECOND) % SECONDS_IN_MINUTE;
-			int pbcsecs = cal_cseconds(pbtime % TICS_IN_SECOND);
 			shownnames = StrParam(s:shownnames, s:"\cj", i:rank, s:". ",
 						s:il, s:playercolor, s:rankname, s:ir, s:" \cb",
 						s:number_prefix( pbmins ), i:pbmins, s:":",
