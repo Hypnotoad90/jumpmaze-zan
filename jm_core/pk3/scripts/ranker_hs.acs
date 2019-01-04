@@ -233,7 +233,6 @@ script "JmLb_Init" OPEN {
 }
 
 script "JmLb_ClientInit" OPEN CLIENTSIDE {
-	SetActivatorToPlayer( ConsolePlayerNumber() );
 	int currentscale = GetCvar("jm_boardscale");
 	RequestScriptPuke(LB_ONCONNECT, currentscale, 0, 0);
 	while (1) {
