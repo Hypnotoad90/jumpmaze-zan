@@ -191,18 +191,13 @@ function str toUpper (str s)
 //- Some constants
 #define LB_ENTRIES_PER_PAGE 30
 #define LB_HUDMSG_ID 90
-//- Script numbers (pukeable)
+//- Net Script numbers
 #define LB_TOGGLE 891
 #define LB_UP 892
 #define LB_DOWN 893
 #define LB_SPECIAL 894
 #define LB_ONCVARUPDATE 897
 #define LB_ONCONNECT 898
-//- Script numbers (non-pukeable)
-#define LB_INIT 881
-#define LB_CLIENTINIT 882
-#define LB_UPDATE 883
-#define LB_DISCONNECT 884
 //- Player leaderboard menu data
 int lb_playeropen[MAX_PLAYERS];
 int lb_playeroffset[MAX_PLAYERS];
@@ -211,7 +206,7 @@ int lb_playeractions[MAX_PLAYERS];
 //- Entry count
 int lb_count = 0;
 
-script LB_INIT OPEN {
+script "JmLb_Init" OPEN {
 	//Clear menu data
 	for (int i=0; i<MAX_PLAYERS; i++) {
 		lb_playeropen[i] = false;
@@ -219,25 +214,12 @@ script LB_INIT OPEN {
 		lb_playersettings[i] = 0;
 		lb_playeractions[i] = 0;
 	}
-	ACS_Execute( LB_UPDATE, 0 );
+	ACS_NamedExecute( "JmLb_Update", 0 );
 	while (1) {
 		for (i=0; i<MAX_PLAYERS; i++) {
 			SetActivatorToPlayer(i);
 			if (lb_playeropen[i]) {
-				if (PlayerIsSpectator(i)) {
-					lb_playeropen[i] = 0;
-					DisplayLeaderboard();
-					continue;
-				}
-				int k_vert = GetPlayerInput(i, INPUT_FORWARDMOVE);
 				setPlayerProperty( 0, 1, PROP_TOTALLYFROZEN );
-				if (k_vert < 0) {
-					ACS_Execute(LB_DOWN, 0, 3, 0, 0);
-				} else if (k_vert > 0) {
-					ACS_Execute(LB_UP, 0, 3, 0, 0);
-				} else if ((GetPlayerInput(i, INPUT_BUTTONS) & BT_ATTACK) && !(GetPlayerInput(i, INPUT_OLDBUTTONS) & BT_ATTACK)) {
-					ACS_Execute(LB_SPECIAL, 0, 0, 0, 0);
-				}
 			}
 			if (lb_playeractions[i] > 0) {
 				lb_playeractions[i]--;
@@ -250,10 +232,21 @@ script LB_INIT OPEN {
 	}
 }
 
-script LB_CLIENTINIT OPEN CLIENTSIDE {
+script "JmLb_ClientInit" OPEN CLIENTSIDE {
+	SetActivatorToPlayer( ConsolePlayerNumber() );
 	int currentscale = GetCvar("jm_boardscale");
 	RequestScriptPuke(LB_ONCONNECT, currentscale, 0, 0);
 	while (1) {
+		int k_vert = GetPlayerInput( ConsolePlayerNumber(), INPUT_FORWARDMOVE );
+		int k_fired = GetPlayerInput( ConsolePlayerNumber(), INPUT_BUTTONS ) & BT_ATTACK;
+		k_fired = k_fired && !( GetPlayerInput( ConsolePlayerNumber(), INPUT_OLDBUTTONS ) & BT_ATTACK );
+		if ( k_vert < 0 ) {
+			RequestScriptPuke( LB_DOWN, 3, 0, 0 );
+		} else if ( k_vert > 0 ) {
+			RequestScriptPuke( LB_UP, 3, 0, 0 );
+		} else if ( k_fired ) {
+			RequestScriptPuke( LB_SPECIAL, 0, 0, 0 );
+		}
 		delay(1);
 		if (currentscale != GetCvar("jm_boardscale")) {
 			currentscale = GetCvar("jm_boardscale");
@@ -262,7 +255,7 @@ script LB_CLIENTINIT OPEN CLIENTSIDE {
 	}
 }
 
-script LB_UPDATE (void) {
+script "JmLb_Update" (void) {
 	if (!is_online() || !JrhIsEnabled() || JmGameGetMapType() == JMG_MAP_TEAM)
 		terminate;
 	//Get entry count for current map
@@ -287,13 +280,9 @@ function void DisplayLeaderboard(void) {
 			print(s:"Leaderboards cannot be used on team maps");
 			lb_playeropen[player] = false;
 			return;
-		} else if (PlayerIsSpectator(player)) {
-			print(s:"Please enter the game to browse leaderboards.");
-			lb_playeropen[player] = false;
-			return;
 		}
 		//Prepare leaderboard
-		ACS_Execute(LB_UPDATE, 0);
+		ACS_NamedExecute( "JmLb_Update", 0 );
 		int offset = lb_playeroffset[player];
 		//- Some sanity checks here (if for some reason other scripts screwed up)
 		if (offset < 0 || offset >= lb_count) {
