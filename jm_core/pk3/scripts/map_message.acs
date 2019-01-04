@@ -14,7 +14,6 @@
 #import "map_skill.acs"
 #import "constants.acs"
 #import "utility.acs"
-//#import "luk.acs" no
 #import "ranker_hs.acs"
 #import "ranker_solo.acs"
 #import "jmrun.acs"
@@ -32,53 +31,27 @@
 // Base ID used by HudMessage.
 #define MM_HUDMSG_BASEID 600
 
-// String versions with appropriate colors of the map skills available.
+// String versions with appropriate colors of the map skills available for most formats.
 str _mm_diff[ MM_TOTAL_DIFFICULTIES ] = {
    "\ccVaried\c-", "\cqVery Easy\c-", "\cdEasy\c-",
    "\chModerate\c-", "\cgHard\c-", "\cmVery Hard\c-",
 };
-// Color codes for difficulties. This is used only by Jumpix
-str _mm_diffclr[ MM_TOTAL_DIFFICULTIES ] = {
-   "\cc", "\cq", "\cd", "\ch", "\cg", "\cm",
-};
-// Retromaze versions of difficulty strings.
-str _mm_retrodiff[ MM_TOTAL_DIFFICULTIES ] = {
-   "\cnVarying", "\cdVery Easy", "\cqEasy",
-   "\ciModerate", "\cgHard", "\crVery Hard",
-};
 
 // Seconds to wait for the record holder name to load before proceeding further.
 #define MM_TIMEOUT 2
-// How long to display the map startup message on screen.
-#define MM_DISPLAY_TIME 3.0
 
-str _mm_author = "";
-str _mm_skill = "\cjUnknown\c-";
-str _mm_skillcolor = "\cj"; //Used by Jumpix
-str _mm_skillretro = "\cmUnset"; //Used by Retromaze
-bool _mm_skilldisable = true;
-bool _mm_showrec = false;
 int _mm_par[ 10 ];
 bool _mm_is_set = false;
 
 function void MmSet( str author, int skill, str par ) {
-   _mm_author = author;
-
-   // If an invalid skill value was given, select unknown.
-   // Note that this is different from varied (as Hypnojump maps do not show difficulty levels).
-   if ( skill < 0 || skill >= MM_TOTAL_DIFFICULTIES ) {
-      skill = MAP_SKILL_UNSET;
-   //Otherwise set proper skill values
-   } else {
-      _mm_skill = _mm_diff[ skill ];
-      _mm_skillcolor = _mm_diffclr[ skill ];
-      _mm_skillretro = _mm_retrodiff[ skill ];
-	  _mm_skilldisable = false;
-   }
-
-   MmSetPar( par );
-
-   _mm_is_set = true;
+	SetCVarString( "jm_mm_author", author );
+	SetCVar( "jm_mm_difficulty", skill );
+	SetCVar( "jm_mm_maptype", JmGameGetMapType() );
+	
+	MmSetPar( par );
+	SetCVarString( "jm_mm_par", StrParam( a:_mm_par ) );
+	
+	_mm_is_set = true;
 }
 
 // Removes the whitespace found in the par time, so it looks nicer when
@@ -98,103 +71,116 @@ function void MmSetPar( str par ) {
    _mm_par[ par_pos ] = '\0';
 }
 
-int _mm_playervars[MAX_PLAYERS];
-
-script 980 ENTER { //NET to make it work with script 988. Shouldn't be harmful to puke either way.
-   delay(20);
-   int mmif = _mm_playervars[PlayerNumber()];
-   if ( _mm_is_set ) {
-      if ( JrhIsEnabled() ) {
-         // Wait for the ranker to complete loading the high score and check if a record holder can be displayed.
-         if ( JrhGetLoadStatus() == JRH_STATUS_WORKING ) {
-            scriptWait( JrhGetLoadScript() );
-            // We don't need to display the record holder's name in the map message
-            // if the record details auto show feature is enabled. This only applies
-            // to the solo ranker.
-         }
-         _mm_showrec = ((JmGameGetMapType() == JMG_MAP_SOLO || JmGameGetMapType() == JMG_MAP_JMRUN) && JrhIsSet() && !JrhIsAutoShowDetailsTable());
-		 // Auto show high score details table if enabled. We put this code
-         // here so we can show the details table at the same time as the
-         // map message appears.
-         if ( JrhIsSet() && JrhIsAutoShowDetailsTable() && mmif == MMIF_STANDARD ) { //As it was supposed to be used only with JM2 intros
-            JrhShowDetails( MM_DISPLAY_TIME );
-         }
-      }
-	  
-      //Get player's CVar and select appropriate display.
-	  if (mmif == MMIF_CLASSIC) { Delay(46); MmDisplayClassic(); }
-	  else if (mmif == MMIF_STANDARD) { Delay(46); MmDisplayStandard(); }
-	  else if (mmif == MMIF_DETAIL) { Delay(15); MmDisplayDetail(); }
-	  else if (mmif == MMIF_JUMPIX) { MmDisplayJumpix(); }
-	  else if (mmif == MMIF_RETROMAZE) { Delay(15); MmDisplayRetromaze(); }
-	  else if (mmif == MMIF_HYPNOJUMP) { MmDisplayHypnojump(); }
-   }
+script "JmMm_EntryServer" ENTER {
+	delay( 20 );
+	if ( _mm_is_set ) {
+		if ( JrhIsEnabled() ) {
+			// Wait for the ranker to complete loading the high score and check if a record holder can be displayed.
+			if ( JrhGetLoadStatus() == JRH_STATUS_WORKING ) {
+				scriptWait( JrhGetLoadScript() );
+			}
+			if ( JrhIsSet() ) {
+				SetCVar( "jm_mm_recordtime", JrhGetFinishTime() );
+				if ( JmGameGetMapType() == JMG_MAP_SOLO )
+					SetCVarString( "jm_mm_recordholder", StrParam( a:_jrs_hs_author ) );
+				if ( JmGameGetMapType() == JMG_MAP_JMRUN )
+					SetCVarString( "jm_mm_recordholder", StrParam( a:_jmr_hs_author ) );
+			}
+		}
+		ACS_NamedExecuteAlways( "JmMm_EntryClient", 0 );
+	}
 }
 
-//A hack since Zandronum 2.1.2 does not have working GetUserCVar.
-script 988 ENTER CLIENTSIDE {
-   RequestScriptPuke(979, GetCVar("jm_introformat"), ConsolePlayerNumber(), 0);
+script "JmMm_EntryClient" ( void ) CLIENTSIDE {
+	int format = GetCVar( "jm_introformat" );
+	switch ( format )
+	{
+		case MMIF_CLASSIC: ACS_NamedExecuteAlways( "JmMm_Classic", 0 ); break;
+		case MMIF_STANDARD: ACS_NamedExecuteAlways( "JmMm_Standard", 0 ); break;
+		case MMIF_DETAIL: ACS_NamedExecuteAlways( "JmMm_Detailed", 0 ); break;
+		case MMIF_JUMPIX: ACS_NamedExecuteAlways( "JmMm_Jumpix", 0 ); break;
+		case MMIF_RETROMAZE: ACS_NamedExecuteAlways( "JmMm_Retromaze", 0 ); break;
+		case MMIF_HYPNOJUMP: ACS_NamedExecuteAlways( "JmMm_Hypnojump", 0 ); break;
+	}
 }
 
-script 979 (int mmif, int player) NET {
-   _mm_playervars[player] = mmif;
+
+
+function str MmGetAuthor( void ) {
+	return GetCVarString( "jm_mm_author" );
+}
+function int MmGetSkill( void ) {
+	return GetCVar( "jm_mm_difficulty" );
+}
+function str MmGetSkillName( void ) {
+	int skill = MmGetSkill();
+	if ( skill >= 0 && skill < MM_TOTAL_DIFFICULTIES )
+		return _mm_diff[ MmGetSkill() ];
+	return "\cjUnknown\c-";
+}
+function str MmGetPar( void ) {
+	return GetCVarString( "jm_mm_par" );
+}
+function str MmGetRecordHolder( void ) {
+	return GetCVarString( "jm_mm_recordholder" );
+}
+function int MmGetRecordTime( void ) {
+	return GetCVar( "jm_mm_recordtime" );
+}
+function int MmGetMapType( void ) {
+	return GetCVar( "jm_mm_maptype" );
 }
 
-function void MmDisplayClassic( void ) {
-   //Classic display has different color for moderate skill
-   str skillstr = _mm_skill;
-   if (_mm_skill == _mm_diff[3]) skillstr = "\cuModerate";
-   
-   setFont("SMALL");
-   //Initially Print function was used for classic display; However,
-   //since it isn't very flexible, we will try to emulate it using HudMessage.
-   if (_mm_skilldisable) {
-      HudMessage(
-	     s : "Par Time \n\ch", a : _mm_par;
-		 HUDMSG_PLAIN | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.375, MM_DISPLAY_TIME, 1.0
-	  );
-   } else {
-      HudMessage(
-         s : "Level of Difficulty \n", s : skillstr, s : "\n\n",
-         s : "Par Time \n\ch", a : _mm_par;
-		 HUDMSG_PLAIN | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.375, MM_DISPLAY_TIME, 1.0
-      );
-   }
+
+
+Script "JmMm_Classic" ( void ) CLIENTSIDE {
+	Delay(46);
+	//Classic display has different color for moderate skill
+	str skillstr = MmGetSkillName();
+	if ( MmGetSkill() == MAP_SKILL_MODERATE ) skillstr = "\cuModerate\c-";
+
+	setFont("SMALL");
+	//Initially Print function was used for classic display; However,
+	//since it isn't very flexible, we will try to emulate it using HudMessage.
+	HudMessage(
+		s:"Level of Difficulty \n", s:skillstr, s:"\n\n",
+		s:"Par Time \n\ch", s:MmGetPar();
+		HUDMSG_PLAIN | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.375, 3.0, 1.0
+		);
 }
 
-function void MmDisplayStandard( void ) {
-   setFont("SMALL");
-   str mapmsg = StrParam(s:"\cf", n:PRINTNAME_LEVELNAME, s:" - ", n:PRINTNAME_LEVEL, s:" - Author: ", s:_mm_author, s:"\n\n");
-   if ( !_mm_skilldisable ) mapmsg = StrParam(s:mapmsg, s:"\ciLevel of Difficulty\n", s:_mm_skill, s:"\n\n");
-   mapmsg = StrParam(s:mapmsg, s:"\ciPar Time\n\cn", a:_mm_par);
-   if ( _mm_showrec && JmGameGetMapType() == JMG_MAP_JMRUN ) mapmsg = StrParam(s:mapmsg, s:"\n\n\ciMap record set by:\c-\n", a:_jmr_hs_author, s:"\c-");
-   if ( _mm_showrec && JmGameGetMapType() == JMG_MAP_SOLO ) mapmsg = StrParam(s:mapmsg, s:"\n\n\ciMap record set by:\c-\n", a:_jrs_hs_author, s:"\c-");
-   hudMessage(s:mapmsg; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, MM_DISPLAY_TIME, 1.0);
+Script "JmMm_Standard" ( void ) CLIENTSIDE {
+	if ( MmGetRecordTime() > 0 && JrhIsAutoShowDetailsTable() )
+		RequestScriptPuke( 999, 0, 0, 0, 0 );
+	Delay(46);
+	setFont("SMALL");
+	str mapmsg = StrParam(s:"\cf", n:PRINTNAME_LEVELNAME, s:" - ", n:PRINTNAME_LEVEL, s:" - Author: ", s:MmGetAuthor(), s:"\n\n");
+	mapmsg = StrParam(s:mapmsg, s:"\ciLevel of Difficulty\n", s:MmGetSkillName(), s:"\n\n");
+	mapmsg = StrParam(s:mapmsg, s:"\ciPar Time\n\cn", s:MmGetPar());
+	if ( !JrhIsAutoShowDetailsTable() && MmGetRecordTime() != VALUE_NONE && MmGetMapType() != JMG_MAP_TEAM )
+		mapmsg = StrParam(s:mapmsg, s:"\n\n\ciMap record set by:\c-\n", s:MmGetRecordHolder(), s:"\c-");
+	hudMessage(s:mapmsg; HUDMSG_FADEOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_GOLD, 1.5, 0.3, 3.0, 1.0);
 }
 
-function void MmDisplayDetail( void ) {
+Script "JmMm_Detailed" ( void ) CLIENTSIDE {
+	Delay(15);
 	//Text setup
-	str mapdetails = StrParam(s:"\n\n\cuShort name: \cj", n:PRINTNAME_LEVEL, s:"\n\cuAuthor: ", s:_mm_author);
-	if (JmGameGetMapType() == JMG_MAP_TEAM) {
+	str mapdetails = StrParam(s:"\n\n\cuShort name: \cj", n:PRINTNAME_LEVEL, s:"\n\cuAuthor: ", s:MmGetAuthor());
+	if ( MmGetMapType() == JMG_MAP_TEAM ) {
 		mapdetails = StrParam(s:mapdetails, s:"\n\cuMap type: \cqTeam");
 	} else {
 		mapdetails = StrParam(s:mapdetails, s:"\n\cuMap type: \ciSolo");
 	}
-	if (!_mm_skilldisable) {
-		mapdetails = StrParam(s:mapdetails, s:"\n\cuDifficulty: ", s:_mm_skill, s:"\n");
+	mapdetails = StrParam(s:mapdetails, s:"\n\cuDifficulty: ", s:MmGetSkillName(), s:"\n");
+	mapdetails = StrParam(s:mapdetails, s:"\cuPar time: \cn", s:MmGetPar());
+	if ( MmGetRecordTime() != VALUE_NONE && MmGetMapType() != JMG_MAP_TEAM ) {
+		mapdetails = StrParam(s:mapdetails, s:"\n\cuRecord holder: \c-", s:MmGetRecordHolder());
 	}
-	mapdetails = StrParam(s:mapdetails, s:"\cuPar time: \cn", a:_mm_par);
-	if ( _mm_showrec && JmGameGetMapType() == JMG_MAP_SOLO ) {
-		mapdetails = StrParam(s:mapdetails, s:"\n\cuRecord holder: \c-", a:_jrs_hs_author);
-	}
-	if ( _mm_showrec && JmGameGetMapType() == JMG_MAP_JMRUN ) {
-		mapdetails = StrParam(s:mapdetails, s:"\n\cuRecord holder: \c-", a:_jmr_hs_author);
-	}
-	if ( JrhIsSet() ) {
+	if ( MmGetRecordTime() != VALUE_NONE ) {
 		//Calculate record time
-		int rectime = JrhGetFinishTime();
-		int minutes = rectime / (SECONDS_IN_MINUTE*TICS_IN_SECOND);
-		int seconds = (rectime / TICS_IN_SECOND) % SECONDS_IN_MINUTE;
+		int rectime = MmGetRecordTime();
+		int minutes = rectime / ( SECONDS_IN_MINUTE * TICS_IN_SECOND );
+		int seconds = ( rectime / TICS_IN_SECOND ) % SECONDS_IN_MINUTE;
 		int cseconds = cal_cseconds( rectime % TICS_IN_SECOND );
 		mapdetails = StrParam(s:mapdetails, s:"\n\cuRecord time: \cp", 
 				s:number_prefix(minutes), i:minutes, s:":",
@@ -209,86 +195,92 @@ function void MmDisplayDetail( void ) {
 	HudMessage(s:mapdetails; HUDMSG_TYPEON | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, -0.49, 7.0, 0.005, 0.75);
 }
 
-function void MmDisplayJumpix( void ) {
-   ACS_ExecuteAlways(501, 0, 0, 0, 0);
-}
-
-Script 501 (void)
-{
-	str skillcstr = _mm_skillcolor;
-	str skillstr = _mm_skill;
-	if (_mm_skill == _mm_diff[1]) {
-		skillcstr = "\cf";
-		skillstr = "\cfVery Easy";
+Script "JmMm_Jumpix" ( void ) CLIENTSIDE {
+	int skill = MmGetSkill();
+	str skillStr = MmGetSkillName();
+	if ( skill == MAP_SKILL_VERY_EASY ) {
+		skillStr = "\cfVery Easy";
 	}
+	str skillColor;
+	switch ( skill ) {
+		default:
+		case MAP_SKILL_UNSET: skillColor = "\cj"; break;
+		case MAP_SKILL_VARIED: skillColor = "\cc"; break;
+		case MAP_SKILL_VERY_EASY: skillColor = "\cq"; break;
+		case MAP_SKILL_EASY: skillColor = "\cd"; break;
+		case MAP_SKILL_MODERATE: skillColor = "\ch"; break;
+		case MAP_SKILL_HARD: skillColor = "\cg"; break;
+		case MAP_SKILL_VERY_HARD: skillColor = "\cm"; break;
+	}
+	
+	
     setfont("BIGFONT");
     HudMessage(n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID, CR_WHITE, 0.5, 0.5, 1.0, 0.7, 0.5);
     delay(35);
-    
     setfont("BIGFONT");
-    HudMessage(s: skillcstr, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.5, 0.7, 0.5, 0.5);
+    HudMessage(s: skillColor, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.5, 0.7, 0.5, 0.5);
     delay(24);
-    
     setfont("BIGFONT");
     HudMessage(n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID, CR_WHITE, 0.5, 0.5, 0.7, 0.5, 0.5);
     delay(24);
-    
+
     int message_time = 5.8;
-    if (_mm_showrec)
+    if ( MmGetRecordTime() != VALUE_NONE && MmGetMapType() != JMG_MAP_TEAM )
     {
         message_time = 7.8;
     }
     
     setfont("BIGFONT");
-    HudMessage(s: skillcstr, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+2, CR_WHITE, 0.5, 0.5, message_time, 0.7, 0.5);
+    HudMessage(s:skillColor, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+2, CR_WHITE, 0.5, 0.5, message_time, 0.7, 0.5);
     delay(24);
     
     SetFont("SMALLFONT");
-    HudMessage(s:"Author: ", s:_mm_author; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+3, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
+    HudMessage(s:"Author: ", s:MmGetAuthor(); HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+3, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
     delay(35*2);
     
     SetFont("SMALLFONT");
-    HudMessage(s:"Map: ", s:skillcstr, n: PRINTNAME_LEVEL; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+4, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
+    HudMessage(s:"Map: ", s:skillColor, n: PRINTNAME_LEVEL; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+4, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
 	
-	if (!_mm_skilldisable) {
-        delay(35*2);
-        
-        SetFont("SMALLFONT");
-        HudMessage(s:"Difficulty: ", s:skillstr; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+5, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
-	}
+	delay(35*2);
+	
+	SetFont("SMALLFONT");
+	HudMessage(s:"Difficulty: ", s:skillStr; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+5, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
     
-    if (_mm_showrec)
+    if ( MmGetRecordTime() != VALUE_NONE && MmGetMapType() != JMG_MAP_TEAM )
     {
     	delay(35*2);
         setFont( "SMALLFONT" );
-		if ( JmGameGetMapType() == JMG_MAP_JMRUN )
-			hudMessage(s:"Record holder: \ca", a : _jmr_hs_author; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+6, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
-		else
-			hudMessage(s:"Record holder: \ca", a : _jrs_hs_author; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+6, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
+		hudMessage(s:"Record holder: \ca", s:MmGetRecordHolder(); HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+6, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
     }
 }
 
-function void MmDisplayRetromaze( void ) {
-   SetFont("BIGFONT");
-   HudMessage(s: "\cj", n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, 0.7, 5 << 16);
-   SetFont("DOOMFONT");
-   HudMessage(s: "\cjby: ", s: _mm_author; HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, 0.71, 5 << 16);
-   HudMessage(s: "\cjDifficulty: ", s: _mm_skillretro; HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID+2, CR_WHITE, 1.5, 0.72, 5 << 16);
+Script "JmMm_Retromaze" ( void ) CLIENTSIDE {
+	Delay(15);
+	
+	int skill = MmGetSkill();
+	str skillStr;
+	switch ( skill ) {
+		default:
+		case MAP_SKILL_UNSET: skillStr = "\cmUnset"; break;
+		case MAP_SKILL_VARIED: skillStr = "\cnVarying"; break;
+		case MAP_SKILL_VERY_EASY: skillStr = "\cdVery Easy"; break;
+		case MAP_SKILL_EASY: skillStr = "\cqEasy"; break;
+		case MAP_SKILL_MODERATE: skillStr = "\ciModerate"; break;
+		case MAP_SKILL_HARD: skillStr = "\cgHard"; break;
+		case MAP_SKILL_VERY_HARD: skillStr = "\crVery Hard"; break;
+	}
+	
+	SetFont( "BIGFONT" );
+	HudMessage( s:"\cj", n:PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.5, 0.7, 5 << 16 );
+	SetFont( "DOOMFONT" );
+	HudMessage( s:"\cjby: ", s:MmGetAuthor(); HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.5, 0.71, 5 << 16);
+	HudMessage( s:"\cjDifficulty: ", s:skillStr; HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID+2, CR_WHITE, 1.5, 0.72, 5 << 16 );
 }
 
-function void MmDisplayHypnojump( void ) {
-   ACS_ExecuteAlways(984, 0, 0, 0, 0);
-}
-
-Script 984 (void) {
-	SetFont("BIGFONT");
-	HudMessage(n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID, CR_RED, 0.5, 0.5, 3, 8.0, 0.1, 0.5);
-	Delay(35*2);
-	SetFont("SMALLFONT");
-	HudMessage(s:"Author: ", s:_mm_author, s:"\c-"; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.55, 3, 6.0, 0.1, 0.1);
-	/*
-	if (!_mm_skilldisable) {
-		Delay(35*3);
-		HudMessage(s:"Difficulty: ", s:_mm_skill, s:"\c-"; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.55, 3, 6.0, 0.1, 0.1);
-	}*/
+Script "JmMm_Hypnojump" ( void ) CLIENTSIDE {
+	SetFont( "BIGFONT" );
+	HudMessage( n:PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID, CR_RED, 0.5, 0.5, 3, 8.0, 0.1, 0.5 );
+	Delay( 35 * 2 );
+	SetFont( "SMALLFONT" );
+	HudMessage( s:"Author: ", s:MmGetAuthor(), s:"\c-"; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.55, 3, 6.0, 0.1, 0.1 );
 }
