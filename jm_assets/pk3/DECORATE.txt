@@ -2441,10 +2441,10 @@ ACTOR BetterBossBrain : BossBrain replaces BossBrain
   States
   {
   Pain:
-    BBRN B 36 A_PlaySound("brain/pain")
+    BBRN B 36 A_PlaySound("brain/pain", 4, 1.0, false, ATTN_NONE )
     Goto Spawn
   Death:
-    BBRN A 100 A_PlaySound("brain/death")
+    BBRN A 100 A_PlaySound("brain/death", 4, 1.0, false, ATTN_NONE )
     BBRN AA 10
     Stop
   }
