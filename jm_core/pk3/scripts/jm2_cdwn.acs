@@ -26,6 +26,11 @@ script 851 OPEN
 
 script 852 OPEN
 {
+	if ( StrCmp( StrParam( n:PRINTNAME_LEVEL ), "TITLEMAP" ) == 0 )
+	{
+		cdwn_freeze = 0;
+		terminate;
+	}
 	if ( getCvar( "jm_countdown" ) == 1) 
 	{
 		delay(1);
