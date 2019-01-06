@@ -116,6 +116,9 @@ function str MmGetSkillName( void ) {
 	int skill = MmGetSkill();
 	if ( skill >= 0 && skill < MM_TOTAL_DIFFICULTIES )
 		return _mm_diff[ MmGetSkill() ];
+	str name = GetCVarString( "jm_mm_difficultyname" );
+	if ( StrCmp( name, "" ) != 0 )
+		return name;
 	return "\cjUnknown\c-";
 }
 function str MmGetPar( void ) {
@@ -201,24 +204,15 @@ Script "JmMm_Jumpix" ( void ) CLIENTSIDE {
 	if ( skill == MAP_SKILL_VERY_EASY ) {
 		skillStr = "\cfVery Easy";
 	}
-	str skillColor;
-	switch ( skill ) {
-		default:
-		case MAP_SKILL_UNSET: skillColor = "\cj"; break;
-		case MAP_SKILL_VARIED: skillColor = "\cc"; break;
-		case MAP_SKILL_VERY_EASY: skillColor = "\cq"; break;
-		case MAP_SKILL_EASY: skillColor = "\cd"; break;
-		case MAP_SKILL_MODERATE: skillColor = "\ch"; break;
-		case MAP_SKILL_HARD: skillColor = "\cg"; break;
-		case MAP_SKILL_VERY_HARD: skillColor = "\cm"; break;
-	}
-	
+	int colorLen = 2;
+	if ( GetChar( skillStr, 1 ) == '[' )
+		colorLen = 5;
 	
     setfont("BIGFONT");
     HudMessage(n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID, CR_WHITE, 0.5, 0.5, 1.0, 0.7, 0.5);
     delay(35);
     setfont("BIGFONT");
-    HudMessage(s: skillColor, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.5, 0.7, 0.5, 0.5);
+    HudMessage(s: StrLeft( skillStr, colorLen ), n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.5, 0.7, 0.5, 0.5);
     delay(24);
     setfont("BIGFONT");
     HudMessage(n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID, CR_WHITE, 0.5, 0.5, 0.7, 0.5, 0.5);
@@ -231,7 +225,7 @@ Script "JmMm_Jumpix" ( void ) CLIENTSIDE {
     }
     
     setfont("BIGFONT");
-    HudMessage(s:skillColor, n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+2, CR_WHITE, 0.5, 0.5, message_time, 0.7, 0.5);
+    HudMessage(s:StrLeft( skillStr, colorLen ), n: PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+2, CR_WHITE, 0.5, 0.5, message_time, 0.7, 0.5);
     delay(24);
     
     SetFont("SMALLFONT");
@@ -239,7 +233,7 @@ Script "JmMm_Jumpix" ( void ) CLIENTSIDE {
     delay(35*2);
     
     SetFont("SMALLFONT");
-    HudMessage(s:"Map: ", s:skillColor, n: PRINTNAME_LEVEL; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+4, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
+    HudMessage(s:"Map: ", s:StrLeft( skillStr, colorLen ), n: PRINTNAME_LEVEL; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+4, CR_WHITE, 0.5, 0.55, 1.8, 0.4, 0.4);
 	
 	delay(35*2);
 	
