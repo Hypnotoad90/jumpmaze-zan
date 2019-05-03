@@ -9,11 +9,10 @@
 #library "hints"
 #include "zcommon.acs"
 
-#define MAXHINTS 9
+#define MAXHINTS 8
 
 str hints[MAXHINTS] = {"When playing online, to log in and have your times and rankings tracked, you must first register on the auth\n
 server (e.g. for Grandvoid this is: grandvoid.sickedwick.net/auth), then in console type login <username> <password>",
-"For Infernum, everyone's personal best times, rankings and overall/global rankings can be viewed at: http://infernum.space/",
 "Struggling to keep up in multiplayer? Google Zandronum sr50 for a trick that might help.",
 "Visit #doomjump on the Zandronum irc network to chat with fellow jumpers!",
 "Use chasecam ('chase' in console) if you need help seeing where you are on a small platform.",
