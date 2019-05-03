@@ -69,10 +69,10 @@ script 981 (int type) NET
 	plvote[PlayerNumber()] = 1;
 	playervoted[PlayerNumber()] = TRUE;
 	print(s:"You voted \cdYES \c*(by default)");
-	delay(35);
 	Setfont("bigfont");
     HudMessageBold(n:0, s:" has initiated a vote!";HUDMSG_PLAIN, HUDID4, CR_RED, 320.0, 50.0, 5000.0);
 	SetActivator(-1);
+	delay(35);
 	Setfont("smallfont");
 	if (type == 0)
 	{
