@@ -17,6 +17,7 @@
 #import "ranker_hs.acs"
 #import "ranker_solo.acs"
 #import "jmrun.acs"
+#import "paths.acs"
 
 // Intro format numbers used by CVar jm_introformat.
 #define MMIF_DETAIL 0
@@ -47,9 +48,12 @@ function void MmSet( str author, int skill, str par ) {
 	SetCVarString( "jm_mm_author", author );
 	SetCVar( "jm_mm_difficulty", skill );
 	SetCVar( "jm_mm_maptype", JmGameGetMapType() );
+	SetCVar( "jm_mm_paths", pathCount() );
 	
-	MmSetPar( par );
-	SetCVarString( "jm_mm_par", StrParam( a:_mm_par ) );
+	for ( int i = 0; i < pathCount(); i++ ) {
+		MmSetPar( pathPar( pathPlayerRoute( i ) ) );
+		SetCVarString( StrParam( s:"jm_mm_par", i:i ), StrParam( a:_mm_par ) );
+	}
 	
 	_mm_is_set = true;
 }
@@ -74,17 +78,24 @@ function void MmSetPar( str par ) {
 script "JmMm_EntryServer" ENTER {
 	delay( 20 );
 	if ( _mm_is_set ) {
+		//Clear old times
+		for ( int i = 0; i < MAX_ROUTES; i++ ) {
+			SetCVar( StrParam( s:"jm_mm_recordtime", i:i ), VALUE_NONE );
+			SetCVarString( StrParam( s:"jm_mm_recordholder", i:i ), "" );
+		}
 		if ( JrhIsEnabled() ) {
 			// Wait for the ranker to complete loading the high score and check if a record holder can be displayed.
 			if ( JrhGetLoadStatus() == JRH_STATUS_WORKING ) {
 				scriptWait( JrhGetLoadScript() );
 			}
-			if ( JrhIsSet() ) {
-				SetCVar( "jm_mm_recordtime", JrhGetFinishTime() );
-				if ( JmGameGetMapType() == JMG_MAP_SOLO )
-					SetCVarString( "jm_mm_recordholder", StrParam( a:_jrs_hs_author ) );
-				if ( JmGameGetMapType() == JMG_MAP_JMRUN )
-					SetCVarString( "jm_mm_recordholder", StrParam( a:_jmr_hs_author ) );
+			for ( i = 0; i < pathCount(); i++ ) {
+				if ( JrhIsSet( i ) ) {
+					SetCVar( StrParam( s:"jm_mm_recordtime", i:i ), JrhGetFinishTime( i ) );
+					if ( JmGameGetMapType() == JMG_MAP_SOLO )
+						SetCVarString( StrParam( s:"jm_mm_recordholder", i:i ), StrParam( a:_jrs_hs_author[ i ] ) );
+					if ( JmGameGetMapType() == JMG_MAP_JMRUN )
+						SetCVarString( "jm_mm_recordholder0", StrParam( a:_jmr_hs_author ) );
+				}
 			}
 		}
 		ACS_NamedExecuteAlways( "JmMm_EntryClient", 0 );
@@ -122,13 +133,13 @@ function str MmGetSkillName( void ) {
 	return "\cjUnknown\c-";
 }
 function str MmGetPar( void ) {
-	return GetCVarString( "jm_mm_par" );
+	return GetCVarString( StrParam( s:"jm_mm_par", i:( PlayerNumber() % GetCVar( "jm_mm_paths" ) ) ) );
 }
 function str MmGetRecordHolder( void ) {
-	return GetCVarString( "jm_mm_recordholder" );
+	return GetCVarString( StrParam( s:"jm_mm_recordholder", i:( PlayerNumber() % GetCVar( "jm_mm_paths" ) ) ) );
 }
 function int MmGetRecordTime( void ) {
-	return GetCVar( "jm_mm_recordtime" );
+	return GetCVar( StrParam( s:"jm_mm_recordtime", i:( PlayerNumber() % GetCVar( "jm_mm_paths" ) ) ) );
 }
 function int MmGetMapType( void ) {
 	return GetCVar( "jm_mm_maptype" );

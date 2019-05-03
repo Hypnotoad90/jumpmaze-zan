@@ -2,9 +2,10 @@
 // competes against one another to the finish.
 //
 // Original Author: 
-// Positron
+// - Positron
 // Edited by:
-// Hypnotoad (note this includes my own comments as I try and work through this script to understand it)
+// - Hypnotoad (note this includes my own comments as I try and work through this script to understand it)
+// - Wirtualnosc
 //
 // License:
 // Free for any purpose. I'm not liable for any damages.
@@ -18,6 +19,8 @@
 #import "luk.acs" 
 
 #import "ranker_hs.acs" 
+
+#import "paths.acs"
 
 // Start script number.
 #libdefine JRS_SCRIPT_START 950
@@ -153,17 +156,17 @@ script 952 ( int player, int playerTime ) {
 
       // High score.
       //
-      if ( _jrs_table_size == 1 || !JrhIsSet() || !rectried ) {
+      if ( _jrs_table_size == 1 || !JrhIsSet( pathPlayerRoute( player ) ) || !rectried ) {
 		 if (PlayerIsLoggedIn(player) == true)
 			rectried = true;
          // Confirm we have new record.
-         if ( JrhIsEnabled() && JrhIsNew( playerTime ) ) { //JrhIsNew --> checks whether the the record has been set and if the time is lower than _jrh_tics, located in ranker_hs, 
+         if ( JrhIsEnabled() && JrhIsNew( playerTime,  pathPlayerRoute( player ) ) ) { //JrhIsNew --> checks whether the the record has been set and if the time is lower than _jrh_tics, located in ranker_hs, 
             // Make sure no cheating has occured.
 			if (PlayerIsLoggedIn(player) == 0)
 			{
 				print(s:"\cgPlease login to set records on solo maps!");	
 			}
-			else if (!JRSIsReallyNew(playerTime)) //make sure another server didn't update the record with a new high score
+			else if (!JRSIsReallyNew(playerTime, pathPlayerRoute( player ) )) //make sure another server didn't update the record with a new high score
 				print(s:"Record not saved: faster time found on database (probably from another server)");
             else if ( ! JrhIsCheater( player ) ) { //value probably set via map script
                JrsHsSave( player, playerTime ); //saves record to DB
@@ -247,10 +250,10 @@ function void JrsShowTable( void ) {
       ( ( JRS_RANK_LIMIT_MAX - _jrs_show_limit ) * JRS_TBL_LINE_HEIGHT );
    int line_id = JRS_TBL_LINEID_OFFSET;
 
-   // We only display the high score if we have one.
-   if ( JrhIsSet() ) { //check high score is set
+   // We only display the high score if we have one and if it's the only path.
+   if ( pathCount() == 1 && JrhIsSet( 0 ) ) { //check high score is set
       int record_line_height = line_height - JRS_TBL_LINE_HEIGHT;
-      JrsHsShowFinishTime( line_id, record_line_height ); //uses variables from ranker_hs
+      JrsHsShowFinishTime( line_id, record_line_height, 0 ); //uses variables from ranker_hs
       line_id += 1;
    }
 
@@ -313,7 +316,7 @@ function void JrsClearTable( void ) {
    int lines_to_clear = _jrs_show_limit;
 
    // Clear the extra record time line.
-   if ( JrhIsSet() ) {
+   if ( pathCount() == 1 && JrhIsSet( 0 ) ) {
       lines_to_clear += 1;
    }
 
@@ -365,54 +368,56 @@ str JRS_HS_RAUTHOR = "jrs_hs_author";
 str JRS_HS_RDATE = "jrs_hs_rdate";
 
 // High score author.
-int _jrs_hs_author[100];
+int _jrs_hs_author[ MAX_ROUTES ][100];
 
 // High score finish time.
-int _jrs_hs_minutes = VALUE_NONE;
-int _jrs_hs_seconds = VALUE_NONE;
-int _jrs_hs_centiseconds = VALUE_NONE;
+int _jrs_hs_minutes[ MAX_ROUTES ] = {VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE};
+int _jrs_hs_seconds[ MAX_ROUTES ] = {VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE};
+int _jrs_hs_centiseconds[ MAX_ROUTES ] = {VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE};
 
 // High score date. 
-int _jrs_hs_year = 0;
-int _jrs_hs_month = 0;
-int _jrs_hs_day = 0;
+int _jrs_hs_year[ MAX_ROUTES ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+int _jrs_hs_month[ MAX_ROUTES ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+int _jrs_hs_day[ MAX_ROUTES ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 // High score loading. 
 script 955 ( void ) {
-   JrsHsSetFinishTime(GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RTIME)); //Simple DB setting
-   JrsHsSetAuthor(); 
-	int packed_data = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RDATE);
-	
-	if (packed_data != 0)
-	{
-		// Packed date is of this format: YYYYMMDD
-		_jrs_hs_day = packed_data % 100;
-		packed_data /= 100;
-		_jrs_hs_month = packed_data % 100;
-		packed_data /= 100;
-		_jrs_hs_year = packed_data;
+	for ( int route = 0; route < pathCount(); route++ ) {
+		JrsHsSetFinishTime(GetDBEntry(pathMapName( route ), JRS_HS_RTIME), route); //Simple DB setting
+		JrsHsSetAuthor( route ); 
+		int packed_data = GetDBEntry(pathMapName( route ), JRS_HS_RDATE);
+
+		if (packed_data != 0)
+		{
+			// Packed date is of this format: YYYYMMDD
+			_jrs_hs_day[ route ] = packed_data % 100;
+			packed_data /= 100;
+			_jrs_hs_month[ route ] = packed_data % 100;
+			packed_data /= 100;
+			_jrs_hs_year[ route ] = packed_data;
+		}
 	}
 }
 
 // Sets the finish time, in tics, of the high score and converts it into more
 // familiar units like minutes and seconds.
-function void JrsHsSetFinishTime( int tics ) {
+function void JrsHsSetFinishTime( int tics, int route ) {
    if ( tics > 0 ) {
       int seconds = tics / TICS_IN_SECOND;
 
-      _jrs_hs_minutes = seconds / SECONDS_IN_MINUTE;
-      _jrs_hs_seconds = seconds % SECONDS_IN_MINUTE;
-      _jrs_hs_centiseconds = cal_cseconds( tics % TICS_IN_SECOND );
+      _jrs_hs_minutes[ route ] = seconds / SECONDS_IN_MINUTE;
+      _jrs_hs_seconds[ route ] = seconds % SECONDS_IN_MINUTE;
+      _jrs_hs_centiseconds[ route ] = cal_cseconds( tics % TICS_IN_SECOND );
 
-      JrhSetFinishTime( tics );
+      JrhSetFinishTime( tics, route );
    }
 }
 
 // Sets the author of the high score
-function void JrsHsSetAuthor( void ) {
-	str authstring = GetDBEntryString(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RAUTHOR);
-    for ( int i = 0; i < StrLen(authstring); ++i ) { _jrs_hs_author[ i ] = GetChar( authstring, i ); }
-	_jrs_hs_author[ StrLen(authstring) ] = 0;
+function void JrsHsSetAuthor( int route ) {
+	str authstring = GetDBEntryString(pathMapName( route ), JRS_HS_RAUTHOR);
+    for ( int i = 0; i < StrLen(authstring); ++i ) { _jrs_hs_author[ route ][ i ] = GetChar( authstring, i ); }
+	_jrs_hs_author[ route ][ StrLen(authstring) ] = 0;
 }
 
 // Saves high score and all of its details in permanent storage. REPLACED WITH ZAN DB
@@ -424,21 +429,21 @@ function void JrsHsSave( int player, int tics ) {
    cdate *= 100;
    cdate += GetTimeProperty(SystemTime(), TM_DAY);
    BeginDBTransaction();
-   SetDBEntryString(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RAUTHOR, StrParam(n:player + 1));
-   SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RTIME, tics);
-   SetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRS_HS_RDATE, cdate);
+   SetDBEntryString(pathMapName( pathPlayerRoute( player ) ), JRS_HS_RAUTHOR, StrParam(n:player + 1));
+   SetDBEntry(pathMapName( pathPlayerRoute( player ) ), JRS_HS_RTIME, tics);
+   SetDBEntry(pathMapName( pathPlayerRoute( player ) ), JRS_HS_RDATE, cdate);
    EndDBTransaction();
 }
 
-function void JrsHsShowFinishTime( int lineId, int lineHeight ) {
+function void JrsHsShowFinishTime( int lineId, int lineHeight, int route ) {
    setFont( "SMALLFONT" );
    hudMessageBold(
       s : "\cnRecord: \cb",
-      s : number_prefix( _jrs_hs_minutes ), i : _jrs_hs_minutes, 
+      s : number_prefix( _jrs_hs_minutes[ route ] ), i : _jrs_hs_minutes[ route ], 
       s : ":", 
-      s : number_prefix( _jrs_hs_seconds ), i : _jrs_hs_seconds, 
+      s : number_prefix( _jrs_hs_seconds[ route ] ), i : _jrs_hs_seconds[ route ], 
       s : "\cs.",
-      s : number_prefix( _jrs_hs_centiseconds ), i : _jrs_hs_centiseconds, 
+      s : number_prefix( _jrs_hs_centiseconds[ route ] ), i : _jrs_hs_centiseconds[ route ], 
       s : "\c-" ;
       HUDMSG_PLAIN, lineId, 0, JRS_TBL_X, lineHeight, 0
    );
@@ -463,7 +468,7 @@ function void JrsHsAnnounceCheat( void ) {
 }
 
 // Prints high score details table.
-script 956 ( int showTime ) {
+script 956 ( int showTime, int route ) {
    int y = JRS_HS_TBL_Y;
    int line_id = JRS_HS_TBL_LINE;
 
@@ -487,11 +492,11 @@ script 956 ( int showTime ) {
    y += JRS_HS_TBL_LINE_HEIGHT;
    line_id += 1;
 	
-	if (_jrs_hs_year != 0)
+	if (_jrs_hs_year[ route ] != 0)
 	{
 		hudMessage(
-		s : "\cc", s : conv_month_string( _jrs_hs_month ), 
-		s : " ", i : _jrs_hs_day, s : ", ", i : _jrs_hs_year, s : "\c-" ;
+		s : "\cc", s : conv_month_string( _jrs_hs_month[ route ] ), 
+		s : " ", i : _jrs_hs_day[ route ], s : ", ", i : _jrs_hs_year[ route ], s : "\c-" ;
 		HUDMSG_FADEOUT, line_id, 0, JRS_HS_TBL_X, y, showTime, 1.0
 		);
 	}
@@ -519,11 +524,11 @@ script 956 ( int showTime ) {
 
    hudMessage(
       s : "\cb",
-      s : number_prefix( _jrs_hs_minutes ), i : _jrs_hs_minutes, 
+      s : number_prefix( _jrs_hs_minutes[ route ] ), i : _jrs_hs_minutes[ route ], 
       s : ":", 
-      s : number_prefix( _jrs_hs_seconds ), i : _jrs_hs_seconds, 
+      s : number_prefix( _jrs_hs_seconds[ route ] ), i : _jrs_hs_seconds[ route ], 
       s : "\cs.",
-      s : number_prefix( _jrs_hs_centiseconds ), i : _jrs_hs_centiseconds, 
+      s : number_prefix( _jrs_hs_centiseconds[ route ] ), i : _jrs_hs_centiseconds[ route ], 
       s : "\c-" ;
       HUDMSG_FADEOUT, line_id, 0, JRS_HS_TBL_X, y, showTime, 1.0
    );
@@ -541,7 +546,7 @@ script 956 ( int showTime ) {
    line_id += 1;
 
    hudMessage(
-      s : "\cc", a : _jrs_hs_author, s : "\c-" ;
+      s : "\cc", a : _jrs_hs_author[ route ], s : "\c-" ;
       HUDMSG_FADEOUT, line_id, 0, JRS_HS_TBL_X, y, showTime, 1.0
    );
 }
@@ -549,26 +554,6 @@ script 956 ( int showTime ) {
 //Personal Record specific scripts
 //----------------------------------------
 
-int firstname[100];
-int secondname[100];
-int thirdname[100];
-int fourthname[100];
-int fifthname[100];
-int sixthname[100];
-int seventhname[100];
-int eighthname[100];
-int ninthname[100];
-int tenthname[100];
-int first;
-int second;
-int third;
-int fourth;
-int fifth;
-int sixth;
-int seventh;
-int eighth;
-int ninth;
-int tenth;
 int joined[64];
 
 script 840 ENTER
@@ -583,7 +568,7 @@ script 840 ENTER
 		started = 1;
 		delay(35);
 	}
-	str mapname = toUpper(StrParam(n:PRINTNAME_LEVEL));
+	str mapname = pathMapName( pathPlayerRoute( PlayerNumber() ) );
 	str yourname = GetPlayerAccountName(playernumber());
 	int yourpb = GetDBEntry(StrParam(s:mapname,s:"_pbs"), yourname);
 	if (yourpb != 0)
@@ -622,7 +607,7 @@ function void checkpb (int time, int player)
 	else
 	{
 		str yourname = GetPlayerAccountName(player);
-		str mapname = toUpper(StrParam(n:PRINTNAME_LEVEL));
+		str mapname = pathMapName( pathPlayerRoute( PlayerNumber() ) );
 		int yourpb = GetDBEntry(StrParam(s:mapname,s:"_pbs"), yourname);
 		if (yourpb == 0 || time < yourpb)
 		{
@@ -631,90 +616,6 @@ function void checkpb (int time, int player)
 		acs_executealways(840,0);
 	}
 }
-
-/*
-script 841 OPEN //loead leaderboard
-{
-	if (is_online() == false || !JrhIsEnabled())
-		terminate;
-	while(TRUE)
-	{
-		str mapname = toUpper(StrParam(n:PRINTNAME_LEVEL));
-		int Top10 = SortDBEntries (StrParam(s:mapname,s:"_pbs"), 10, 0, 0 );
-		int lcount = CountDBResults(top10);
-		for (int i = 0; i < 10; i++)
-		{
-			str authname;
-			int ptime;
-			if (i <= lcount - 1)
-			{
-				authname = GetDBResultKeyString(Top10, i);
-				ptime = GetDBResultValue(Top10, i);
-			}
-			else
-			{
-				authname = "(No time set)";
-				ptime = 0;
-			}
-			switch(i)
-			{
-				case 0:
-					for ( int a = 0; a < StrLen(authname); ++a ) {firstname[ a ] = GetChar( authname, a ); }
-					firstname[ StrLen(authname) ] = 0;
-					first = ptime;
-					break;
-				case 1:
-					for ( int b = 0; b < StrLen(authname); ++b ) {secondname[ b ] = GetChar( authname, b ); }
-					secondname[ StrLen(authname) ] = 0;
-					second = ptime;
-					break;
-				case 2:
-					for ( int c = 0; c < StrLen(authname); ++c ) {thirdname[ c ] = GetChar( authname, c ); }
-					thirdname[ StrLen(authname) ] = 0;
-					third = ptime;
-					break;
-				case 3:
-					for ( int d = 0; d < StrLen(authname); ++d ) {fourthname[ d ] = GetChar( authname, d ); }
-					fourthname[ StrLen(authname) ] = 0;
-					fourth = ptime;
-					break;
-				case 4:
-					for ( int e = 0; e < StrLen(authname); ++e ) {fifthname[ e ] = GetChar( authname, e ); }
-					fifthname[ StrLen(authname) ] = 0;
-					fifth = ptime;
-					break;
-				case 5:
-					for ( int f = 0; f < StrLen(authname); ++f ) {sixthname[ f ] = GetChar( authname, f ); }
-					sixthname[ StrLen(authname) ] = 0;
-					sixth = ptime;
-					break;
-				case 6:
-					for ( int g = 0; g < StrLen(authname); ++g ) {seventhname[ g ] = GetChar( authname, g ); }
-					seventhname[ StrLen(authname) ] = 0;
-					seventh = ptime;
-					break;
-				case 7:
-					for ( int h = 0; h < StrLen(authname); ++h ) {eighthname[ h ] = GetChar( authname, h ); }
-					eighthname[ StrLen(authname) ] = 0;
-					eighth = ptime;
-					break;
-				case 8:
-					for ( int j = 0; j < StrLen(authname); ++j ) {ninthname[ j ] = GetChar( authname, j ); }
-					ninthname[ StrLen(authname) ] = 0;
-					ninth = ptime;
-					break;
-				case 9:
-					for ( int k = 0; k < StrLen(authname); ++k ) {tenthname[ k ] = GetChar( authname, k ); }
-					tenthname[ StrLen(authname) ] = 0;
-					tenth = ptime;
-					break;
-			}
-		}
-		FreeDBResults ( Top10 );
-		delay(35*60);
-	}
-}
-*/
 
 script 842 (void)
 {
@@ -726,7 +627,7 @@ script 842 (void)
 	joined[playernumber()] = 1;
 	while( TRUE )
 	{
-		str mapname = toUpper(StrParam(n:PRINTNAME_LEVEL));
+		str mapname = pathMapName( pathPlayerRoute( PlayerNumber() ) );
 		str yourname = GetPlayerAccountName(playernumber());
 		int yourpb = GetDBEntry(StrParam(s:mapname,s:"_pbs"), yourname);
 		if (yourpb != 0)

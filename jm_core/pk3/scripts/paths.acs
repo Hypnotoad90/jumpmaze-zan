@@ -1,0 +1,71 @@
+//Multiple paths system used by JPX2BDEM (Library)
+//Author: Wirtualnosc
+
+#library "paths"
+#include "zcommon.acs"
+#import "constants.acs"
+#import "utility.acs"
+
+str paths_parTimes = "";
+int paths_parCount = 1;
+int paths_playerRoute[ MAX_PLAYERS ];
+
+function void pathInit( str parTimes ) {
+	paths_parTimes = parTimes;
+	int length = strlen( paths_parTimes );
+	for ( int i = 0; i < length; i++ ) {
+		if ( GetChar( paths_parTimes, i ) == ';' )
+			paths_parCount++;
+	}
+	for ( i = 0; i < paths_parCount; i++ ) {
+		do {
+			int route = random( 0, paths_parCount - 1 );
+			bool alreadyexists = false;
+			for ( int j = 0; j < i; j++ ) {
+				if ( paths_playerRoute[ j ] == route ) {
+					alreadyexists = true;
+					break;
+				}
+			}
+		} while ( alreadyexists );
+		paths_playerRoute[ i ] = route;
+	}
+	for ( i = paths_parCount; i < MAX_PLAYERS; i++ )
+		paths_playerRoute[ i ] = paths_playerRoute[ i % paths_parCount ];
+}
+
+function int pathCount( void ) {
+	return paths_parCount;
+}
+
+function str pathPar( int which ) {
+	int length = strlen( paths_parTimes );
+	int current = 0;
+	int parstart = 0;
+	int parend = length;
+	for ( int i = 0; i < length; i++ ) {
+		if ( current == ( which % paths_parCount ) ) {
+			parstart = i;
+			break;
+		}
+		if ( GetChar( paths_parTimes, i ) == ';' )
+			current++;
+	}
+	for ( i = parstart; i < length; i++ ) {
+		if ( GetChar( paths_parTimes, i ) == ';' ) {
+			parend = i;
+			break;
+		}
+	}
+	return StrMid( paths_parTimes, parstart, parend - parstart );
+}
+
+function str pathMapName( int which ) {
+	if ( paths_parCount == 1 )
+		return toUpper( StrParam( n:PRINTNAME_LEVEL ) );
+	return StrParam( s:toUpper( StrParam( n:PRINTNAME_LEVEL ) ), s:" (Route ", i:( which % paths_parCount )+1, s:")" );
+}
+
+function int pathPlayerRoute( int player ) {
+	return paths_playerRoute[ player ];
+}

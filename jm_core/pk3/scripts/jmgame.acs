@@ -29,6 +29,8 @@
 #import "svmz/game.acs"
 // Telefrag patch:
 #import "telefrag_patch.acs"
+// Multiple paths:
+#import "paths.acs"
 
 // Game modes:
 #libdefine JMG_MODE_COOP 0
@@ -69,6 +71,7 @@ function void JmGameInit( int mapType, str par ) {
 
    // Initialize utility library.
    UtilityInit();
+   pathInit( par );
 
    // Survival Maze.
    if ( is_survival_mode() ) {
@@ -275,6 +278,10 @@ function bool JmGameIsValidExit( void ) {
 
 function void JmGameShowInitError( void ) {
    printBold( s : "\ciScripts were not initialized!\c-" );
+}
+
+function int JmGameGetPlayerRoute( int player ) {
+   return pathPlayerRoute( player );
 }
 
 // I don't like having race conditions, so we're going to centralize the

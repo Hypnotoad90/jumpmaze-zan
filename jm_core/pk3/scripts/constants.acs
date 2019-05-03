@@ -13,6 +13,7 @@
 #libdefine MAX_PLAYERS 32
 #libdefine VALUE_NONE -1
 #libdefine TOTAL_MONTHS 12
+#libdefine MAX_ROUTES 8
 
 // Byte angles:
 // Viewing through Doom Builder 2, left is West and right is East.

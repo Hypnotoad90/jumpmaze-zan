@@ -16,6 +16,8 @@
 
 #import "ranker_hs.acs"
 
+#import "paths.acs"
+
 // Start script number.
 #libdefine JRT_SCRIPT_START 960
 #libdefine JRT_SCRIPT_POINT 962
@@ -92,7 +94,7 @@ script JRT_SCRIPT_POINT ( void ) {
          JrtSetFinishTime( finish_time );
 
          // High score.
-         if ( JrhIsEnabled() && JrhIsNew( finish_time ) ) {
+         if ( JrhIsEnabled() && JrhIsNew( finish_time, 0 ) ) {
 			
 			if (!JRTIsReallyNew(finish_time)) //make sure another server didn't update the record with a new high score
 				terminate;
@@ -208,7 +210,7 @@ function void JrtShowTable( void ) {
    }
 
    // Draw the high score finish time.
-   if ( JrhIsSet() ) {
+   if ( JrhIsSet( 0 ) ) {
       JrtHsShowFinishTime( high_score_y );
    }
 
@@ -478,7 +480,7 @@ function void JrtHsSetFinishTime( int tics ) {
       _jrt_hs_seconds = seconds % SECONDS_IN_MINUTE;
       _jrt_hs_centiseconds = cal_cseconds( tics % TICS_IN_SECOND );
 
-      JrhSetFinishTime( tics );
+      JrhSetFinishTime( tics, 0 );
    }
 }
 

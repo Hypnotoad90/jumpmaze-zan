@@ -10,6 +10,7 @@
 #include "zcommon.acs"
 
 #import "constants.acs"
+#import "paths.acs"
 
 str _timer_par = "";
 // Number of tics that passed before the timer is started. This is used to
@@ -58,7 +59,7 @@ script 987 ( void ) NET {
    if ( _timer_par != "" ) {
       setFont( "BIGFONT" );
       hudMessage(
-         s : _timer_par ;
+         s : pathPar( pathPlayerRoute( PlayerNumber() ) ) ;
          HUDMSG_PLAIN, 986, CR_RED, 0.95, 0.90, 0
       );
    }

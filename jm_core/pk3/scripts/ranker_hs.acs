@@ -14,6 +14,7 @@
 #import "luk.acs"
 #import "jmgame.acs"
 #import "jm2_cdwn.acs"
+#import "paths.acs"
 
 #libdefine JRH_LINE_NOTICE 27233
 #libdefine JRH_LINE_NOTICE_Y 0.55
@@ -41,7 +42,7 @@ bool _jrh_manual_disable = false;
 
 // High score finish time. We put some of the finish time handling here
 // because both rankers use the same code.
-int _jrh_tics = VALUE_NONE;
+int _jrh_tics[ MAX_ROUTES ] = { VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE, VALUE_NONE };
 
 function int JrhGetLoadStatus( void ) {
    return _jrh_load_status;
@@ -88,34 +89,34 @@ function void JrhDisable( void ) {
    _jrh_manual_disable = true;
 }
 
-function int JrhGetFinishTime( void ) {
-   return _jrh_tics;
+function int JrhGetFinishTime( int route ) {
+   return _jrh_tics[ route ];
 }
 
-function void JrhSetFinishTime( int tics ) {
-   _jrh_tics = tics;
+function void JrhSetFinishTime( int tics, int route ) {
+   _jrh_tics[ route ] = tics;
 }
 
-function bool JrhIsSet( void ) {
-   return _jrh_tics != VALUE_NONE;
+function bool JrhIsSet( int route ) {
+   return _jrh_tics[ route ] != VALUE_NONE;
 }
 
-function bool JrhIsNew( int newTime ) {
-   return ( _jrh_tics == VALUE_NONE || newTime < _jrh_tics );
+function bool JrhIsNew( int newTime, int route ) {
+   return ( _jrh_tics[ route ] == VALUE_NONE || newTime < _jrh_tics[ route ] );
 }
 
-function bool JRSIsReallyNew(int newTime) { //added by Hypnotoad, check in case the DB was updated with a new SOLO record
-	int dbtime = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), "jrs_hs_time");
+function bool JRSIsReallyNew(int newTime, int route ) { //added by Hypnotoad, check in case the DB was updated with a new SOLO record
+	int dbtime = GetDBEntry(pathMapName( route ), "jrs_hs_time");
 	return (dbtime == 0 || newTime < dbtime);
 }
 
 function bool JRTIsReallyNew(int newTime) { //added by Hypnotoad, check in case the DB was updated with a new TEAM record
-	int dbtime = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), "jrt_hs_time");
+	int dbtime = GetDBEntry(pathMapName( 0 ), "jrt_hs_time");
 	return (dbtime == 0 || newTime < dbtime);
 }
 
 function bool JMRIsReallyNew(int newTime) { //added by Hypnotoad, check in case the DB was updated with a new JMRUN record
-	int dbtime = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), "jmr_hs_time");
+	int dbtime = GetDBEntry(pathMapName( 0 ), "jmr_hs_time");
 	return (dbtime == 0 || newTime < dbtime);
 }
 
@@ -152,7 +153,7 @@ function void JrhShowDetails( int showTime ) {
       }
    }*/
    // No high score set.
-   else if ( ! JrhIsSet() ) {
+   else if ( ! JrhIsSet( pathPlayerRoute( PlayerNumber() ) ) ) {
       hudMessage( 
          s : "\ciNo high score is set for the map\c-" ;
          HUDMSG_PLAIN, JRH_LINE_NOTICE, 0, 1.5, JRH_LINE_NOTICE_Y, 3.0
@@ -160,31 +161,8 @@ function void JrhShowDetails( int showTime ) {
    }
    // Show.
    else {
-      acs_ExecuteAlways( _jrh_script_details, 0, showTime );
+      acs_ExecuteAlways( _jrh_script_details, 0, showTime, pathPlayerRoute( PlayerNumber() ) );
    }
-}
-
-//for converting map name to upper case
-
-#define CASE_DIFFERENCE ('A' - 'a')
-int g_toUpperBuffer[1024];
-
-function str toUpper (str s)
-{
-    int i, c;
-
-    for (i = 0; GetChar(s,i) != '\0'; ++i)
-    {
-        c = GetChar (s, i);
-
-        if (c >= 'a' && c <= 'z')
-            g_toUpperBuffer[i] = c + CASE_DIFFERENCE;
-        else
-            g_toUpperBuffer[i] = c;
-    }
-
-    g_toUpperBuffer[i] = '\0';
-    return strparam (a:g_toUpperBuffer);
 }
 
 //LEADERBOARD STUFF
@@ -290,7 +268,7 @@ function void DisplayLeaderboard(void) {
 		}
 		//- Get all the stuff from database
 		int limit = LB_ENTRIES_PER_PAGE;
-		str mappbs = StrParam(s:toUpper(StrParam(n:PRINTNAME_LEVEL)),s:"_pbs");
+		str mappbs = StrParam(s:pathMapName( pathPlayerRoute( player ) ),s:"_pbs");
 		int lbres = SortDBEntries( mappbs, limit, offset, 0 );
 		int lbreslen = CountDBResults(lbres);
 		if (lbreslen < limit) limit = lbreslen;
@@ -353,7 +331,7 @@ function void DisplayLeaderboard(void) {
 			SetFont("TMSBOARD");
 			HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
 			SetFont("BIGFONT");
-			HudMessage(s:toUpper(StrParam(s:"top times on ",n:PRINTNAME_LEVEL)); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 320.0, 50.1, 0.0);
+			HudMessage(s:toUpper(StrParam(s:"top times on ",s:pathMapName( pathPlayerRoute( player ) ))); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 320.0, 50.1, 0.0);
 			SetFont("CONFONT");
 			HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
 			HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
@@ -362,7 +340,7 @@ function void DisplayLeaderboard(void) {
 			SetFont("TMSBOARD");
 			HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
 			SetFont("BIGFONT");
-			HudMessage(s:toUpper(StrParam(s:"top times on ",n:PRINTNAME_LEVEL)); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 1.5, -0.1, 0.0);
+			HudMessage(s:toUpper(StrParam(s:"top times on ",s:pathMapName( pathPlayerRoute( player ) ))); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 1.5, -0.1, 0.0);
 			SetFont("CONFONT");
 			HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
 			HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 1.5, -0.1, 0.0);

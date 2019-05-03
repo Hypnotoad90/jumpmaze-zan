@@ -20,6 +20,8 @@
 #import "ranker_hs.acs" 
 #import "who_exited.acs"
 
+#import "paths.acs"
+
 // Start script number.
 #libdefine JMR_SCRIPT_START 920
 
@@ -273,7 +275,7 @@ function void JMRRemember( int player, bool toRemember ) {
 
 // Adds player to table.
 script 922 ( int player, int playerTime ) {
-         if ( JrhIsEnabled() && JrhIsNew( playerTime ) ) { //JrhIsNew --> checks whether the the record has been set and if the time is lower than _jrh_tics, located in ranker_hs, 
+         if ( JrhIsEnabled() && JrhIsNew( playerTime, pathPlayerRoute( player ) ) ) { //JrhIsNew --> checks whether the the record has been set and if the time is lower than _jrh_tics, located in ranker_hs, 
             // Make sure no cheating has occured.
 			if (PlayerIsLoggedIn(player) == 0)
 			{
@@ -397,7 +399,7 @@ function void JMRShowTable( void ) {
    int line_id = JMR_TBL_LINEID_OFFSET;
 
    // We only display the high score if we have one.
-   if ( JrhIsSet() ) { //check high score is set
+   if ( JrhIsSet( 0 ) ) { //check high score is set
       int record_line_height = line_height - JMR_TBL_LINE_HEIGHT;
       JMRHsShowFinishTime( line_id, record_line_height ); //uses variables from ranker_hs
       line_id += 1;
@@ -462,7 +464,7 @@ function void JMRClearTable( void ) {
    int lines_to_clear = _jmr_show_limit;
 
    // Clear the extra record time line.
-   if ( JrhIsSet() ) {
+   if ( JrhIsSet( 0 ) ) {
       lines_to_clear += 1;
    }
 
@@ -553,7 +555,7 @@ function void JMRHsSetFinishTime( int tics ) {
       _jmr_hs_seconds = seconds % SECONDS_IN_MINUTE;
       _jmr_hs_centiseconds = cal_cseconds( tics % TICS_IN_SECOND );
 
-      JrhSetFinishTime( tics );
+      JrhSetFinishTime( tics, 0 );
    }
 }
 

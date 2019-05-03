@@ -157,3 +157,27 @@ function str conv_month_string( int month ) {
 
    return "";
 }
+
+//for converting map name to upper case
+
+#define CASE_DIFFERENCE ('A' - 'a')
+int g_toUpperBuffer[1024];
+
+function str toUpper (str s)
+{
+    int i, c;
+
+    for (i = 0; GetChar(s,i) != '\0'; ++i)
+    {
+        c = GetChar (s, i);
+
+        if (c >= 'a' && c <= 'z')
+            g_toUpperBuffer[i] = c + CASE_DIFFERENCE;
+        else
+            g_toUpperBuffer[i] = c;
+    }
+
+    g_toUpperBuffer[i] = '\0';
+    return strparam (a:g_toUpperBuffer);
+}
+
