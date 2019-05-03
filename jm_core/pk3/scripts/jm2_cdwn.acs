@@ -26,7 +26,10 @@ script 851 OPEN
 
 script 852 OPEN
 {
-	if ( StrCmp( StrParam( n:PRINTNAME_LEVEL ), "TITLEMAP" ) == 0 )
+	if ( StrICmp( StrParam( n:PRINTNAME_LEVEL ), "TITLEMAP" ) == 0
+		|| StrICmp( StrParam( n:PRINTNAME_LEVEL ), "WIN01" ) == 0
+		|| StrICmp( StrParam( n:PRINTNAME_LEVEL ), "WIN02" ) == 0
+		)
 	{
 		cdwn_freeze = 0;
 		terminate;
@@ -34,7 +37,7 @@ script 852 OPEN
 	if ( getCvar( "jm_countdown" ) == 1) 
 	{
 		delay(1);
-		if (JmGameGetMapType() == 2) {
+		if ( JmGameGetMapType() == 2 ) {
 			timerstage = 2;
 			JmGameStartTimer();
 			cdwn_freeze = 0;
