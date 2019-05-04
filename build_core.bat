@@ -69,5 +69,7 @@ acc "scripts/pickup.acs" "acs/pickup.o"
 IF EXIST "%CD%\scripts\acs.err" MOVE /Y "%CD%\scripts\acs.err" "err_pickup.txt"
 acc "scripts/paths.acs" "acs/paths.o"
 IF EXIST "%CD%\scripts\acs.err" MOVE /Y "%CD%\scripts\acs.err" "err_paths.txt"
+acc "scripts/speedometer.acs" "acs/speedometer.o"
+IF EXIST "%CD%\scripts\acs.err" MOVE /Y "%CD%\scripts\acs.err" "err_speedometer.txt"
 %SEVENZAEXE% a -tzip "%OUTDIR%\jm_core%FILEVERSION%.pk3" * -r -xr!*.dbs -xr!*.backup1 -xr!*.backup2 -xr!*.backup3 -xr!*.bak -xr!err_*.txt
 POPD

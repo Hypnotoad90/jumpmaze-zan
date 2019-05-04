@@ -7,3 +7,4 @@ hints
 vote
 cvarset
 pickup
+speedometer
