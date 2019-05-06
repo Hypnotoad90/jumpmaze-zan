@@ -11,14 +11,12 @@ beta:
 release:
 	@$(MAKE) build targetName=release
 	@echo Build successful!
-clean:
-	@$(DEL) $(DELFLAGS) jm_core/pk3/acs/*
+cleanCommon:
 	@$(DEL) $(DELFLAGS) $(targetDirDebug)
 	@$(DEL) $(DELFLAGS) $(targetDirBeta)
 	@$(DEL) $(DELFLAGS) $(targetDirRelease)
-	@echo Clean operation complete.
 endif
-.PHONY: debug beta release clean build
+.PHONY: debug beta release clean cleanCommon build
 
 # Processor architecture
 ifeq ($(PROCESSOR_ARCHITECTURE),x32)

@@ -126,3 +126,9 @@ $(targetDir)/jm2_maps-$(targetSuffix).pk3: jm_maps/jm2_maps | $(targetDir)
 
 # Build target
 build: $(pk3Files)
+
+# Clean target
+clean: cleanCommon
+	@$(DEL) $(DELFLAGS) $(acsDir)/*
+	@echo Clean operation complete.
+
