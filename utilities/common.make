@@ -47,6 +47,8 @@ DELFLAGS=-rf
 WHERE=which
 MKDIR=mkdir
 MKDIRFLAGS=-p
+FIND=/usr/bin/find
+FINDFLAGS=-type f
 
 # Directories
 targetDirDebug := debug
