@@ -7,6 +7,37 @@ include utilities/common.make
 # ACS files
 acsDir := jm_core/pk3/acs
 sourceDir := jm_core/pk3/scripts
+acsFiles := \
+	$(acsDir)/utility.o \
+	$(acsDir)/jmrhighs.o \
+	$(acsDir)/jmrsolo.o \
+	$(acsDir)/jmmskill.o \
+	$(acsDir)/jmmapmsg.o \
+	$(acsDir)/jmgame.o \
+	$(acsDir)/jmrteam.o \
+	$(acsDir)/jmrun.o \
+	$(acsDir)/jm2_cdwn.o \
+	$(acsDir)/TRANSLUCENT.o \
+	$(acsDir)/sflags.o \
+	$(acsDir)/jmwhoxit.o \
+	$(acsDir)/jmtimer.o \
+	$(acsDir)/teleptch.o \
+	$(acsDir)/strigger.o \
+	$(acsDir)/luksys.o \
+	$(acsDir)/constant.o \
+	$(acsDir)/autofist.o \
+	$(acsDir)/rsdsys.o \
+	$(acsDir)/client.o \
+	$(acsDir)/ptport.o \
+	$(acsDir)/srvlmaze.o \
+	$(acsDir)/startreset.o \
+	$(acsDir)/admin.o \
+	$(acsDir)/hints.o \
+	$(acsDir)/vote.o \
+	$(acsDir)/cvarset.o \
+	$(acsDir)/pickup.o \
+	$(acsDir)/paths.o \
+	$(acsDir)/speedometer.o
 
 $(acsDir):
 	@$(MKDIR) $(MKDIRFLAGS) $@
@@ -72,10 +103,10 @@ $(acsDir)/speedometer.o: $(sourceDir)/speedometer.acs $(sourceDir)/speedfuncs.ac
 	$(ACC) $< $@
 
 # PK3 files
-jmCoreContents = $(shell $(FIND) jm_core/pk3 $(FINDFLAGS))
-jmAssetsContents = $(shell $(FIND) jm_assets/pk3 $(FINDFLAGS))
-jmMapsContents = $(shell $(FIND) jm_maps/jm_maps $(FINDFLAGS))
-jm2MapsContents = $(shell $(FIND) jm_maps/jm2_maps $(FINDFLAGS))
+jmCoreContents = $(shell $(FIND) jm_core/pk3 $(FINDFLAGS) -newer $(targetDir)/jm_core-$(targetSuffix).pk3 2>/dev/null)
+jmAssetsContents = $(shell $(FIND) jm_assets/pk3 $(FINDFLAGS) -newer $(targetDir)/jm_assets-$(targetSuffix).pk3 2>/dev/null)
+jmMapsContents = $(shell $(FIND) jm_maps/jm_maps $(FINDFLAGS) -newer $(targetDir)/jm_maps-$(targetSuffix).pk3 2>/dev/null)
+jm2MapsContents = $(shell $(FIND) jm_maps/jm2_maps $(FINDFLAGS) -newer $(targetDir)/jm2_maps-$(targetSuffix).pk3 2>/dev/null)
 
 pk3Files := \
 	$(targetDir)/jm_core-$(targetSuffix).pk3 \
@@ -85,7 +116,7 @@ pk3Files := \
 
 $(targetDir):
 	@$(MKDIR) $(MKDIRFLAGS) $@
-$(targetDir)/jm_core-$(targetSuffix).pk3: jm_core/pk3 $(jmCoreContents) | $(targetDir)
+$(targetDir)/jm_core-$(targetSuffix).pk3: jm_core/pk3 $(jmCoreContents) $(acsFiles) | $(targetDir)
 	@$(DEL) $(DELFLAGS) $@
 	$(SEVENZA) $(SEVENZAFLAGS) $@ ./$</*
 $(targetDir)/jm_assets-$(targetSuffix).pk3: jm_assets/pk3 $(jmAssetsContents) | $(targetDir)
