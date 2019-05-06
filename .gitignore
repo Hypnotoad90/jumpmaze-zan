@@ -8,7 +8,6 @@
 
 # Compiled PK3s
 *.pk3
-out/
 debug/
 release/
 release_beta/
@@ -18,7 +17,3 @@ release_beta/
 
 # Compiled ACS
 *.o
-
-# Auto-generated files
-utilities/zz_autogen_commit.bat
-utilities/zz_autogen_version.bat

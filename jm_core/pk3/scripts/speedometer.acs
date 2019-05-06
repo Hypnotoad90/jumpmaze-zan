@@ -5,7 +5,7 @@
 #include "zcommon.acs"
 #library "speedometer"
 
-#include "speedfuncs.h"
+#include "speedfuncs.acs"
 
 #define BARFONTCOUNT 12
 
