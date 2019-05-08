@@ -163,3 +163,69 @@ ACTOR TranslucentScript : CustomInventory
 		Stop
 	}
 }
+
+ACTOR PersonalTeleport : DoomWeapon
+{
+	Weapon.SelectionOrder 10
+	Weapon.SlotNumber 1
+	States
+	{
+		Spawn: // This state is entered when you drop the weapon.
+			PTPT A -1
+			Stop
+		Ready: // This state is entered when you have this weapon selected.
+			PTPT A 1 A_WeaponReady
+			Loop 
+		Deselect: // This state is entered when you deselect the current selected weapon.
+			PTPT A 1 A_Lower
+			Loop 
+		Select: // This state is entered when you select this weapon.
+			PTPT A 1 A_Raise
+			Loop 
+		Fire: // The firing state.
+			PTPT A 1
+			PTPT B 1 acs_executealways(833,0,0,0,0)
+			PTPT C 1 
+			PTPT D 1 
+			PTPT E 1
+			PTPT F 15 
+			PTPT A 15 
+			Goto Ready
+		Flash: // The weapons flash.
+			USGF F 1 
+			Stop
+		}
+}
+
+ACTOR ReButton : DoomWeapon //for custom behaviour
+{
+	Weapon.SelectionOrder 10
+	Weapon.SlotNumber 1
+	States
+	{
+		Spawn: // This state is entered when you drop the weapon.
+			PTPT A -1
+			Stop
+		Ready: // This state is entered when you have this weapon selected.
+			PTPT A 1 A_WeaponReady
+			Loop 
+		Deselect: // This state is entered when you deselect the current selected weapon.
+			PTPT A 1 A_Lower
+			Loop 
+		Select: // This state is entered when you select this weapon.
+			PTPT A 1 A_Raise
+			Loop 
+		Fire: // The firing state.
+			PTPT A 1
+			PTPT B 1 acs_executealways(832,0,0,0,0)
+			PTPT C 1 
+			PTPT D 1 
+			PTPT E 1
+			PTPT F 15 
+			PTPT A 15 
+			Goto Ready
+		Flash: // The weapons flash.
+			USGF F 1 
+			Stop
+		}
+}
