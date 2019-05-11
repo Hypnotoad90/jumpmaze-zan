@@ -1,5 +1,5 @@
 #Library "TRANSLUCENT"
-#Include "Zcommon.acs"
+#Include "zcommon.acs"
 
 Int SelfX, SelfY, SelfZ;
 Bool Instance[64] = { False };
