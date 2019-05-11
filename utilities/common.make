@@ -18,29 +18,47 @@ cleanCommon:
 endif
 .PHONY: debug beta release clean cleanCommon build
 
-# Processor architecture
-ifeq ($(PROCESSOR_ARCHITECTURE),x32)
-ifndef PROCESSOR_ARCHITEW6432
-hostArch := 32
+# Detect OS and CPU architecture
+ifeq ($(OS),Windows_NT)
+    hostOS := windows
+    ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
+        hostArch := 64
+    else
+        ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+            hostArch := 64
+        endif
+        ifeq ($(PROCESSOR_ARCHITECTURE),x86)
+            hostArch := 32
+        endif
+    endif
 else
-hostArch := 64
-endif
-else
-ifeq ($(PROCESSOR_ARCHITECTURE),x86)
-ifndef PROCESSOR_ARCHITEW6432
-hostArch := 32
-else
-hostArch := 64
-endif
-else
-hostArch := 64
-endif
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        hostOS := linux
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        hostOS := macos
+    endif
+    UNAME_P := $(shell uname -p)
+    ifeq ($(UNAME_P),x86_64)
+        hostArch := 64
+    endif
+    ifneq ($(filter %86,$(UNAME_P)),)
+        hostArch := 32
+    endif
 endif
 
 # Tools
-ACC=utilities/acc
+# Use our own 7za on Windows, and system 7za everywhere else
+ifeq ($(hostOS),windows)
+	ACC=utilities/acc.exe
+	SEVENZA=utilities/7za$(hostArch)
+else
+	ACC=utilities/acc$(hostArch)
+	SEVENZA=7za
+endif
+
 ACCFLAGS=
-SEVENZA=utilities/7za$(hostArch)
 SEVENZAFLAGS=a -tzip -r -xr!*.dbs -xr!*.backup1 -xr!*.backup2 -xr!*.backup3 -xr!*.bak
 DEL=rm
 DELFLAGS=-rf
