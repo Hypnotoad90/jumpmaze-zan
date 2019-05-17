@@ -37,7 +37,9 @@ acsFiles := \
 	$(acsDir)/cvarset.o \
 	$(acsDir)/pickup.o \
 	$(acsDir)/paths.o \
-	$(acsDir)/speedometer.o
+	$(acsDir)/speedometer.o \
+	$(acsDir)/KeyPresses.o \
+	$(acsDir)/SpectatorFunctions.o
 
 $(acsDir):
 	@$(MKDIR) $(MKDIRFLAGS) $@
@@ -100,6 +102,10 @@ $(acsDir)/pickup.o: $(sourceDir)/pickup.acs | $(acsDir)
 $(acsDir)/paths.o: $(sourceDir)/paths.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/speedometer.o: $(sourceDir)/speedometer.acs $(sourceDir)/speedfuncs.acs | $(acsDir)
+	$(ACC) $< $@
+$(acsDir)/KeyPresses.o: $(sourceDir)/KeyPresses.acs | $(acsDir)
+	$(ACC) $< $@
+$(acsDir)/SpectatorFunctions.o: $(sourceDir)/SpectatorFunctions.acs | $(acsDir)
 	$(ACC) $< $@
 
 # PK3 files

@@ -29,3 +29,5 @@ server noarchive int jm_mm_recordtime6 = -1;
 server noarchive int jm_mm_recordtime7 = -1;
 server noarchive int jm_mm_maptype = 0;
 server noarchive int jm_mm_paths = 1;
+user bool SpyMessage = true;
+user bool KeyPresses;
