@@ -281,8 +281,3 @@ script "Spectator_Respawn" RESPAWN
         Thing_ChangeTID(0, PLAYER_TID + PlayerNumber());
     }
 }
-
-script "Spectator_Disconnect" (int playerNum) DISCONNECT
-{
-    playerSpying[playerNum] = playerNum;
-}
