@@ -23,7 +23,7 @@ int BarGraphics[BARFONTCOUNT] = // These are the different graphics that make up
 function bool isSpeedometerHidden( void )
 {
 	return GetCVar("screenblocks") >= 12
-		|| !GetCVar("jm_mph_enable")
+		|| GetCVar("jm_mph_disable")
 		|| StrICmp( StrParam( n:PRINTNAME_LEVEL ), "TITLEMAP" ) == 0
 		|| StrICmp( StrParam( n:PRINTNAME_LEVEL ), "WIN01" ) == 0
 		|| StrICmp( StrParam( n:PRINTNAME_LEVEL ), "WIN02" ) == 0
@@ -66,10 +66,10 @@ function void drawSpeedometer(int speed, int id, int x, int y, int scale, int wi
 script "SpeedometerOpen" OPEN clientside
 {
 	// Is speedometer enabled?
-	if (!GetCVar("jm_mph_enable"))
+	if (!GetCVar("jm_mph_disable"))
 	{
-		ConsoleCommand("set jm_mph_enable 1");
-		ConsoleCommand("archivecvar jm_mph_enable");
+		ConsoleCommand("set jm_mph_disable 0");
+		ConsoleCommand("archivecvar jm_mph_disable");
 	}
 	
     // Use Z height when calculating speed?
