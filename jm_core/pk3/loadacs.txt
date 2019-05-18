@@ -8,5 +8,4 @@ vote
 cvarset
 pickup
 speedometer
-SpectatorFunctions
-KeyPresses
+Spying

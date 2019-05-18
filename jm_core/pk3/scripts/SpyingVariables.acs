@@ -1,0 +1,4 @@
+int packets[3];
+int playerSpying[MAX_PLAYERS];
+
+int tempTIDArray[MAX_PLAYERS];

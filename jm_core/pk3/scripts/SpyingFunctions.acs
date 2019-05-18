@@ -1,0 +1,46 @@
+// Return the player number of who a player is spying
+function int GetPlayerSpying(int playerNum)
+{
+    // Store every player's TID in temporary array
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        SetActivatorToPlayer(i);
+        tempTIDArray[i] = ActivatorTID();
+        Thing_ChangeTID(0, UniqueTID());
+    }
+    
+    SetActivator(CheckPlayerCamera(playerNum));
+    int spyingPlayerNum = PlayerNumber();
+    if (spyingPlayerNum == -1) // Are we spying a non-player?
+        spyingPlayerNum = playerNum;
+        
+    // Reset player TIDs
+    for (int j = 0; j < MAX_PLAYERS; j++)
+    {
+        SetActivatorToPlayer(j);
+        Thing_ChangeTID(0, tempTIDArray[j]);
+    }
+    
+    SetActivatorToPlayer(playerNum);
+    
+    return spyingPlayerNum;
+}
+
+// Initialise array so players are watching themselves
+function void Init_SpyingArray(void)
+{
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        playerSpying[i] = i;
+    }
+}
+
+// A bitwise right shift that works properly
+function int rshiftu(int n, int s)
+{
+    if (n & 0x80000000)
+    {
+        return (n & 0x7FFFFFFF) >> s | (1 << (31 - s));
+    }
+    return n >> s;
+}

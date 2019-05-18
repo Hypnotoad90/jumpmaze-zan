@@ -1,0 +1,194 @@
+#library "Spying.acs"
+#include "zcommon.acs"
+
+#include "SpyingConstants.acs"
+#include "SpyingVariables.acs"
+#include "SpyingFunctions.acs"
+
+script "Client_SpyingOpen" OPEN CLIENTSIDE
+{
+    Delay(5);
+
+    int playerNum = ConsolePlayerNumber();
+    int spyingPlayerNum;
+    int spyingSpying; // Who the player we're spying is spying
+    int watching;
+    
+    Init_SpyingArray();
+    
+    SetHudSize(640, 480, false);
+
+    while (true)
+    {
+        SetActivatorToPlayer(playerNum);
+        
+        spyingPlayerNum = GetPlayerSpying(playerNum);
+        
+        // Update the server with who we're spectating
+        if (playerSpying[playerNum] != spyingPlayerNum)
+        {
+            NamedRequestScriptPuke("Server_UpdateSpying", spyingPlayerNum);
+        }
+        
+        if (GetUserCVar(playerNum, "ShowSpying"))
+        {
+            // Are we spying on someone else?
+            if (playerNum != spyingPlayerNum)
+            {
+                spyingSpying = playerSpying[spyingPlayerNum];
+                // Is the player we're spying on also spying on someone else?
+                if (spyingSpying != spyingPlayerNum && spyingSpying != playerNum)
+                {
+                    HudMessage(s:StrParam(n:spyingPlayerNum + 1), s:" is watching ", s:StrParam(n:spyingSpying + 1); HUDMSG_PLAIN, 0, CR_UNTRANSLATED, 0.1, 190.1, 0.25);
+                }
+            }
+        
+            // show who is spying on you
+            watching = 0;
+            for (int player = 0; player < MAX_PLAYERS; player++)
+            {
+                // We know you're watching yourself
+                if (player == playerNum)
+                {
+                    continue;
+                }
+            
+                if (playerSpying[player] == playerNum && CheckPlayerCamera(player) != -1) // CheckPlayerCamera hack to see if player is in server
+                {
+                    HudMessage(s:StrParam(n:player + 1); HUDMSG_PLAIN, 0, CR_UNTRANSLATED, 0.1, 210.1 + watching * 10.0, 0.25);
+                    
+                    watching++;
+                }
+            }
+            
+            if (watching)
+            {
+                HudMessage(s:"Watching You:"; HUDMSG_PLAIN, 0, CR_WHITE, 0.1, 200.1, 0.25);
+            }
+        }
+        
+        SetActivator(0);
+        
+        Delay(5);
+    }
+}
+
+script "Client_UpdateArray" (int packet1, int packet2, int packet3) CLIENTSIDE
+{
+    // Activator is server
+    SetActivatorToPlayer(ConsolePlayerNumber());
+    
+    // Get position in array
+    int position = (rshiftu((packet1 & MSB_2), 26) | rshiftu((packet2 & MSB_2), 28) | rshiftu((packet3 & MSB_2), 30));
+    position *= 15;
+    
+    // Store player numbers from first packet
+    int shift = 24;
+    for (int i = 0; i < 5; i++)
+    {
+        playerSpying[position] = (packet1 >> shift) & LSB_6;
+    
+        if (position == MAX_PLAYER_NUMBER)
+        {
+            terminate;
+        }
+    
+        shift -= 6;
+        position++;
+    }
+    
+    // Store player numbers from second packet
+    shift = 24;
+    for (int j = 0; j < 5; j++)
+    {
+        playerSpying[position] = (packet2 >> shift) & LSB_6;
+    
+        if (position == MAX_PLAYER_NUMBER)
+        {
+            terminate;
+        }
+    
+        shift -= 6;
+        position++;
+    }
+    
+    // Store player numbers from third packet
+    shift = 24;
+    for (int k = 0; k < 5; k++)
+    {
+        playerSpying[position] = (packet3 >> shift) & LSB_6;
+    
+        if (position == MAX_PLAYER_NUMBER)
+        {
+            terminate;
+        }
+    
+        shift -= 6;
+        position++;
+    }
+}
+
+script "Server_UpdateSpying" (int spyingPlayerNum) NET
+{
+    playerSpying[PlayerNumber()] = spyingPlayerNum;
+}
+
+script "Server_InitSpyingArray" OPEN
+{
+    Init_SpyingArray();
+}
+
+script "Who is Spying Who" OPEN
+{
+    Delay(5);
+    
+    int offset, shift, playerNum;
+    
+    while (true)
+    {
+        offset = 0;
+        
+        for (int chunk = 0; chunk < 5; chunk++)
+        {
+            packets[0] = 0;
+            packets[1] = 0;
+            packets[2] = 0;
+            packets[0] |= (chunk << (26 + (2 * 0))) & MSB_2; // Set position of the packets
+            packets[1] |= (chunk << (26 + (2 * 1))) & MSB_2; // Set position of the packets
+            packets[2] |= (chunk << (26 + (2 * 2))) & MSB_2; // Set position of the packets
+            
+            for (int packet = 0; packet < 3; packet++)
+            {
+                shift = 24;
+                
+                for (int player = 0; player < 5; player++) // We can only cram 5 player numbers into an integer
+                {
+                    if (CheckPlayerCamera(player + offset) != -1) // CheckPlayerCamera hack to see if player is in server
+                    {
+                        playerNum = playerSpying[player + offset];
+                    }
+                    else
+                    {
+                        playerSpying[player + offset] = player + offset;
+                        playerNum = player + offset;
+                    }
+                    packets[packet] |= playerNum << shift;
+                    
+                    shift -= 6;
+                    
+                    // Send final packets
+                    if (player + offset == MAX_PLAYER_NUMBER)
+                    {
+                        ACS_NamedExecuteAlways("Client_UpdateArray", 0, packets[0], packets[1], packets[2]);
+                        
+                        restart;
+                    }
+                }
+                
+                offset += 5;
+            }
+            
+            ACS_NamedExecuteAlways("Client_UpdateArray", 0, packets[0], packets[1], packets[2]);
+        }
+    }
+}
