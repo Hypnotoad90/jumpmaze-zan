@@ -79,7 +79,7 @@ script "SpeedometerOpen" OPEN clientside
         ConsoleCommand("archivecvar jm_mph_usez");
     }
 
-    // Choose between MPH, km/h, units/tic (integer), or units/tic (float) display
+    // Choose between MPH, km/h, m/s, units/tic (integer), or units/tic (float) display
     if (!GetCVar("jm_mph_km"))
     {
         ConsoleCommand("set jm_mph_km 0");
@@ -182,18 +182,22 @@ script "SpeedometerEnter" ENTER clientside
         mph = FixedMul(m, unitCm) / 100;    // cm/tic -> m/tic
         mph = FixedMul(mph, SECOND_TICS);   // m/tic  -> m/second
 
-        if (GetCVar("jm_mph_km")) { mph /= 1000; } // m/second -> km/second  
-        else { mph = FixedDiv(mph, 1609.344); } // m/second -> miles/second
-        mph *= 3600;                        // second -> hour
-        mph >>= 16;                         // we want an integer :(
-
+		if (GetCVar("jm_mph_km") != 2)
+		{
+			if (GetCVar("jm_mph_km")) { mph /= 1000; } // m/second -> km/second  
+			else { mph = FixedDiv(mph, 1609.344); } // m/second -> miles/second
+			mph *= 3600;                        // second -> hour
+		}
+		mph >>= 16;                         // we want an integer :(
+		
         SetHudSize(640, 480, 1);
         SetFont("SMALLFONT");
 
         switch (GetCVar("jm_mph_km"))
         {
-          case 3: HudMessage(f:m, s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
-          case 2: HudMessage(d:round(m), s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
+          case 4: HudMessage(f:m, s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
+          case 3: HudMessage(d:round(m), s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
+		  case 2: HudMessage(d:mph, s:"\c- m/s"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
           case 1: HudMessage(d:mph, s:"\c- km/h"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
           case 0: HudMessage(d:mph, s:"\c- mph"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
         }

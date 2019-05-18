@@ -13,8 +13,9 @@ OptionValue "JMSpeedUnits"
 {
 	0, "mph"
 	1, "km/h"
-	2, "units/tic"
-	3, "units/tic (exact)"
+	2, "m/s"
+	3, "units/tic"
+	4, "units/tic (exact)"
 }
 
 OptionMenu "JMMain"
