@@ -20,9 +20,9 @@ script "Client_KeyPress" OPEN CLIENTSIDE
         {
             SetActivatorToPlayer(ConsolePlayerNumber());
         
-            buttons = GetPlayerInput(0, INPUT_BUTTONS);
-            forward = GetPlayerInput(0, INPUT_FORWARDMOVE);
-            side = GetPlayerInput(0, INPUT_SIDEMOVE);
+            buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+            forward = GetPlayerInput(-1, INPUT_FORWARDMOVE);
+            side = GetPlayerInput(-1, INPUT_SIDEMOVE);
             
             // Left
             if (side < 0)
