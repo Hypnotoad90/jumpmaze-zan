@@ -1,4 +1,0 @@
-#libdefine MAX_PLAYERS 64
-#libdefine MAX_PLAYER_NUMBER MAX_PLAYERS - 1
-#libdefine MSB_2 0xC0000000
-#libdefine LSB_6 0x0000003F

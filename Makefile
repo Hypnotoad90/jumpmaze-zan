@@ -103,7 +103,7 @@ $(acsDir)/paths.o: $(sourceDir)/paths.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/speedometer.o: $(sourceDir)/speedometer.acs $(sourceDir)/speedfuncs.acs | $(acsDir)
 	$(ACC) $< $@
-$(acsDir)/Spying.o: $(sourceDir)/Spying.acs $(sourceDir)/SpyingConstants.acs $(sourceDir)/SpyingVariables.acs $(sourceDir)/SpyingFunctions.acs | $(acsDir)
+$(acsDir)/Spying.o: $(sourceDir)/Spying.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/KeyPresses.o: $(sourceDir)/KeyPresses.acs | $(acsDir)
 	$(ACC) $< $@
