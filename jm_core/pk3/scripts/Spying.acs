@@ -81,6 +81,9 @@ script "Client_SpyingOpen" OPEN CLIENTSIDE
 
     while (true)
     {
+        while (!GetCvar("jm_showspys"))
+            Delay(35);
+            
         SetActivatorToPlayer(playerNum);
         
         spyingPlayerNum = GetPlayerSpying(playerNum);
@@ -195,6 +198,9 @@ script "Client_UpdateArray" (int packet1, int packet2, int packet3) CLIENTSIDE
 
 script "Server_UpdateSpying" (int spyingPlayerNum) NET
 {
+    if (!GetCvar("jm_showspys"))
+        terminate;
+
     playerSpying[PlayerNumber()] = spyingPlayerNum;
 }
 
@@ -205,6 +211,9 @@ script "Server_InitSpyingArray" OPEN
 
 script "Who is Spying Who" OPEN
 {
+    while (!GetCvar("jm_showspys"))
+        Delay(35);
+    
     Delay(5);
     
     int offset, shift, playerNum;
