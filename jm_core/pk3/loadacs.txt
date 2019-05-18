@@ -9,3 +9,4 @@ cvarset
 pickup
 speedometer
 Spying
+KeyPresses
