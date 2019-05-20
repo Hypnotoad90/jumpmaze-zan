@@ -1,22 +1,29 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
-# Custom for Visual Studio
-*.cs     diff=csharp
-*.sln    merge=union
-*.csproj merge=union
-*.vbproj merge=union
-*.fsproj merge=union
-*.dbproj merge=union
+# Images
+*.png binary
+*.jpg binary
+*.raw binary
 
-# Standard to msysgit
-*.doc	 diff=astextplain
-*.DOC	 diff=astextplain
-*.docx diff=astextplain
-*.DOCX diff=astextplain
-*.dot  diff=astextplain
-*.DOT  diff=astextplain
-*.pdf  diff=astextplain
-*.PDF	 diff=astextplain
-*.rtf	 diff=astextplain
-*.RTF	 diff=astextplain
+# Sounds
+*.ogg binary
+*.spc binary
+*.wav binary
+*.vgm binary
+*.nsf binary
+
+# Doom stuff
+*.lmp binary
+*.wad binary
+TEXTURE1* binary
+PNAMES* binary
+*.acs linguist-language=C
+
+# JM build stuff
+utilities/*.exe binary
+utilities/*.acs linguist-vendored
+
+# Other JM stuff
+*.aac text
+jm_core/doc/* linguist-documentation
