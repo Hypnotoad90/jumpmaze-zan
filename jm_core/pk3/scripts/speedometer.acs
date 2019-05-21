@@ -65,7 +65,7 @@ function void drawSpeedometer(int speed, int id, int x, int y, int scale, int wi
 
 script "SpeedometerOpen" OPEN clientside
 {
-	// Is speedometer enabled?
+	// Is speedometer enabled? @Wirtualnosc
 	if (!GetCVar("jm_mph_disable"))
 	{
 		ConsoleCommand("set jm_mph_disable 0");
@@ -108,6 +108,20 @@ script "SpeedometerOpen" OPEN clientside
         ConsoleCommand("set jm_mph_barslide 300");
         ConsoleCommand("archivecvar jm_mph_barslide");
     }
+	
+	// Speedometer X coordinate @Wirtualnosc
+    if (!GetCVar("jm_mph_xpos"))
+    {
+        ConsoleCommand("set jm_mph_xpos 320");
+        ConsoleCommand("archivecvar jm_mph_xpos");
+    }
+	
+	// Speedometer Y coordinate @Wirtualnosc
+    if (!GetCVar("jm_mph_ypos"))
+    {
+        ConsoleCommand("set jm_mph_ypos 470");
+        ConsoleCommand("archivecvar jm_mph_ypos");
+    }
 }
 
 
@@ -122,11 +136,13 @@ script "SpeedometerEnter" ENTER clientside
     // c        - "close enough" threshold
     // mph      - what the digital speedometer shows; either km/h or mph
     // unitCm   - one cm in doom units; based on jm_mph_doomguyheight
+	// xpos     - horizontal position of speedometer @Wirtualnosc
+	// ypos     - vertical position of speedometer @Wirtualnosc
     //
     // Why are all these variable names one letter?
     // It's so the calculation lines don't get too long.
     
-    int i, f, s, c, x, y, z, m, mph, unitCm;
+    int i, f, s, c, x, y, z, m, mph, unitCm, xpos, ypos;
     int showmag = 0;
 
     // Remove these two lines, and "dead speedometer" bugs start cropping up.
@@ -149,6 +165,10 @@ script "SpeedometerEnter" ENTER clientside
             Delay(1);
             continue;
         }
+		
+		// Calculate positions for speedometer
+		xpos = GetCVar("jm_mph_xpos");
+		ypos = GetCVar("jm_mph_ypos");
 
         // Get the speed for displaying
         x = GetActorVelX(0);
@@ -171,8 +191,8 @@ script "SpeedometerEnter" ENTER clientside
         else if (abs(m - showmag) < c) { showmag = m; }      // snap it to the actual speed, it's close enough
         else { showmag += FixedDiv(m - showmag, itof(f) / 100); }   // slide
 
-        SetHudSize(800, 600, 1);
-        drawSpeedometer(showmag, SPEEDOMETER_HUDID+1, 700, 80, s, 50);
+        SetHudSize(640, 480, 1);
+        drawSpeedometer(showmag, SPEEDOMETER_HUDID+1, xpos, ypos, s, 50);
         
         // Pixels in doom are 20% taller than they are wide; account for that
         // Doomguy's sprite is 51 pixels tall starting at its origin, hence the 51
@@ -193,13 +213,15 @@ script "SpeedometerEnter" ENTER clientside
         SetHudSize(640, 480, 1);
         SetFont("SMALLFONT");
 
+		xpos = itof(xpos) - 2.8;
+		ypos = itof(ypos);
         switch (GetCVar("jm_mph_km"))
         {
-          case 4: HudMessage(f:m, s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
-          case 3: HudMessage(d:round(m), s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
-		  case 2: HudMessage(d:mph, s:"\c- m/s"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
-          case 1: HudMessage(d:mph, s:"\c- km/h"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
-          case 0: HudMessage(d:mph, s:"\c- mph"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, 552.2, 64.0, 0.5, 0.5); break;
+          case 4: HudMessage(f:m, s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
+          case 3: HudMessage(d:round(m), s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
+		  case 2: HudMessage(d:mph, s:"\c- m/s"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
+          case 1: HudMessage(d:mph, s:"\c- km/h"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
+          case 0: HudMessage(d:mph, s:"\c- mph"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
         }
 
         Delay(1);
