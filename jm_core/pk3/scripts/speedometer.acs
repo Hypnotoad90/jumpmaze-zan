@@ -112,14 +112,14 @@ script "SpeedometerOpen" OPEN clientside
 	// Speedometer X coordinate @Wirtualnosc
     if (!GetCVar("jm_mph_xpos"))
     {
-        ConsoleCommand("set jm_mph_xpos 320");
+        ConsoleCommand("set jm_mph_xpos 552");
         ConsoleCommand("archivecvar jm_mph_xpos");
     }
 	
 	// Speedometer Y coordinate @Wirtualnosc
     if (!GetCVar("jm_mph_ypos"))
     {
-        ConsoleCommand("set jm_mph_ypos 470");
+        ConsoleCommand("set jm_mph_ypos 64");
         ConsoleCommand("archivecvar jm_mph_ypos");
     }
 }
