@@ -8,3 +8,5 @@ vote
 cvarset
 pickup
 speedometer
+Spying
+KeyPresses
