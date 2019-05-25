@@ -16,7 +16,7 @@ script "Client_KeyPress" OPEN CLIENTSIDE
     
     while (true)
     {
-        if (!PlayerIsSpectator(ConsolePlayerNumber()) && GetUserCVar(ConsolePlayerNumber(), "KeyPresses"))
+        if (!PlayerIsSpectator(ConsolePlayerNumber()) && GetUserCVar(ConsolePlayerNumber(), "jm_keypresses"))
         {
             SetActivatorToPlayer(ConsolePlayerNumber());
         

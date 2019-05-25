@@ -100,7 +100,7 @@ script "Client_SpyingOpen" OPEN CLIENTSIDE
             NamedRequestScriptPuke("Server_UpdateSpying", spyingPlayerNum);
         }
         
-        if (GetUserCVar(playerNum, "ShowSpying"))
+        if (GetUserCVar(playerNum, "jm_showspying"))
         {
             // Are we spying on someone else?
             if (playerNum != spyingPlayerNum)

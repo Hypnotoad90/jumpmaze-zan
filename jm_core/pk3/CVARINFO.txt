@@ -30,5 +30,5 @@ server noarchive int jm_mm_recordtime7 = -1;
 server noarchive int jm_mm_maptype = 0;
 server noarchive int jm_mm_paths = 1;
 server noarchive bool jm_showspys;
-user bool ShowSpying = true;
-user bool KeyPresses;
+user bool jm_showspying = true;
+user bool jm_keypresses = false;
