@@ -277,8 +277,7 @@ script 947 ( int holdTime ) {
             _rsd_segment[ segment_pos++ ] = '\n';
 
             // Color code.
-            _rsd_segment[ segment_pos++ ] = '\\';
-            _rsd_segment[ segment_pos++ ] = 'c';
+            _rsd_segment[ segment_pos++ ] = 0x1C; //\c
             _rsd_segment[ segment_pos++ ] = RSD_ELLIPSIS_COLOR;
 
             _rsd_segment[ segment_pos++ ] = '.';
