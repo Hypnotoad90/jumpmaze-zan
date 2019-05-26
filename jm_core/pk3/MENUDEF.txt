@@ -42,6 +42,8 @@ OptionMenu "JMMain"
 	Option "Disable speedometer", "jm_speedometer_disable", "OnOff"
 	Option "Use vertical speed", "jm_speedometer_usez", "OnOff"
 	Option "Speed units", "jm_speedometer_km", "JMSpeedUnits"
+	Slider "Horizontal position", "jm_speedometer_xpos", 0, 640, 4
+	Slider "Vertical position", "jm_speedometer_ypos", 0, 480, 4
 	StaticText " "
 	StaticText "Singleplayer Settings"
 	Option "Countdown on map start", "jm_countdown", "OnOff"
