@@ -40,3 +40,4 @@ user int jm_speedometer_barscale = 20;
 user int jm_speedometer_barslide = 300;
 user int jm_speedometer_xpos = 552;
 user int jm_speedometer_ypos = 64;
+user bool jm_countdownsnd = true;
