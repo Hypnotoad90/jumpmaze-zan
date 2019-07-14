@@ -1,0 +1,30 @@
+{
+name="hisymak"
+sprite=HISM
+dsplpain=dscupain
+dspldeth=dshsdeth
+dspdiehi=dshsdeex
+dsslop=dshsdehi
+dsplpain=dshspain
+dsoof=dshsoof
+dsnoway=dshsoof
+dspunch=dshspunc
+dstaunt=dshstaun
+game=heretic
+cheat=false
+}
+
+{
+name = "The Player"
+sprite = sena
+dstaunt = SUCKA
+}
+
+{
+name = "Wario"
+sprite = wlf2
+dsplpain = dspopain
+dspldeth = dsnzdeth
+dspdiehi = dsnzdihi
+dstaunt = NEIN
+}
