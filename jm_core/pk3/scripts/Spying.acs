@@ -282,6 +282,7 @@ script "Who is Spying Who" OPEN
                     if (player + offset == MAX_PLAYER_NUMBER)
                     {
                         if (playersInPacket)
+                        {
                             ACS_NamedExecuteAlways("Client_UpdateArray", 0, packets[0], packets[1], packets[2]);
                         }
                         
