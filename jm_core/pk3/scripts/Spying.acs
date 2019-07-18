@@ -68,6 +68,21 @@ function int rshiftu(int n, int s)
     return n >> s;
 }
 
+function int GetPlayerCount(void)
+{
+    int count = 0;
+    
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (PlayerIsSpectator(i) || PlayerInGame(i))
+        {
+            count++;
+        }
+    }
+    
+    return count;
+}
+
 ////////////////////////////////////////////////////////
 //////////////////// Client Scripts ///////////////////
 //////////////////////////////////////////////////////
@@ -87,7 +102,7 @@ script "Client_SpyingOpen" OPEN CLIENTSIDE
 
     while (true)
     {
-        while (!GetCvar("jm_showspys"))
+        while (GetCvar("jm_showspys") == 0 || GetPlayerCount() <= 1)
             Delay(35);
             
         SetActivatorToPlayer(playerNum);
@@ -217,7 +232,7 @@ script "Server_InitSpyingArray" OPEN
 
 script "Who is Spying Who" OPEN
 {
-    while (!GetCvar("jm_showspys"))
+    while (GetCvar("jm_showspys") == 0 || GetPlayerCount() <= 1)
         Delay(35);
     
     Delay(5);
