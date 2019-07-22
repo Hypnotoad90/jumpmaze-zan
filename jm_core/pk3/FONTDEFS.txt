@@ -1,0 +1,4 @@
+KEYFONT
+{
+    TEMPLATE KPUI%2d
+}
