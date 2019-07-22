@@ -1,0 +1,209 @@
+// Survival Maze DECORATE.
+//
+// Author: 
+// Positron
+//
+// License:
+// None. This code is public domain.
+
+// Base actor for all Survival Maze pickup items.
+actor SvmzItem : CustomInventory {
+   +NOGRAVITY
+   
+   +INVENTORY.QUIET
+   +INVENTORY.FORCERESPAWNINSURVIVAL
+   
+   states {
+      spawn:
+	     TNT1 A 0
+		 // Initialization script.
+         TNT1 A 1 A_JumpIf( acs_ExecuteWithResult( 910 ), "start" )
+		 // Item will be removed if the initialization script returns
+		 // false.
+		 stop
+   }
+}
+
+// Base actor for pickup item markers. These marker items are used to
+// create a "grayed-out" item effect after an item is picked up and
+// therefore are purely for decorative purposes.
+actor SvmzItemMarker {
+   +NOINTERACTION
+   
+   RenderStyle "Translucent"
+   Alpha 0.25
+}
+
+// Time Boost
+// -----------------------------------------------------------------------
+
+// Small Time Boost.
+actor SvmzTimeBoost1 : SvmzItem 15900 {
+   Inventory.RespawnTics 700
+   
+   // We make the size of the item larger than its sprite so it's
+   // easier to pick up.
+   Radius 16
+   Height 32
+   
+   states {
+      // This state is executed only once, on map start.
+      spawn_marker:
+         TNT1 A 1 A_SpawnItemEx( "svmzTimeBoost1Marker",
+		    0, 0, 0, 0, 0, 0, 0, 0, 0 )
+		 // Proceed to the pickup item's "start" state.
+
+      start:
+	     SMB1 A -1
+		 
+	  pickup:
+		 TNT1 A 1 A_PlaySound( "SVMZSND1", CHAN_AUTO, 0.65 )
+         TNT1 A 1 acs_ExecuteAlways( 911, 0, 1 )
+		 stop
+   }
+}
+
+actor SvmzTimeBoost1Marker : SvmzItemMarker {
+   states {
+      spawn:
+	     TNT1 A 0
+         SMB1 A -1
+   }
+}
+
+// Medium Time Boost.
+actor SvmzTimeBoost2 : SvmzItem 15901 {
+   Inventory.RespawnTics 1050
+
+   Radius 16
+   Height 32
+   
+   states {
+      spawn_marker:
+         TNT1 A 1 A_SpawnItemEx( "svmzTimeBoost2Marker",
+		    0, 0, 0, 0, 0, 0, 0, 0, 0 )
+			
+	  start:
+	     SMB2 A -1
+		 
+	  pickup:
+		 TNT1 A 1 A_PlaySound( "SVMZSND1", CHAN_AUTO, 0.65 )
+         TNT1 A 1 acs_ExecuteAlways( 911, 0, 3 )
+		 stop
+   }
+}
+
+actor SvmzTimeBoost2Marker : SvmzItemMarker {
+   states {
+      spawn:
+	     TNT1 A 0
+         SMB2 A -1
+   }
+}
+
+// Large Time Boost.
+actor SvmzTimeBoost3 : SvmzItem 15902 {
+   Inventory.RespawnTics 1575
+   
+   Radius 16
+   Height 32
+   
+   states {
+      spawn_marker:
+         TNT1 A 1 A_SpawnItemEx( "svmzTimeBoost3Marker",
+		    0, 0, 0, 0, 0, 0, 0, 0, 0 )
+			
+	  start:
+	     SMB3 A -1
+		 
+	  pickup:
+		 TNT1 A 1 A_PlaySound( "SVMZSND1", CHAN_AUTO, 0.65 )
+         TNT1 A 1 acs_ExecuteAlways( 911, 0, 10 )
+		 stop
+   }
+}
+
+actor SvmzTimeBoost3Marker : SvmzItemMarker {
+   states {
+      spawn:
+	     TNT1 A 0
+         SMB3 A -1
+   }
+}
+
+// Raging Bomb
+// -----------------------------------------------------------------------
+
+actor SvmzRagingBomb : SvmzItem 15903 {
+   Inventory.RespawnTics 1050
+
+   Radius 16
+   Height 32
+
+   states {
+      spawn_marker:
+         TNT1 A 1 A_SpawnItemEx( "svmzRagingBombMarker",
+		    0, 0, 0, 0, 0, 0, 0, 0, 0 )
+			
+      start:
+         SMRB A -1
+		 
+	  pickup:
+		 TNT1 A 1 A_PlaySound( "SVMZSND2", CHAN_AUTO, 0.85 )
+		 // Argument is the number of seconds to remove from the timer.
+         TNT1 A 1 acs_ExecuteAlways( 913, 0, 8 )
+		 stop
+   }
+}
+
+actor SvmzRagingBombMarker : SvmzItemMarker {
+   states {
+      spawn:
+	     TNT1 A 0
+         SMRB A -1
+   }
+}
+
+// Impunity
+// -----------------------------------------------------------------------
+
+actor SvmzImpunity : SvmzItem 15904 {
+   // We don't want this item respawning, so make the respawn time
+   // something impossible to reach.
+   Inventory.RespawnTics 999999999
+   
+   radius 16
+   height 44
+   
+   states {
+      // We will spawn the marker in another state definition because
+	  // we need to test another condition first.
+	  
+      start:
+	     // Make sure we have enough players before we make this
+		 // item available.
+	     TNT1 A 1 A_JumpIf( 
+		    acs_ExecuteWithResult( 915 ) == 0, "end" 
+	     )
+         TNT1 A 1 A_SpawnItemEx( "svmzImpunityMarker",
+		    0, 0, 0, 0, 0, 0, 0, 0, 0 )
+         SMIM A -1
+		 
+      end:
+	     TNT1 A 0 A_Print( "None" )
+	     stop
+		 
+	  pickup:
+		 TNT1 A 1 A_PlaySound( "SVMZSND3", CHAN_AUTO, 0.85 )
+         TNT1 A 1 acs_ExecuteAlways( 916, 0 )
+		 stop
+   }
+}
+
+actor SvmzImpunityMarker : SvmzItemMarker {
+   states {
+      spawn:
+	     TNT1 A 0
+         SMIM A -1
+   }
+}
