@@ -8,6 +8,7 @@
 
 int packets[3];
 int playerSpying[MAX_PLAYERS];
+int playerStates[MAX_PLAYERS]; // 0 - not in server, 1 - in server
 
 int tempTIDArray[MAX_PLAYERS];
 
@@ -68,6 +69,21 @@ function int rshiftu(int n, int s)
     return n >> s;
 }
 
+function int GetPlayerCount(void)
+{
+    int count = 0;
+    
+    for (int i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (PlayerIsSpectator(i) || PlayerInGame(i))
+        {
+            count++;
+        }
+    }
+    
+    return count;
+}
+
 ////////////////////////////////////////////////////////
 //////////////////// Client Scripts ///////////////////
 //////////////////////////////////////////////////////
@@ -87,7 +103,7 @@ script "Client_SpyingOpen" OPEN CLIENTSIDE
 
     while (true)
     {
-        while (!GetCvar("jm_showspys"))
+        while (GetCvar("jm_showspys") == 0 || GetPlayerCount() <= 1)
             Delay(35);
             
         SetActivatorToPlayer(playerNum);
@@ -207,6 +223,7 @@ script "Server_UpdateSpying" (int spyingPlayerNum) NET
     if (!GetCvar("jm_showspys"))
         terminate;
 
+    playerStates[PlayerNumber()] = 1;
     playerSpying[PlayerNumber()] = spyingPlayerNum;
 }
 
@@ -217,12 +234,12 @@ script "Server_InitSpyingArray" OPEN
 
 script "Who is Spying Who" OPEN
 {
-    while (!GetCvar("jm_showspys"))
+    while (GetCvar("jm_showspys") == 0 || GetPlayerCount() <= 1)
         Delay(35);
     
     Delay(5);
     
-    int offset, shift, playerNum;
+    int offset, shift, playerNum, playersInPacket;
     
     while (true)
     {
@@ -237,6 +254,7 @@ script "Who is Spying Who" OPEN
             packets[1] |= (chunk << (26 + (2 * 1))) & MSB_2; // Set position of the packets
             packets[2] |= (chunk << (26 + (2 * 2))) & MSB_2; // Set position of the packets
             
+            playersInPacket = 0;
             for (int packet = 0; packet < 3; packet++)
             {
                 shift = 24;
@@ -245,13 +263,17 @@ script "Who is Spying Who" OPEN
                 {
                     if (CheckPlayerCamera(player + offset) != -1) // CheckPlayerCamera hack to see if player is in server
                     {
+                        playersInPacket++;
                         playerNum = playerSpying[player + offset];
                     }
-                    else
+                    else if (playerStates[player + offset] == 1) // player just left so let's send data once more
                     {
+                        playersInPacket++;
+                        playerStates[player + offset] = 0;
                         playerSpying[player + offset] = player + offset;
                         playerNum = player + offset;
                     }
+                    
                     packets[packet] |= playerNum << shift;
                     
                     shift -= 6;
@@ -259,7 +281,10 @@ script "Who is Spying Who" OPEN
                     // Send final packets
                     if (player + offset == MAX_PLAYER_NUMBER)
                     {
-                        ACS_NamedExecuteAlways("Client_UpdateArray", 0, packets[0], packets[1], packets[2]);
+                        if (playersInPacket)
+                        {
+                            ACS_NamedExecuteAlways("Client_UpdateArray", 0, packets[0], packets[1], packets[2]);
+                        }
                         
                         restart;
                     }
@@ -268,7 +293,10 @@ script "Who is Spying Who" OPEN
                 offset += 5;
             }
             
-            ACS_NamedExecuteAlways("Client_UpdateArray", 0, packets[0], packets[1], packets[2]);
+            if (playersInPacket)
+            {
+                ACS_NamedExecuteAlways("Client_UpdateArray", 0, packets[0], packets[1], packets[2]);
+            }
         }
     }
 }
