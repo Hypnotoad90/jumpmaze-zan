@@ -1,4 +1,3 @@
-server int jm_util_ishosted = 0;
 server int jm_show_rdetails = 0;
 server noarchive string jm_mm_author = "";
 server noarchive int jm_mm_difficulty = 0;

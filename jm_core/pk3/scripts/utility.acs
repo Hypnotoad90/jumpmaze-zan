@@ -14,25 +14,13 @@
 // Initialization. This function must be called before the library can be
 // safely used.
 function void UtilityInit( void ) {
-   // Initialization code for is_online().
-   if ( getCVar( "jm_util_ishosted" ) == 0 ) {
-      // Determine whether the start of the game was single player.
-      // If not, then we are hosting.
-      if ( ! is_single_player() ) {
-         setcvar( "jm_util_ishosted", 1);
-      }
-      else {
-         // Since the value 0 is used to determine if the console
-         // variable is empty, we need to use a different value
-         // to indicate when the game is not hosted.
-         setcvar( "jm_util_ishosted", 2 );
-      }
-   }
 }
 
 // States whether the current game is hosted.
 function bool is_online( void ) {
-   return getCVar( "jm_util_ishosted" ) == 1;
+   // this DISGUSTING hack is needed until IsNetworkGame() comes
+   // included with our ACC zspecials
+   return PlayerOnTeam() == 1;
 }
 
 // Convert a par time string into seconds.

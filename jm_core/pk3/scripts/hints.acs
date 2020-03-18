@@ -11,22 +11,25 @@
 
 #define MAXHINTS 10
 
-str hints[MAXHINTS] = {"When playing online, to log in and have your times and rankings tracked, you must first register on the auth\n
-server (e.g. for Grandvoid this is: grandvoid.sickedwick.net/auth), then in console type login <username> <password>",
-"Struggling to keep up in multiplayer? Google Zandronum sr50 for a trick that might help.",
-"Visit #doomjump on the Zandronum irc network to chat with fellow jumpers!",
-"Use chasecam ('chase' in console) if you need help seeing where you are on a small platform.",
-"Source repositories for this project can be found at https://github.com/Hypnotoad90/jumpmaze-zan and https://github.com/Hypnotoad90/jmce",
-"If you're finding the maps too difficult, change to MAP00, a tutorial and training map to learn the basics.",
-"Type \"puke 999\" in console to see the record details of a map you're currently playing.\n
-You can also bind this command in customize controls, under the Jumpmaze section.",
-"You can initiate a vote to reset the map by puking 981, and to proceed to the next map by puking 981 1, \n
-You can also bind these commands, as well as vote yes and vote no, in customize controls, under the Jumpmaze section.",
-"Visit https://discord.gg/br8GbqC on discord to chat with fellow jumpers!",
-"Don't like the position of speedometer? You can change it manually by typing these in console:\n
-\"jm_mph_xpos <value>\" and \"jm_mph_ypos <value>\""};
+str hints[MAXHINTS] = {
+"When playing online, to log in and have your times and rankings tracked, you must first register on the auth\n
+server (auth.zandronum.com), then in console type login <username> <password>"
+, "Struggling to keep up in multiplayer? Google Zandronum sr50 for a trick that might help."
+, "Use chasecam ('chase' in console) if you need help seeing where you are on a small platform."
+, "Source repositories for this project can be found at https://github.com/Hypnotoad90/jumpmaze-zan and https://github.com/Hypnotoad90/jmce"
+, "If you're finding the maps too difficult, change to MAP00, a tutorial and training map to learn the basics."
+, "Type \"puke 999\" in console to see the current world record details of a map you're currently playing.\n
+You can also bind this command in customize controls, under the Jumpmaze section."
+, "You can initiate a vote to reset the map by puking 981, and to proceed to the next map by puking 981 1, \n
+You can also bind these commands, as well as vote yes and vote no, in customize controls, under the Jumpmaze section."
+, "Speedrunners can declare themselves ready to reset by calling \"pukename readytoreset\" in the console, when all players\n
+call this command, the map will instantly reset. You can also bind these commands, in customize controls, under the Jumpmaze section."
+, "Visit https://discord.gg/br8GbqC on discord to chat with fellow jumpers!"
+, "Don't like the position of speedometer? You can change it manually by typing these in console:\n
+\"jm_mph_xpos <value>\" and \"jm_mph_ypos <value>\""
+};
 	
-script 994 OPEN CLIENTSIDE
+script "jm_hints" OPEN CLIENTSIDE
 {
 	//Because random seeding is apparently reset on the client after map change, I have to do my own (borrowed from prophunt)
 

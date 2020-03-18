@@ -1,73 +1,74 @@
 OptionValue "JMIntroFormat"
 {
-	100, "None"
-	0, "Detailed"
-	1, "Classic"
-	2, "Standard"
-	3, "Jumpix"
-	4, "Retromaze"
-	5, "Hypnojump"
+    100, "None"
+    0, "Detailed"
+    1, "Classic"
+    2, "Standard"
+    3, "Jumpix"
+    4, "Retromaze"
+    5, "Hypnojump"
 }
 
 OptionValue "JMSpeedUnits"
 {
-	0, "mph"
-	1, "km/h"
-	2, "m/s"
-	3, "units/tic"
-	4, "units/tic (exact)"
+    0, "mph"
+    1, "km/h"
+    2, "m/s"
+    3, "units/tic"
+    4, "units/tic (exact)"
 }
 
 OptionMenu "JMMain"
 {
-	Title "JUMPMAZE SETTINGS"
-	StaticText "Controls"
-	Control "Record Details", "puke 999"
-	Control "Leaderboards", "puke 891"
-	Control "Call vote Reset Map", "puke 981"
-	Control "Call vote Next Map", "puke 981 1"
-	Control "Vote Yes", "puke 982"
-	Control "Vote No", "puke 983"
-	StaticText " "
-	StaticText "User Settings"
-	Option "Scale Leaderboards", "jm_boardscale", "OnOff"
-	Option "Map Introduction Format", "jm_introformat", "JMIntroFormat"
-	Option "Fist Autoswitch", "jm_auto_fist", "OnOff"
-	Option "Disable Hints", "jm_disablehints", "OnOff"
-	Option "Show Key Presses", "jm_keypresses", "OnOff"
-	Option "Show Spying Players", "jm_showspying", "OnOff"
-	Option "Play Countdown Sounds", "jm_countdownsnd", "OnOff"
-	StaticText " "
-	StaticText "Speedometer"
-	Option "Disable speedometer", "jm_speedometer_disable", "OnOff"
-	Option "Use vertical speed", "jm_speedometer_usez", "OnOff"
-	Option "Speed units", "jm_speedometer_km", "JMSpeedUnits"
-	Slider "Horizontal position", "jm_speedometer_xpos", 0, 640, 4
-	Slider "Vertical position", "jm_speedometer_ypos", 0, 480, 4
-	StaticText " "
-	StaticText "Singleplayer Settings"
-	Option "Countdown on map start", "jm_countdown", "OnOff"
+    Title "JUMPMAZE SETTINGS"
+    StaticText "Controls"
+    Control "Record Details", "puke 999"
+    Control "Leaderboards", "puke 891"
+    Control "Call vote Reset Map", "puke 981"
+    Control "Call vote Next Map", "puke 981 1"
+    Control "Vote Yes", "puke 982"
+    Control "Vote No", "puke 983"
+    Control "Declare ready to reset", "pukename readytoreset"
+    StaticText " "
+    StaticText "User Settings"
+    Option "Scale Leaderboards", "jm_boardscale", "OnOff"
+    Option "Map Introduction Format", "jm_introformat", "JMIntroFormat"
+    Option "Fist Autoswitch", "jm_auto_fist", "OnOff"
+    Option "Disable Hints", "jm_disablehints", "OnOff"
+    Option "Show Key Presses", "jm_keypresses", "OnOff"
+    Option "Show Spying Players", "jm_showspying", "OnOff"
+    Option "Play Countdown Sounds", "jm_countdownsnd", "OnOff"
+    StaticText " "
+    StaticText "Speedometer"
+    Option "Disable speedometer", "jm_speedometer_disable", "OnOff"
+    Option "Use vertical speed", "jm_speedometer_usez", "OnOff"
+    Option "Speed units", "jm_speedometer_km", "JMSpeedUnits"
+    Slider "Horizontal position", "jm_speedometer_xpos", 0, 640, 4
+    Slider "Vertical position", "jm_speedometer_ypos", 0, 480, 4
+    StaticText " "
+    StaticText "Singleplayer Settings"
+    Option "Countdown on map start", "jm_countdown", "OnOff"
 }
 
 ListMenu "MainMenu"
 {
-	StaticPatch 94, 2, "M_DOOM"
-	Position 97, 72
-	
-	TextItem "$MNU_NEWGAME", "n", "PlayerclassMenu"
-	ifOption(SwapMenu)
-	{
-		TextItem "$MNU_LOADGAME", "l", "LoadGameMenu"
-		TextItem "$MNU_SAVEGAME", "s", "SaveGameMenu"
-		TextItem "Jumpmaze Settings", "j", "JMMain"
-		TextItem "$MNU_OPTIONS","o", "OptionsMenu"
-	}
-	else
-	{
-		TextItem "Jumpmaze Settings", "j", "JMMain"
-		TextItem "$MNU_OPTIONS","o", "OptionsMenu"
-		TextItem "$MNU_LOADGAME", "l", "LoadGameMenu"
-		TextItem "$MNU_SAVEGAME", "s", "SaveGameMenu"
-	}
-	TextItem "$MNU_QUITGAME", "q", "QuitMenu"
+    StaticPatch 94, 2, "M_DOOM"
+    Position 97, 72
+    
+    TextItem "$MNU_NEWGAME", "n", "PlayerclassMenu"
+    ifOption(SwapMenu)
+    {
+        TextItem "$MNU_LOADGAME", "l", "LoadGameMenu"
+        TextItem "$MNU_SAVEGAME", "s", "SaveGameMenu"
+        TextItem "Jumpmaze Settings", "j", "JMMain"
+        TextItem "$MNU_OPTIONS","o", "OptionsMenu"
+    }
+    else
+    {
+        TextItem "Jumpmaze Settings", "j", "JMMain"
+        TextItem "$MNU_OPTIONS","o", "OptionsMenu"
+        TextItem "$MNU_LOADGAME", "l", "LoadGameMenu"
+        TextItem "$MNU_SAVEGAME", "s", "SaveGameMenu"
+    }
+    TextItem "$MNU_QUITGAME", "q", "QuitMenu"
 }

@@ -106,18 +106,18 @@ function bool JrhIsNew( int newTime, int route ) {
 }
 
 function bool JRSIsReallyNew(int newTime, int route ) { //added by Hypnotoad, check in case the DB was updated with a new SOLO record
-	int dbtime = GetDBEntry(pathMapName( route ), "jrs_hs_time");
-	return (dbtime == 0 || newTime < dbtime);
+    int dbtime = GetDBEntry(pathMapName( route ), "jrs_hs_time");
+    return (dbtime == 0 || newTime < dbtime);
 }
 
 function bool JRTIsReallyNew(int newTime) { //added by Hypnotoad, check in case the DB was updated with a new TEAM record
-	int dbtime = GetDBEntry(pathMapName( 0 ), "jrt_hs_time");
-	return (dbtime == 0 || newTime < dbtime);
+    int dbtime = GetDBEntry(pathMapName( 0 ), "jrt_hs_time");
+    return (dbtime == 0 || newTime < dbtime);
 }
 
 function bool JMRIsReallyNew(int newTime) { //added by Hypnotoad, check in case the DB was updated with a new JMRUN record
-	int dbtime = GetDBEntry(pathMapName( 0 ), "jmr_hs_time");
-	return (dbtime == 0 || newTime < dbtime);
+    int dbtime = GetDBEntry(pathMapName( 0 ), "jmr_hs_time");
+    return (dbtime == 0 || newTime < dbtime);
 }
 
 script 999 ( void ) NET {
@@ -177,259 +177,378 @@ function void JrhShowDetails( int showTime ) {
 #define LB_ONCVARUPDATE 897
 #define LB_ONCONNECT 898
 //- Player leaderboard menu data
+
+// Player has opened leaderboard
 int lb_playeropen[MAX_PLAYERS];
+
+// Player is displaying a custom leaderboard
+int lb_playercustom[MAX_PLAYERS];
+
+// Player's leaderboard position offset
 int lb_playeroffset[MAX_PLAYERS];
+
+// Player's leaderboard settings
 int lb_playersettings[MAX_PLAYERS];
+
+// Unknown(??)
 int lb_playeractions[MAX_PLAYERS];
 //- Entry count
 int lb_count = 0;
 
+// Initialises player menu states to 0, updates the entry count, freezes player if menu is open
 script "JmLb_Init" OPEN {
-	//Clear menu data
-	for (int i=0; i<MAX_PLAYERS; i++) {
-		lb_playeropen[i] = false;
-		lb_playeroffset[i] = 0;
-		lb_playersettings[i] = 0;
-		lb_playeractions[i] = 0;
-	}
-	ACS_NamedExecute( "JmLb_Update", 0 );
-	while (1) {
-		for (i=0; i<MAX_PLAYERS; i++) {
-			SetActivatorToPlayer(i);
-			if (lb_playeropen[i]) {
-				setPlayerProperty( 0, 1, PROP_TOTALLYFROZEN );
-			}
-			if (lb_playeractions[i] > 0) {
-				lb_playeractions[i]--;
-			}
-		}
-		SetActivator(0, AAPTR_NULL);
-		delay(1);
-		if (cdwn_freeze == 0 && roundover == 0)
-			setPlayerProperty( 1, 0, PROP_TOTALLYFROZEN );
-	}
+    //Clear menu data
+    for (int i=0; i<MAX_PLAYERS; i++) {
+        lb_playeropen[i] = false;
+        lb_playercustom[i] = false;
+        lb_playeroffset[i] = 0;
+        lb_playersettings[i] = 0;
+        lb_playeractions[i] = 0;
+    }
+    ACS_NamedExecute( "JmLb_Update", 0 );
+    while (1) {
+        for (i=0; i<MAX_PLAYERS; i++) {
+            SetActivatorToPlayer(i);
+            if (lb_playeropen[i]) {
+                setPlayerProperty( 0, 1, PROP_TOTALLYFROZEN );
+            }
+            if (lb_playeractions[i] > 0) {
+                lb_playeractions[i]--;
+            }
+        }
+        SetActivator(0, AAPTR_NULL);
+        delay(1);
+        // What!?!?
+        if (cdwn_freeze == 0 && roundover == 0)
+            setPlayerProperty( 1, 0, PROP_TOTALLYFROZEN );
+    }
 }
 
+
+// Checks player input and triggers leaderboard functions
 script "JmLb_ClientInit" OPEN CLIENTSIDE {
-	int currentscale = GetCvar("jm_boardscale");
-	RequestScriptPuke(LB_ONCONNECT, currentscale, 0, 0);
-	while (1) {
-		int k_vert = GetPlayerInput( ConsolePlayerNumber(), INPUT_FORWARDMOVE );
-		int k_fired = GetPlayerInput( ConsolePlayerNumber(), INPUT_BUTTONS ) & BT_ATTACK;
-		k_fired = k_fired && !( GetPlayerInput( ConsolePlayerNumber(), INPUT_OLDBUTTONS ) & BT_ATTACK );
-		if ( k_vert < 0 ) {
-			RequestScriptPuke( LB_DOWN, 3, 0, 0 );
-		} else if ( k_vert > 0 ) {
-			RequestScriptPuke( LB_UP, 3, 0, 0 );
-		} else if ( k_fired ) {
-			RequestScriptPuke( LB_SPECIAL, 0, 0, 0 );
-		}
-		delay(1);
-		if (currentscale != GetCvar("jm_boardscale")) {
-			currentscale = GetCvar("jm_boardscale");
-			RequestScriptPuke(LB_ONCVARUPDATE, currentscale, 0, 0);
-		}
-	}
+    int currentscale = GetCvar("jm_boardscale");
+    RequestScriptPuke(LB_ONCONNECT, currentscale, 0, 0);
+    while (1) {
+        int k_vert = GetPlayerInput( ConsolePlayerNumber(), INPUT_FORWARDMOVE );
+        int k_fired = GetPlayerInput( ConsolePlayerNumber(), INPUT_BUTTONS ) & BT_ATTACK;
+        k_fired = k_fired && !( GetPlayerInput( ConsolePlayerNumber(), INPUT_OLDBUTTONS ) & BT_ATTACK );
+        bool k_jumped = GetPlayerInput( ConsolePlayerNumber(), INPUT_BUTTONS) & BT_JUMP;
+        k_jumped = k_jumped && !( GetPlayerInput( ConsolePlayerNumber(), INPUT_OLDBUTTONS ) & BT_JUMP );
+        if ( k_vert < 0 ) {
+            RequestScriptPuke( LB_DOWN, 3, 0, 0 );
+        } else if ( k_vert > 0 ) {
+            RequestScriptPuke( LB_UP, 3, 0, 0 );
+        } else if ( k_fired ) {
+            RequestScriptPuke( LB_SPECIAL, 0, 0, 0 );
+        } else if ( k_jumped ) {
+            NamedRequestScriptPuke( "lbExitCustomLeaderboard", 0, 0, 0 );
+        }
+        delay(1);
+        if (currentscale != GetCvar("jm_boardscale")) {
+            currentscale = GetCvar("jm_boardscale");
+            RequestScriptPuke(LB_ONCVARUPDATE, currentscale, 0, 0);
+        }
+    }
 }
 
+// New: function to get the count
+function int getEntryCount(str keyName)
+{
+    int res = GetDBEntries(keyName);
+    int count = CountDBResults(res);
+    FreeDBResults(res);
+    return count;
+}
+
+// Updates the entry count, called by DisplayLeaderboard, called by JmLb_Init and DisplayLeaderboard
 script "JmLb_Update" (void) {
-	if (!is_online() || !JrhIsEnabled() || JmGameGetMapType() == JMG_MAP_TEAM)
-		terminate;
-	//Get entry count for current map
-	str mappbs = StrParam(s:toUpper(StrParam(n:PRINTNAME_LEVEL)),s:"_pbs");
-	int res = GetDBEntries(mappbs);
-	lb_count = CountDBResults(res);
-	FreeDBResults(res);
+    if (!is_online() || !JrhIsEnabled() || JmGameGetMapType() == JMG_MAP_TEAM)
+        terminate;
+    //Get entry count for current map
+    str mappbs = StrParam(s:toUpper(StrParam(n:PRINTNAME_LEVEL)),s:"_pbs");
+    lb_count = getEntryCount(mappbs);
 }
 
+function void hideLeaderboard(void)
+{
+    HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+5, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+    HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+    HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+    HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+    HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
+}
+
+// New: displays custom leaderboard based on the key you pass it
+function void DisplayCustomLeaderboard(str key, str header, str footer, bool useLBCount)
+{
+    int player = PlayerNumber();
+    if (lb_playeropen[player] != 1)
+    {
+        //Hide leaderboard
+        hideLeaderboard();
+        return;
+    }
+
+    //Prepare leaderboard
+    int count = 0;
+    if (!useLBCount)
+    {
+        count = getEntryCount(key);
+    }
+    else
+    {
+        ACS_NamedExecute( "JmLb_Update", 0, key);
+        count = lb_count;
+    }
+
+    int offset = lb_playeroffset[player];
+    //- Clamp offset (we can't do this from the pukes as we don't know which key is being used)
+    if (offset < 0) {
+        lb_playeroffset[player] = 0;
+        offset = 0;
+    }
+    else if (offset >= count) {
+        offset = count - 1;
+        lb_playeroffset[player] = offset;
+    }
+
+    //- Get all the stuff from database
+    int limit = LB_ENTRIES_PER_PAGE;
+    int lbres = SortDBEntries(key, limit, offset, 0 );
+    int lbreslen = CountDBResults(lbres);
+    if (lbreslen < limit) limit = lbreslen;
+    str shownnames = "\n\n\n";
+    for (int i=0; i<limit; i++) {
+        //While we're getting data, we also construct strings on the fly
+        str rankname = GetDBResultKeyString(lbres, i);
+        int rank = GetDbEntryRank(key, rankname, false);
+        str playercolor = "\cg";
+        //- If a player is logged in, he will be marked a different color.
+        if (PlayerIsLoggedIn(playernumber()) && GetPlayerAccountName(playernumber()) == rankname)
+            playercolor = "\ck";
+        //- Truncate if too long
+        rankname = StrLeft(rankname, 30);
+        //- Get time values
+        int pbtime = GetDBResultValue(lbres, i);
+        int pbmins = (pbtime / (TICS_IN_SECOND * SECONDS_IN_MINUTE));
+        int pbsecs = (pbtime / TICS_IN_SECOND) % SECONDS_IN_MINUTE;
+        int pbcsecs = cal_cseconds(pbtime % TICS_IN_SECOND);
+        //- Construct left indent
+        str il;
+        if (rank < 10) il = "   ";
+        else if (rank < 100) il = "  ";
+        else if (rank < 1000) il = " ";
+        else il = "";
+        //- Construct right indent
+        str ir = "";
+        int irspaces = 30 - StrLen(rankname);
+        int pbminscopy = pbmins;
+        while ( pbminscopy >= 100 ) {
+            pbminscopy /= 10;
+            irspaces--;
+        }
+        for (int j=0; j<irspaces; j++)
+            ir = StrParam(s:ir, s:" ");
+        //- Construct a line
+        shownnames = StrParam(s:shownnames, s:"\cj", i:rank, s:". ",
+                    s:il, s:playercolor, s:rankname, s:ir, s:" \cb",
+                    s:number_prefix( pbmins ), i:pbmins, s:":",
+                    s:number_prefix( pbsecs ), i:pbsecs, s:"\cs.",
+                    s:number_prefix( pbcsecs ), i:pbcsecs, s:"\c-\n");
+        // Todo: add custom handling for if the table is not showing times
+        // but some other score
+    }
+    
+    //- Make statinfo string
+    str statinfo = "\n\n\n";
+    for (i=0; i<LB_ENTRIES_PER_PAGE; i++)
+        statinfo = StrParam(s:statinfo,s:"\n");
+    statinfo = StrParam(s:statinfo,s:"\n\cj",s:footer);
+    //Display results
+    SetHudSize(4,3,true);
+    SetFont("TMSBBACK");
+    HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+5, CR_UNTRANSLATED, 2.0, 1.0, 0.0);
+    SetHudSize(0,0,false);
+    if (lb_playersettings[player] > 0) {
+        SetHudSize(640,480,true);
+        SetFont("TMSBOARD");
+        HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
+        SetFont("BIGFONT");
+        HudMessage(s:header; HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 320.0, 50.1, 0.0);
+        SetFont("CONFONT");
+        HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
+        HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
+        SetHudSize(0,0,false);
+    } 
+    else {
+        SetFont("TMSBOARD");
+        HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+        SetFont("BIGFONT");
+        HudMessage(s:header; HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 1.5, -0.1, 0.0);
+        SetFont("CONFONT");
+        HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+        HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
+    }
+}
+
+// Displays the leaderboard + header & footer messages, using the current map pb key
 function void DisplayLeaderboard(void) {
-	int player = PlayerNumber();
-	if (lb_playeropen[player] == 1) {
-		if (!is_online()) {
-			print(s:"Leaderboards can be used only in online games");
-			lb_playeropen[player] = false;
-			return;
-		} else if (!JrhIsEnabled()) {
-			print(s:"Leaderboards are disabled");
-			lb_playeropen[player] = false;
-			return;
-		} else if (JmGameGetMapType() == JMG_MAP_TEAM) {
-			print(s:"Leaderboards cannot be used on team maps");
-			lb_playeropen[player] = false;
-			return;
-		}
-		//Prepare leaderboard
-		ACS_NamedExecute( "JmLb_Update", 0 );
-		int offset = lb_playeroffset[player];
-		//- Some sanity checks here (if for some reason other scripts screwed up)
-		if (offset < 0 || offset >= lb_count) {
-			lb_playeroffset[player] = 0;
-			offset = 0;
-		}
-		//- Get all the stuff from database
-		int limit = LB_ENTRIES_PER_PAGE;
-		str mappbs = StrParam(s:pathMapName( pathPlayerRoute( player ) ),s:"_pbs");
-		int lbres = SortDBEntries( mappbs, limit, offset, 0 );
-		int lbreslen = CountDBResults(lbres);
-		if (lbreslen < limit) limit = lbreslen;
-		str shownnames = "\n\n\n";
-		for (int i=0; i<limit; i++) {
-			//While we're getting data, we also construct strings on the fly
-			str rankname = GetDBResultKeyString(lbres, i);
-			int rank = GetDbEntryRank(mappbs, rankname, false);
-			str playercolor = "\cg";
-			//- If a player is logged in, he will be marked a different color.
-			if (PlayerIsLoggedIn(playernumber()) && GetPlayerAccountName(playernumber()) == rankname)
-				playercolor = "\ck";
-			//- Truncate if too long
-			rankname = StrLeft(rankname, 30);
-			//- Get time values
-			int pbtime = GetDBResultValue(lbres, i);
-			int pbmins = (pbtime / (TICS_IN_SECOND * SECONDS_IN_MINUTE));
-			int pbsecs = (pbtime / TICS_IN_SECOND) % SECONDS_IN_MINUTE;
-			int pbcsecs = cal_cseconds(pbtime % TICS_IN_SECOND);
-			//- Construct left indent
-			str il;
-			if (rank < 10) il = "   ";
-			else if (rank < 100) il = "  ";
-			else if (rank < 1000) il = " ";
-			else il = "";
-			//- Construct right indent
-			str ir = "";
-			int irspaces = 30 - StrLen(rankname);
-			int pbminscopy = pbmins;
-			while ( pbminscopy >= 100 ) {
-				pbminscopy /= 10;
-				irspaces--;
-			}
-			for (int j=0; j<irspaces; j++)
-				ir = StrParam(s:ir, s:" ");
-			//- Construct a line
-			shownnames = StrParam(s:shownnames, s:"\cj", i:rank, s:". ",
-						s:il, s:playercolor, s:rankname, s:ir, s:" \cb",
-						s:number_prefix( pbmins ), i:pbmins, s:":",
-						s:number_prefix( pbsecs ), i:pbsecs, s:"\cs.",
-						s:number_prefix( pbcsecs ), i:pbcsecs, s:"\c-\n");
-		}
-		FreeDBResults(lbres);
-		//- Make statinfo string
-		str statinfo = "\n\n\n";
-		for (i=0; i<LB_ENTRIES_PER_PAGE; i++)
-			statinfo = StrParam(s:statinfo,s:"\n");
-		str footer = GetCvarString("jm_footer");
-		if ( strcmp( footer, "" ) == 0 || footer == 0 )
-			statinfo = StrParam(s:statinfo,s:"\n\cjPlease set jm_footer CVar to replace this message with a custom one.\nSuch message should preferably contain address at which you can browse\nmore records or where you can create an account.");
-		else
-			statinfo = StrParam(s:statinfo,s:"\n\cj",s:footer);
-		//Display results
-		SetHudSize(4,3,true);
-		SetFont("TMSBBACK");
-		HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+5, CR_UNTRANSLATED, 2.0, 1.0, 0.0);
-		SetHudSize(0,0,false);
-		if (lb_playersettings[player] > 0) {
-			SetHudSize(640,480,true);
-			SetFont("TMSBOARD");
-			HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
-			SetFont("BIGFONT");
-			HudMessage(s:toUpper(StrParam(s:"top times on ",s:pathMapName( pathPlayerRoute( player ) ))); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 320.0, 50.1, 0.0);
-			SetFont("CONFONT");
-			HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
-			HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 320.0, 50.1, 0.0);
-			SetHudSize(0,0,false);
-		} else {
-			SetFont("TMSBOARD");
-			HudMessage(s:"A";HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
-			SetFont("BIGFONT");
-			HudMessage(s:toUpper(StrParam(s:"top times on ",s:pathMapName( pathPlayerRoute( player ) ))); HUDMSG_PLAIN | HUDMSG_NOWRAP, LB_HUDMSG_ID+1, CR_RED, 1.5, -0.1, 0.0);
-			SetFont("CONFONT");
-			HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
-			HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
-		}
-	} else {
-		//Hide leaderboard
-		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+5, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
-		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+4, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
-		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+1, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
-		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
-		HudMessage(s:""; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 0.0, 0.0, 0.0);
-	}
+    int player = PlayerNumber();
+    if (lb_playeropen[player] == 1) {
+        if (!is_online()) {
+            hideLeaderboard();
+            print(s:"Leaderboards can be used only in online games");
+            lb_playeropen[player] = false;
+            return;
+        } else if (!JrhIsEnabled()) {
+            hideLeaderboard();
+            print(s:"Leaderboards are disabled");
+            lb_playeropen[player] = false;
+            return;
+        } else if (JmGameGetMapType() == JMG_MAP_TEAM) {
+            hideLeaderboard();
+            print(s:"Leaderboards cannot be used on team maps");
+            lb_playeropen[player] = false;
+            return;
+        }
+        //Prepare leaderboard
+        str mappbs = StrParam(s:pathMapName( pathPlayerRoute( player ) ),s:"_pbs");
+        str footer = GetCvarString("jm_footer");
+        if ( strcmp( footer, "" ) == 0 || footer == 0 )
+            footer = StrParam(s:"\cjPlease set jm_footer CVar to replace this message with a custom one.\nSuch message should preferably contain address at which you can browse\nmore records or where you can create an account.");
+            
+        str header = StrParam(s:toUpper(StrParam(s:"top times on ",s:pathMapName( pathPlayerRoute( player ) ))));
+        DisplayCustomLeaderboard(mappbs, header, footer, true);
+    }
+    else
+    {
+        hideLeaderboard();
+    }
 }
 
+// Toggles leaderboard display, puked by player
 script LB_TOGGLE (void) NET {
-	int player = PlayerNumber();
-	if (lb_playeractions[player]) terminate;
-	lb_playeractions[player] = 3;
-	if (lb_playeropen[player]) {
-		//Close
-		lb_playeropen[player] = 0;
-		LocalAmbientSound("menu/clear", 127);
-	} else {
-		//Open
-		lb_playeropen[player] = 1;
-		LocalAmbientSound("menu/activate", 127);
-		lb_playeroffset[player] = 0;
-	}
-	DisplayLeaderboard();
+    int player = PlayerNumber();
+    lb_playercustom[player] = false; // disable custom leaderboard
+    if (lb_playeractions[player]) terminate;
+    lb_playeractions[player] = 3;
+    if (lb_playeropen[player]) {
+        //Close
+        lb_playeropen[player] = 0;
+        LocalAmbientSound("menu/clear", 127);
+    } else {
+        //Open
+        lb_playeropen[player] = 1;
+        LocalAmbientSound("menu/activate", 127);
+        lb_playeroffset[player] = 0;
+    }
+    DisplayLeaderboard();
 }
 
+// Shifts leaderboard up, puked by player and by JmLb_ClientInit
 script LB_UP (int count) NET {
-	int player = PlayerNumber();
-	if (lb_playeractions[player]) terminate;
-	lb_playeractions[player] = 3;
-	if (lb_playeropen[player] == 0)
-		terminate;
-	if (count <= 0)
-		count = 1;
-	LocalAmbientSound("menu/cursor", 127);
-	lb_playeroffset[player] -= count;
-	if (lb_playeroffset[player] < 0)
-		lb_playeroffset[player] = 0;
-	DisplayLeaderboard();
+    int player = PlayerNumber();
+    if (lb_playeractions[player]) terminate;
+    lb_playeractions[player] = 3;
+    if (lb_playeropen[player] == 0)
+        terminate;
+    if (count <= 0)
+        count = 1;
+    LocalAmbientSound("menu/cursor", 127);
+    lb_playeroffset[player] -= count;
+    if (lb_playeroffset[player] < 0)
+        lb_playeroffset[player] = 0;
+    
+    if (lb_playercustom[player])
+        ACS_NamedExecute( "CustomLB_Update", 0 ); // Maps must implement this script!
+    else
+        DisplayLeaderboard();
 }
 
+// Shifts leaderboard down, puked by player and by JmLb_ClientInit
 script LB_DOWN (int count) NET {
-	int player = PlayerNumber();
-	if (lb_playeractions[player]) terminate;
-	lb_playeractions[player] = 3;
-	if (lb_playeropen[player] == 0)
-		terminate;
-	if (count <= 0)
-		count = 1;
-	LocalAmbientSound("menu/cursor", 127);
-	lb_playeroffset[player] += count;
-	if (lb_playeroffset[player] >= lb_count)
-		lb_playeroffset[player] = lb_count - 1;
-	DisplayLeaderboard();
+    int player = PlayerNumber();
+    if (lb_playeractions[player]) terminate;
+    lb_playeractions[player] = 3;
+    if (lb_playeropen[player] == 0)
+        terminate;
+    if (count <= 0)
+        count = 1;
+    LocalAmbientSound("menu/cursor", 127);
+    lb_playeroffset[player] += count;
+    if (lb_playercustom[player])
+        ACS_NamedExecute( "CustomLB_Update", 0 ); // Maps must implement this script!
+    else
+        DisplayLeaderboard();
 }
 
+// Shifts to current pb, puked by player and by JmLb_ClientInit
 script LB_SPECIAL (void) NET {
-	int player = PlayerNumber();
-	if (lb_playeractions[player]) terminate;
-	lb_playeractions[player] = 3;
-	if (lb_playeropen[player] == 0)
-		terminate;
-	if (PlayerIsLoggedIn(playernumber()) == 0)
-		terminate;
-	str mappbs = StrParam(s:toUpper(StrParam(n:PRINTNAME_LEVEL)),s:"_pbs");
-	int count = GetDBEntryRank(mappbs, GetPlayerAccountName(playernumber()), 0);
-	LocalAmbientSound("menu/cursor", 127);
-	lb_playeroffset[player] = count - (LB_ENTRIES_PER_PAGE / 2);
-	if (lb_playeroffset[player] < 0) lb_playeroffset[player] = 0;
-	DisplayLeaderboard();
+    int player = PlayerNumber();
+    if (lb_playeractions[player]) terminate;
+    lb_playeractions[player] = 3;
+    if (lb_playeropen[player] == 0)
+        terminate;
+    if (PlayerIsLoggedIn(playernumber()) == 0)
+        terminate;
+    str mappbs = StrParam(s:toUpper(StrParam(n:PRINTNAME_LEVEL)),s:"_pbs");
+    int count = GetDBEntryRank(mappbs, GetPlayerAccountName(playernumber()), 0);
+    LocalAmbientSound("menu/cursor", 127);
+    lb_playeroffset[player] = count - (LB_ENTRIES_PER_PAGE / 2);
+    if (lb_playeroffset[player] < 0) lb_playeroffset[player] = 0;
+    if (lb_playercustom[player])
+        ACS_NamedExecute( "CustomLB_Update", 0 ); // Maps must implement this script!
+    else
+        DisplayLeaderboard();
 }
 
+// Force close leaderboard
+script "lbExitCustomLeaderboard" (void) NET
+{
+    int player = PlayerNumber();
+    if (lb_playercustom[player] == false)
+        terminate;
+    lb_playercustom[player] = false; // disable custom leaderboard
+    lb_playeropen[player] = 0;
+    LocalAmbientSound("menu/clear", 127);
+    hideLeaderboard();
+}
+
+// Updates player settings flag
 script LB_ONCVARUPDATE (int settings) NET {
-	lb_playersettings[PlayerNumber()] = settings;
+    lb_playersettings[PlayerNumber()] = settings;
 }
 
+// Inits player leaderboard states to 0
 script LB_ONCONNECT (int settings) NET {
-	lb_playeropen[PlayerNumber()] = 0;
-	lb_playeroffset[PlayerNumber()] = 0;
-	lb_playersettings[PlayerNumber()] = settings;
-	lb_playeractions[PlayerNumber()] = 0;
+    lb_playeropen[PlayerNumber()] = 0;
+    lb_playeroffset[PlayerNumber()] = 0;
+    lb_playersettings[PlayerNumber()] = settings;
+    lb_playeractions[PlayerNumber()] = 0;
+    lb_playercustom[PlayerNumber()] = 0;
 }
 
-
+// Use this script to toggle the table
+function void lbToggleCustomTable (str key, str header, str footer)
+{
+    int player = PlayerNumber();
+    if (lb_playeractions[player]) return;
+    lb_playeractions[player] = 3;
+    if (lb_playeropen[player]) {
+        //Close
+        lb_playeropen[player] = 0;
+        lb_playercustom[player] = 0;
+        //LocalAmbientSound("menu/clear", 127);
+    } else {
+        //Open
+        lb_playeropen[player] = 1;
+        lb_playercustom[player] = 1;
+        //LocalAmbientSound("menu/activate", 127);
+        lb_playeroffset[player] = 0;
+    }
+    DisplayCustomLeaderboard(key, header, footer, false);
+}
 
 
 
