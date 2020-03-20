@@ -11,122 +11,167 @@
 
 #import "jmgame.acs"
 
-#define ADMN_MORPH 0
-#define ADMN_INITFLY 1
-#define ADMN_FLY 2
-#define CHK_FLY 3
-#define ADMN_UNFLY 4
-#define ADEBUG 10
-
 global bool 50:admins[];
-global int 49:adminsFly[];
-//global bool 48:adminsClip[];
-global int 47:firstadmin;
 
-script 989 (int option, int who)
+#define MODE_NORMAL 0
+#define MODE_ADMIN 1
+#define MODE_NOCLIPPER 2
+#define MAX_PLAYERS 64
+
+int AdminMode[MAX_PLAYERS];
+
+function void GiveAdminPowers(int player)
 {
-	/*if (option == ADEBUG)
-	{
-		if (who == 0)
-		{
-			log(s:"Current state: SPAWN");
-			HudMessageBold(s:"Current state: SPAWN"; HUDMSG_PLAIN, 1, CR_RED, 0.5, 0.5, 1.0);
-		}
-		else if (who == 1)
-		{
-			log(s:"Current state: SEE");
-			HudMessageBold(s:"Current state: SEE"; HUDMSG_PLAIN, 1, CR_RED, 0.5, 0.5, 1.0);
-		}
-		terminate;
-	}*/
-	if (option == CHK_FLY && admins[playernumber()] && PlayerInGame(playernumber()))
-	{
-		//log(s:"Checking flight");
-		if (adminsFly[playernumber()] == 1)
-			SetResultValue(1);
-		else
-			SetResultValue(0);
-		terminate;
-	}
-	else if (option == ADMN_INITFLY && admins[playernumber()] && PlayerInGame(playernumber()))
-	{
-		UnMorphActor(0, TRUE);
-		delay(1);
-		int success = MorphActor(0,"AdminMini", "", 0x7fffffff, MRF_NEWTIDBEHAVIOUR | MRF_WHENINVULNERABLE, "", "");
-		//PrintBold(d:success);
-		terminate;
-	}
-	else if (option == ADMN_UNFLY && admins[playernumber()] && PlayerInGame(playernumber()))
-	{
-		UnMorphActor(0, TRUE);
-		delay(1);
-		int success2 = MorphActor(0,"Admin", "", 0x7fffffff, MRF_NEWTIDBEHAVIOUR | MRF_WHENINVULNERABLE, "", "");
-		//PrintBold(d:success2);
-		terminate;
-	}
-	int _who;
-	if (who == 0)
-		_who = firstadmin;
-	else
-		_who = who;
-	if (option == ADMN_MORPH && !admins[_who])
-	{
-		if (StrCmp (GetPlayerAccountName(_who), "hypnotoad") != 0 && StrCmp (GetPlayerAccountName(_who), "wirtualnosc") != 0)
-		{
-			PrintBold(s:"Access Denied!");
-			terminate;
-		}
-		admins[_who] = TRUE;
-		firstadmin = _who;
-	}
-	else if (option == ADMN_FLY && admins[_who] && PlayerInGame(_who))
-	{
-		if (!adminsFly[_who])
-		{
-			log(s:"Admin has turned flight on");
-			adminsFly[_who] = 1;
-		}
-		else
-		{
-			log(s:"Admin has turned flight off");
-			adminsFly[_who] = 0;
-		}
-			
-	}
+    SetActivatorToPlayer(player);
+    GiveInventory("AdminPower",1);
+    SetActorProperty(0, APROP_Speed, 2.2);
 }
 
-script 992 ENTER
+function void GiveAdminInventory(int player)
+{
+    SetActivatorToPlayer(player);
+    GiveInventory("BackPack", 1);
+    GiveInventory("Megasphere", 1);
+    GiveInventory("Cell", 600);
+    GiveInventory("Clip", 600);
+    GiveInventory("Shell", 600);
+    GiveInventory("RocketAmmo", 600);
+    GiveInventory("Minigun", 1);
+    GiveInventory("Railgun", 1);
+    GiveInventory("BFG9000", 1);
+    GiveInventory("Chaingun", 1);
+    GiveInventory("PlasmaRifle", 1);
+    GiveInventory("RocketLauncher", 1);
+    GiveInventory("Shotgun", 1);
+    GiveInventory("SuperShotgun", 1);
+}
+
+function void TakeAdminInventory(int player)
+{
+    SetActivatorToPlayer(player);
+    TakeInventory("Minigun", 1);
+    TakeInventory("Railgun", 1);
+    TakeInventory("BFG9000", 1);
+    TakeInventory("Chaingun", 1);
+    TakeInventory("PlasmaRifle", 1);
+    TakeInventory("RocketLauncher", 1);
+    TakeInventory("Shotgun", 1);
+    TakeInventory("SuperShotgun", 1);
+}
+
+function void TakeAdminPowers(int player)
+{
+    SetActivatorToPlayer(player);
+    GiveInventory("AdminDePower",1);
+    SetActorProperty(0, APROP_Speed, 1.0);
+}
+
+function void MorphToNoClipper(int player)
+{
+    SetActivatorToPlayer(player);
+    MorphActor(0,"AdminNoClipper", "", 0x7fffffff, MRF_NEWTIDBEHAVIOUR | MRF_WHENINVULNERABLE, "", "");
+}
+
+function void UnmorphPlayer(int player)
+{
+    SetActivatorToPlayer(player);
+    UnMorphActor(0,true);
+}
+
+function bool IsAdminAccount(int player)
+{
+    if ((StrCmp (GetPlayerAccountName(player), "hypnotoad") != 0)
+    && (StrCmp (GetPlayerAccountName(player), "wirtualnosc") != 0)
+    && (StrCmp (GetPlayerAccountName(player), "plussean") != 0))
+    {
+        return false;
+    }
+    
+    return true;
+}
+
+// snaity checking that a player is definitely admin!
+function bool VerifyAdmin(int player)
+{
+    return IsAdminAccount(player) && admins[player];
+}
+
+// Sets a player as an admin and morphs
+script "SetAdmin" (int player)
+{
+    if (!IsAdminAccount(player))
+    {
+        PrintBold(s:"Access Denied!");
+        terminate;
+    }
+    
+    admins[player] = true;
+    JmGameDisallowPlayerHs(player);
+    printbold(n:player + 1, s:" has activated their admin powers!");
+    AdminMode[playernumber()] = MODE_NORMAL;
+}
+
+script "AdminPower" (int player)
+{
+    UnmorphPlayer(player);
+    delay(10);       
+    GiveAdminPowers(player);
+    delay(5);
+    GiveAdminInventory(player);
+}
+
+script "AdminNoClip" (int player)
+{
+    UnmorphPlayer(player);
+    delay(10);
+    MorphToNoClipper(player);
+}
+
+script "ToggleAdminPower" (void) net
+{
+    if (!VerifyAdmin(playernumber()))
+        terminate;
+
+    int mode = AdminMode[playernumber()];
+    if (mode == MODE_NORMAL || mode == MODE_NOCLIPPER) {
+        AdminMode[playernumber()] = MODE_ADMIN;
+        acs_namedexecute("AdminPower", 0, playernumber());
+    }
+    else if (mode == MODE_ADMIN) {
+        AdminMode[playernumber()] = MODE_NOCLIPPER;
+        acs_namedexecute("AdminNoClip", 0, playernumber());
+    }
+}
+
+script "AdminDePower" (int player) net
+{
+    if (!VerifyAdmin(playernumber()))
+        terminate;
+        
+    AdminMode[playernumber()] = MODE_NORMAL;
+    UnmorphPlayer(player);
+    delay(10);       
+    TakeAdminPowers(player);
+    delay(5);
+    TakeAdminInventory(player);
+}
+
+script "AdminEnter" ENTER
 {
 	if (admins[playernumber()])
 	{
-		if (StrCmp (GetPlayerAccountName(PlayerNumber()), "hypnotoad") == 0 || StrCmp (GetPlayerAccountName(PlayerNumber()), "wirtualnosc") == 0)
-		{
-			printbold(n:0, s:" has activated his admin powers!");
-			delay(4);
-			MorphActor(0,"Admin", "", 0x7fffffff, MRF_NEWTIDBEHAVIOUR | MRF_WHENINVULNERABLE, "", "");
-			JmGameDisallowPlayerHs(PlayerNumber());
-			delay(5);
-			GiveInventory("Cell", 600);
-			GiveInventory("Clip", 600);
-			delay(5);
-			GiveInventory("Railgun", 1);
-		}
-		else
-		{
+        if (!VerifyAdmin(playernumber()))
+        {
 			print(s:"You are not authorized for Admin mode");
 			admins[playernumber()] = FALSE;
-			adminsFly[PlayerNumber()] = 0;
-			firstadmin = 0;
-		}
+        }
 	}
 }
 
-script 993 (int disc) DISCONNECT
+script "AdminDisconnect" (int disc) DISCONNECT
 {
 	if (admins[disc])
 	{
 		admins[disc] = FALSE;
-		adminsFly[disc] = 0;
-		firstadmin = 0;
 	}
 }
