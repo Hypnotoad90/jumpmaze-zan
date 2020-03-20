@@ -164,7 +164,7 @@ script 981 (int type) NET
 script "ReadyToReset" (void) NET
 {
     int player = PlayerNumber();
-    if (readyToReset[player])
+    if (readyToReset[player] || !playeringame(player))
         terminate;
         
     readyToReset[PlayerNumber()] = true;

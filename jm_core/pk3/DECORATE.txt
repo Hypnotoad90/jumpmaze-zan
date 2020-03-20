@@ -4,102 +4,28 @@ ACTOR DoomPlayerJumper : Doomplayer
 	Player.DisplayName "Marine"
 }
 
-ACTOR Admin : DoomPlayer
-{
-	species "jumper"
-	//+NOGRAVITY
-	+INVULNERABLE
-	+NODAMAGE
-	+BRIGHT
-	+NOSKIN
-	Player.MorphWeapon "Minigun"
-	Player.DisplayName "Admin"
-	var int user_flying;
-	States
-	{
-	  Spawn:
-		PLY2  A -1
-		Loop
-	  See:
-		PLY2  A 0 
-		PLY2  ABCD 4
-		PLY2  A 0 A_JumpIf(0 == (ACS_ExecuteWithResult(989, 3, 0, 0)), 2)
-		PLY2  A 0 ACS_ExecuteWithResult(989, 1, 0, 0)
-		PLY2  A 0 
-		Loop
-	Missile:
-		PLY2  E 12 
-		Goto Spawn
-	Melee:
-		PLY2  F 6 BRIGHT
-		Goto Missile
-	Pain:
-		PLY2  G 4 
-		PLY2  G 4 A_Pain
-		Goto Spawn
-	Death:
-		PLY2  H 0 A_PlayerSkinCheck("AltSkinDeath")
-	Death1:
-		PLY2  H 10
-		PLY2  I 10 A_PlayerScream
-		PLY2  J 10 A_NoBlocking
-		PLY2  KLM 10
-		PLY2  N -1
-		Stop
-	XDeath:
-		PLY2  O 0 A_PlayerSkinCheck("AltSkinXDeath")
-	XDeath1:
-		PLY2  O 5
-		PLY2  P 5 A_XScream
-		PLY2  Q 5 A_NoBlocking
-		PLY2  RSTUV 5
-		PLY2  W -1
-		Stop
-	AltSkinDeath:
-		PLY2  H 6
-		PLY2  I 6 A_PlayerScream
-		PLY2  JK 6
-		PLY2  L 6 A_NoBlocking
-		PLY2  MNO 6
-		PLY2  P -1
-		Stop
-	AltSkinXDeath:
-		PLY2  Q 5 A_PlayerScream
-		PLY2  R 0 A_NoBlocking
-		PLY2  R 5 A_SkullPop
-		PLY2  STUVWX 5
-		PLY2  Y -1
-		Stop
-	}
-}
-
-ACTOR AdminMini : DoomPlayer
+ACTOR AdminNoClipper : DoomPlayer
 {
 	+NOCLIP
 	Player.ForwardMove 2.2
 	Player.SideMove 2.2
 	species "jumper"
-	//+NOGRAVITY
 	+INVULNERABLE
 	+NODAMAGE
 	+BRIGHT
 	+NOSKIN
-	Player.MorphWeapon "Minigun"
 	Player.DisplayName "Admin"
 	var int user_flying;
 	States
 	{
 	  Spawn:
+        PLY2  A 0 A_JumpIfInventory("BirtEffect", 1, "CanFly")
+		PLY2  A 0 A_GiveInventory("BirtEffect")
+     CanFly:
 		PLY2  A -1
 		Loop
 	  See:
-		PLY2  A 0 A_JumpIf(1 == user_flying, 3)
-		PLY2  A 0 A_GiveInventory("PowerFlight")
-		PLY2  A 0 A_SetUserVar("user_flying",1)
 		PLY2  ABCD 4
-		PLY2  A 0 A_JumpIf(1 == (ACS_ExecuteWithResult(989, 3, 0, 0)), 3)
-		PLY2  A 0 A_TakeInventory("PowerFlight")
-		PLY2  A 0 ACS_ExecuteWithResult(989, 4, 0, 0)
 		PLY2  A 0 
 		Loop
 	Missile:
@@ -161,6 +87,48 @@ ACTOR TranslucentScript : CustomInventory
 		Pickup:
 		TNT1 A 0 ACS_ExecuteAlways(693, 0, 0, 0, 0)
 		Stop
+	}
+}
+
+ACTOR AdminPower : CustomInventory
+{
+	+COUNTITEM
+	+INVENTORY.INVBAR
+	+INVENTORY.UNDROPPABLE
+    Inventory.PickupMessage "You got admin power!"
+	states
+	{
+	Spawn:
+		TNT1 ABCD 6
+		Loop
+	Pickup:
+        TNT1 A 0 A_ChangeFlag("INVULNERABLE", TRUE)
+        TNT1 A 0 A_ChangeFlag("NOCLIP", TRUE)
+        TNT1 A 0 A_ChangeFlag("NODAMAGE", TRUE)
+        TNT1 A 0 A_ChangeFlag("BRIGHT", TRUE)
+        TNT1 A 0 A_GiveInventory("BirtEffect")
+        Stop
+	}
+}
+
+ACTOR AdminDePower : CustomInventory
+{
+	+COUNTITEM
+	+INVENTORY.INVBAR
+	+INVENTORY.UNDROPPABLE
+    Inventory.PickupMessage "Clearing admin power"
+	states
+	{
+	Spawn:
+		TNT1 ABCD 6
+		Loop
+	Pickup:
+        TNT1 A 0 A_ChangeFlag("INVULNERABLE", FALSE)
+        TNT1 A 0 A_ChangeFlag("NOCLIP", FALSE)
+        TNT1 A 0 A_ChangeFlag("NODAMAGE", FALSE)
+        TNT1 A 0 A_ChangeFlag("BRIGHT", FALSE)
+        TNT1 A 0 A_TakeInventory("BirtEffect")
+        Stop
 	}
 }
 
