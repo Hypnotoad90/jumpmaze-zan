@@ -1,0 +1,16 @@
+[eng default]
+QUITMSG  = "Remember, if the game is boring,\nyou are boring!";
+QUITMSG1 = "What? Can't handle something as simple as jumping?";
+QUITMSG2 = "Next time...jump before you reach the edge of the cliff.";
+QUITMSG3 = "Keep practicing this and maybe you can jump off a bridge with skill.";
+QUITMSG4 = "Don't trip on your way out.";
+QUITMSG5 = "Don't go! There's still a chance you might make that last jump!";
+QUITMSG6 = "Are you sure you want to leave?";
+QUITMSG7 = "Dont hit that button!\nYou'll regret leaving this...";
+QUITMSG8 = "Leaving already?";
+QUITMSG9 = "Fine...if you want to leave press alt + f4.";
+QUITMSG10 = "Get some practice,\nthe road ahead is challenging for the unskilled jumper.";
+QUITMSG11 = "Keep dying? Go practice.";
+QUITMSG12 = "You'll be back soon.";
+QUITMSG13 = "Don't worry, You couldn't jump even to\nsave your grandma's life.";
+QUITMSG14 = "That jump is intimidating...\nIsn't it?";
