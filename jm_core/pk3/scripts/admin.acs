@@ -20,6 +20,10 @@ global bool 50:admins[];
 
 int AdminMode[MAX_PLAYERS];
 
+#define NUM_ADMINS 4
+
+str adminAccounts[NUM_ADMINS] = {"hypnotoad", "wirtualnosc", "plussean", "cyber"};
+
 function void GiveAdminPowers(int player)
 {
     SetActivatorToPlayer(player);
@@ -80,20 +84,25 @@ function void UnmorphPlayer(int player)
 
 function bool IsAdminAccount(int player)
 {
-    if ((StrCmp (GetPlayerAccountName(player), "hypnotoad") != 0)
-    && (StrCmp (GetPlayerAccountName(player), "wirtualnosc") != 0)
-    && (StrCmp (GetPlayerAccountName(player), "plussean") != 0))
-    {
-        return false;
+    for (int i = 0; i < NUM_ADMINS; i++) {
+        if (StrCmp (GetPlayerAccountName(player), adminAccounts[i]) == 0) {
+            return true;
+        }
     }
     
-    return true;
+    return false;
 }
 
 // snaity checking that a player is definitely admin!
 function bool VerifyAdmin(int player)
 {
     return IsAdminAccount(player) && admins[player];
+}
+
+function void InitAdmin(int player)
+{
+    JmGameDisallowPlayerHs(player);
+    AdminMode[player] = MODE_NORMAL;
 }
 
 // Sets a player as an admin and morphs
@@ -106,9 +115,8 @@ script "SetAdmin" (int player)
     }
     
     admins[player] = true;
-    JmGameDisallowPlayerHs(player);
-    printbold(n:player + 1, s:" has activated their admin powers!");
-    AdminMode[playernumber()] = MODE_NORMAL;
+    InitAdmin(player);
+    printbold(n:player + 1, s:" has activated their admin powers!"); 
 }
 
 script "AdminPower" (int player)
@@ -158,14 +166,16 @@ script "AdminDePower" (int player) net
 
 script "AdminEnter" ENTER
 {
-	if (admins[playernumber()])
-	{
-        if (!VerifyAdmin(playernumber()))
+    int player = playernumber();
+    if (admins[player])
+    {
+        InitAdmin(player);
+        if (!VerifyAdmin(player))
         {
-			print(s:"You are not authorized for Admin mode");
-			admins[playernumber()] = FALSE;
+            print(s:"You are not authorized for Admin mode");
+            admins[player] = FALSE;
         }
-	}
+    }
 }
 
 script "AdminDisconnect" (int disc) DISCONNECT
