@@ -23,7 +23,7 @@
 #libdefine JRT_SCRIPT_POINT 962
 
 // Maximum allowed score points per map.
-#define JRT_MAX_POINTS 10
+#define JRT_MAX_POINTS 16
 #define JRT_SHOW_DELAY_TIME 16
 
 // Points table layout:
