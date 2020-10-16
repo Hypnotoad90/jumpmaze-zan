@@ -2417,11 +2417,6 @@ ACTOR BirtRune : CustomInventory 27668
 	
 }
 
-Actor BirtEffect : PowerFlight
-{
-	Powerup.Duration 0x7FFFFFFD
-}
-
 ACTOR NewStalagmite 9941
 {
   Game Doom
