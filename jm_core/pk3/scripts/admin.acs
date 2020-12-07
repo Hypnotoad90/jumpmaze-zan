@@ -20,10 +20,6 @@ global bool 50:admins[];
 
 int AdminMode[MAX_PLAYERS];
 
-#define NUM_ADMINS 4
-
-str adminAccounts[NUM_ADMINS] = {"hypnotoad", "wirtualnosc", "plussean", "cyber"};
-
 function void GiveAdminPowers(int player)
 {
     SetActivatorToPlayer(player);
@@ -84,9 +80,28 @@ function void UnmorphPlayer(int player)
 
 function bool IsAdminAccount(int player)
 {
-    for (int i = 0; i < NUM_ADMINS; i++) {
-        if (StrCmp (GetPlayerAccountName(player), adminAccounts[i]) == 0) {
-            return true;
+    str list = StrParam(s: GetCVarString("jm_admins"), c: ';');
+    str account = GetPlayerAccountName(player);
+    str buf = "";
+    
+    for (int i = 0; i < StrLen(list); i++) 
+    {
+        int c = GetChar(list, i);
+        
+        if (c == ';')
+        {
+            // It's basically impossible, but GetPlayerAccountName *can* return an empty string,
+            // so ignore empty names in the jm_admins list
+            if (StrLen(buf) >= 1 && StrICmp(account, buf) == 0)
+            {
+                return true;
+            }
+            
+            buf = "";
+        }
+        else
+        {
+            buf = StrParam(s: buf, c: c);
         }
     }
     
