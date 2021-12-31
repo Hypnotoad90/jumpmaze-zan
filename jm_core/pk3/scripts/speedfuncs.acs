@@ -21,12 +21,12 @@ function int max(int x, int y)
     return y;
 }
 
-function int round(int toround)
+function int maths_round(int toround)
 {
     return ftoi(toround + 0.5);
 }
 
-function int ceil(int toround)
+function int maths_ceil(int toround)
 {
     return ftoi(toround + (1.0-1));
 }

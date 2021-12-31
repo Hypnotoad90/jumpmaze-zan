@@ -20,7 +20,7 @@ function void UtilityInit( void ) {
 function bool is_online( void ) {
    // this DISGUSTING hack is needed until IsNetworkGame() comes
    // included with our ACC zspecials
-   return PlayerOnTeam() == 1;
+   return IsNetworkGame() == 1;
 }
 
 // Convert a par time string into seconds.

@@ -2,8 +2,8 @@
 // Originally made by ijon tichy for zanrun
 // Modified by Wirtualnosc for use with jm_core
 
-#include "zcommon.acs"
 #library "speedometer"
+#include "zcommon.acs"
 
 #include "speedfuncs.acs"
 
@@ -51,7 +51,7 @@ function void drawSpeedometer(int speed, int id, int x, int y, int scale, int wi
 
         if (j < speed)
         {
-            k = ceil((speed - j) / scale)-1;
+            k = maths_ceil((speed - j) / scale)-1;
             k = max(0, k % BARFONTCOUNT);
             SetFont(BarGraphics[k]);
             HudMessage(s:"A"; HUDMSG_PLAIN, id+i, CR_UNTRANSLATED, (x + (i * 2.0)) + 0.1, y, 0.5, 0.5);
@@ -158,7 +158,7 @@ script "SpeedometerEnter" ENTER clientside
         switch (GetCVar("jm_speedometer_km"))
         {
           case 4: HudMessage(f:m, s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
-          case 3: HudMessage(d:round(m), s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
+          case 3: HudMessage(d:maths_round(m), s:"\c- units/tic"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
 		  case 2: HudMessage(d:mph, s:"\c- m/s"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
           case 1: HudMessage(d:mph, s:"\c- km/h"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
           case 0: HudMessage(d:mph, s:"\c- mph"; HUDMSG_FADEOUT, SPEEDOMETER_HUDID, CR_BRICK, xpos, ypos, 0.5, 0.5); break;
