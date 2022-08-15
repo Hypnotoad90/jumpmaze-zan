@@ -26,6 +26,7 @@
 #define MMIF_JUMPIX 3
 #define MMIF_RETROMAZE 4
 #define MMIF_HYPNOJUMP 5
+#define MMIF_JUAMPAMAZE 6
 
 #define MM_TOTAL_DIFFICULTIES 6
 
@@ -109,6 +110,7 @@ script "JmMm_EntryClient" ( void ) CLIENTSIDE {
 		case MMIF_JUMPIX: ACS_NamedExecuteAlways( "JmMm_Jumpix", 0 ); break;
 		case MMIF_RETROMAZE: ACS_NamedExecuteAlways( "JmMm_Retromaze", 0 ); break;
 		case MMIF_HYPNOJUMP: ACS_NamedExecuteAlways( "JmMm_Hypnojump", 0 ); break;
+		case MMIF_JUAMPAMAZE: ACS_NamedExecuteAlways( "JmMm_Juampamaze", 0 ); break;
 	}
 }
 
@@ -285,4 +287,11 @@ Script "JmMm_Hypnojump" ( void ) CLIENTSIDE {
 	Delay( 35 * 2 );
 	SetFont( "SMALLFONT" );
 	HudMessage( s:"Author: ", s:MmGetAuthor(), s:"\c-"; HUDMSG_FADEINOUT, MM_HUDMSG_BASEID+1, CR_WHITE, 0.5, 0.55, 3, 6.0, 0.1, 0.1 );
+}
+
+Script "JmMm_Juampamaze" ( void ) CLIENTSIDE {
+	SetFont( "BIGFONT" );
+	HudMessage( s: "\cn", n:PRINTNAME_LEVELNAME; HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID, CR_WHITE, 1.7, 0.94, 5 << 16 );
+    SetFont( "DOOMFONT" );
+    HudMessage( s: "\cjby: ", s:MmGetAuthor(); HUDMSG_FADEINOUT | HUDMSG_LOG, MM_HUDMSG_BASEID+1, CR_WHITE, 1.7, 0.98, 5 << 16 );
 }

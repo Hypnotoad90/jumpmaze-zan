@@ -7,6 +7,7 @@ OptionValue "JMIntroFormat"
     3, "Jumpix"
     4, "Retromaze"
     5, "Hypnojump"
+	6, "Juampamaze"
 }
 
 OptionValue "JMSpeedUnits"
