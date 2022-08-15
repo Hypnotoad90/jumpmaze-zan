@@ -83,6 +83,7 @@ endif
 
 # - Beta
 ifeq ($(targetName),beta)
+SEVENZAFLAGS := $(SEVENZAFLAGS) -mx=9
 targetDir := $(targetDirBeta)
 ifeq ($(shell $(WHERE) git),)
 $(error Could not find git.exe on this system. Ensure it is in your PATH variable!)
@@ -94,6 +95,7 @@ endif
 
 # - Release
 ifeq ($(targetName),release)
+SEVENZAFLAGS := $(SEVENZAFLAGS) -mx=9
 targetDir := $(targetDirRelease)
 targetVersion := $(shell cat version.gv)
 targetSuffix := $(targetVersion)
