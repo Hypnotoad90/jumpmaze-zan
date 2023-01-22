@@ -94,6 +94,13 @@ function void JmGameInit( int mapType, str par ) {
       mode = JMG_MODE_COOP;
       TimerSetPar( par );
    }
+   
+   // Enable sv_shootthroughallies in solo, and disable it in team maps.
+   if ( mapType == JMG_MAP_TEAM ) {
+      consoleCommand( "sv_shootthroughallies false" );
+   } else {
+      consoleCommand( "sv_shootthroughallies true" );
+   }
 
    _jmg_mode = mode;
    _jmg_map_type = mapType;
