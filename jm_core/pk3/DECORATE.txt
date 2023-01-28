@@ -1,9 +1,3 @@
-ACTOR DoomPlayerJumper : Doomplayer
-{
-	species "jumper"
-	Player.DisplayName "Marine"
-}
-
 // BirtEffect originally resided in jm_assets, but I moved it here as admin
 // stuff uses it
 ACTOR BirtEffect : PowerFlight
