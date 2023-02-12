@@ -2,4 +2,26 @@ Cooperative
 {
     addflag MAPRESETS
     addflag MAPRESET_RESETS_MAPTIME
+    
+    name "Jumpmaze"
+    
+    GameSettings
+    {
+        sv_disallowsuicide = false
+        sv_chasecam = true
+        sv_doubleammo = false
+        sv_itemrespawn = true
+        sv_infiniteammo = false
+        sv_nodrop = true
+        sv_respawnsuper = true
+        sv_coop_losekeys = false
+        sv_unblockplayers = true
+        sv_unblockallies = true
+    }
+    
+    LockedGameSettings
+    {
+        sv_nojump = false
+        compat_skulltagjumping = true
+    }
 }
