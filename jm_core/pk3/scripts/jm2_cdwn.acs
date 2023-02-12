@@ -46,7 +46,7 @@ script 852 OPEN {
     }
 }
 
-script "JMCountdown_Run" OPEN
+script "JMCountdown_Run" (void)
 {
 	if ( StrICmp( StrParam( n:PRINTNAME_LEVEL ), "TITLEMAP" ) == 0
 		|| StrICmp( StrParam( n:PRINTNAME_LEVEL ), "WIN01" ) == 0
