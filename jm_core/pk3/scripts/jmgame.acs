@@ -45,6 +45,8 @@
 // This flag makes the timer start up manually upon the request of
 // the user. Thanks goes to Frank for the idea. 
 #libdefine JMGF_MANUAL_TIMER 0x1
+// Makes the countdown started manually
+#libdefine JMGF_MANUAL_COUNTDOWN 0x2
 
 int _jmg_mode = VALUE_NONE;
 int _jmg_map_type = VALUE_NONE;
@@ -289,6 +291,10 @@ function void JmGameShowInitError( void ) {
 
 function int JmGameGetPlayerRoute( int player ) {
    return pathPlayerRoute( player );
+}
+
+function void JmGameStartOpeningCountdown( void ) {
+    ACS_NamedExecute( "JMCountdown_Run", 0 );
 }
 
 // I don't like having race conditions, so we're going to centralize the

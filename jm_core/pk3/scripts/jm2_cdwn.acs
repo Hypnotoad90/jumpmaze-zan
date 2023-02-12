@@ -11,11 +11,15 @@ int cdwn_freeze = 1;
 script 851 OPEN
 {
 	cdownOffset = timer();
-	if ( getCvar( "jm_countdown" ) == 0) 
+    if ( JmGameGetInitFlags() & JMGF_MANUAL_COUNTDOWN )
+    {
+		timerstage = 0;
+		cdwn_freeze = 0;
+    }
+	else if ( getCvar( "jm_countdown" ) == 0) 
 	{
 		timerstage = 2;
 		cdwn_freeze = 0;
-		terminate;
 	}
 	else 
 	{
@@ -33,7 +37,16 @@ script "PlayCountdownSound" ( int which ) CLIENTSIDE {
 	}
 }
 
-script 852 OPEN
+script 852 OPEN {
+    delay(1);
+    if ( JmGameGetInitFlags() & JMGF_MANUAL_COUNTDOWN ) {
+        cdwn_freeze = 0;
+    } else {
+        ACS_NamedExecuteAlways("JMCountdown_Run", 0);
+    }
+}
+
+script "JMCountdown_Run" OPEN
 {
 	if ( StrICmp( StrParam( n:PRINTNAME_LEVEL ), "TITLEMAP" ) == 0
 		|| StrICmp( StrParam( n:PRINTNAME_LEVEL ), "WIN01" ) == 0
@@ -45,7 +58,6 @@ script 852 OPEN
 	}
 	if ( getCvar( "jm_countdown" ) == 1) 
 	{
-		delay(1);
 		if ( JmGameGetMapType() == 2 ) {
 			timerstage = 2;
 			JmGameStartTimer();
