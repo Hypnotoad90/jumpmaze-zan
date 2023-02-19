@@ -4,6 +4,7 @@ Cooperative
     addflag MAPRESET_RESETS_MAPTIME
     
     name "Jumpmaze"
+    shortname "JM"
     
     GameSettings
     {
