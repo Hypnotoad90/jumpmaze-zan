@@ -53,6 +53,9 @@ endif
 ifeq ($(hostOS),windows)
 	ACC=utilities/acc.exe
 	SEVENZA=utilities/7za$(hostArch)
+else ifeq ($(hostOS),macos)
+	ACC=utilities/acc_macos
+	SEVENZA=utilities/7zz
 else
 	ACC=utilities/acc$(hostArch)
 	SEVENZA=7za

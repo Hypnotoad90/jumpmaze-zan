@@ -17,3 +17,6 @@ release_beta/
 
 # Compiled ACS
 *.o
+
+# macOS crap
+.DS_Store
