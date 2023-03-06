@@ -25,6 +25,7 @@
 #define RESULT_VOTENO_WIN 1
 #define RESULT_DRAW 2
 #define RESULT_NOTENOUGHVOTES 3
+#define RESULT_CANCELLED 4
 
 #define VOTE_YES 1
 #define VOTE_NO 2
@@ -35,6 +36,7 @@ int plvote[MAX_PLAYERS];
 bool readyToReset[MAX_PLAYERS];
 int votetimer = 0;
 bool voteInProgress = FALSE;
+bool voteCancelled = FALSE;
 
 script "vote_clearHudClientside" (void) CLIENTSIDE
 {
@@ -76,6 +78,19 @@ script "vote_nextMap" (void)
     // Why?
     delay(1);
     terminate;
+}
+
+// Allow server admins to cancel votes
+script "vote_cancel" (void)
+{
+    if (voteInProgress)
+    {
+        voteCancelled = true;
+    }
+    else
+    {
+        Log(s: "There isn't a vote currently in progress.");
+    }
 }
 
 script 981 (int type) NET
@@ -120,6 +135,7 @@ script 981 (int type) NET
     
     // Set the vote to be in progress
     voteInProgress = true;
+    voteCancelled = false;
     
     // Clear current votes
     clearVotes();
@@ -203,6 +219,11 @@ function bool checkReadyToReset (int exclude)
 // Checks vote while voting, only returns result if majority winner
 function int checkCurrentVote (void)
 {
+    if (voteCancelled)
+    {
+        return RESULT_CANCELLED;
+    }
+        
     int vote1Count = 0;
     int vote2Count = 0;
     int inGameCount = 0;
@@ -244,6 +265,11 @@ function int checkCurrentVote (void)
 // Checks final result
 function int checkVote (void)
 {
+    if (voteCancelled)
+    {
+        return RESULT_CANCELLED;
+    }
+        
     int vote1Count = 0;
     int vote2Count = 0;
     int inGameCount = 0;
@@ -358,7 +384,13 @@ script "vote_doVote" (int vote1, int vote2, int type)
     {
         clearVoteHud();
         HudMessageBold(s:"\n\n\nDraw, defaulting to no action.";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
-    } 
+        terminate;
+    }
+    else if (currentResult == RESULT_CANCELLED)
+    {
+        clearVoteHud();
+        HudMessageBold(s:"\n\n\nThe vote was cancelled by an admin.";HUDMSG_PLAIN, HUDID3, CR_WHITE, 320.0, 200.0, 20.0 );
+    }
 }
 
 script 982 (void) NET
