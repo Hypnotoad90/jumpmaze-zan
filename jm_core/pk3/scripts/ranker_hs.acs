@@ -227,7 +227,8 @@ script "JmLb_Init" OPEN {
 
 // Checks player input and triggers leaderboard functions
 script "JmLb_ClientInit" OPEN CLIENTSIDE {
-    int currentscale = GetCvar("jm_boardscale");
+    int cpn = ConsolePlayerNumber();
+    int currentscale = GetUserCvar(cpn, "jm_boardscale");
     RequestScriptPuke(LB_ONCONNECT, currentscale, 0, 0);
     while (1) {
         int k_vert = GetPlayerInput( ConsolePlayerNumber(), INPUT_FORWARDMOVE );
@@ -245,8 +246,8 @@ script "JmLb_ClientInit" OPEN CLIENTSIDE {
             NamedRequestScriptPuke( "lbExitCustomLeaderboard", 0, 0, 0 );
         }
         delay(1);
-        if (currentscale != GetCvar("jm_boardscale")) {
-            currentscale = GetCvar("jm_boardscale");
+        if (currentscale != GetUserCvar(cpn, "jm_boardscale")) {
+            currentscale = GetUserCvar(cpn, "jm_boardscale");
             RequestScriptPuke(LB_ONCVARUPDATE, currentscale, 0, 0);
         }
     }
