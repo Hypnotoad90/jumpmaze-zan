@@ -10,6 +10,7 @@
 #include "zcommon.acs"
 
 #import "jm2_cdwn.acs"
+#import "admin.acs"
 
 #define HUDID1 1500 //cant be 1 - 9, 960+, 732+, 27233, 412, 985, 986, 11142
 #define HUDID2 1501
@@ -81,15 +82,35 @@ script "vote_nextMap" (void)
 }
 
 // Allow server admins to cancel votes
-script "vote_cancel" (void)
+script "vote_cancel" (void) NET
 {
+    bool isServer = (PlayerNumber() == -1);
+    
+    // Allow the server (rcon) and admin players to use this.
+    // Stupid ACS and its lack of short-circuit evaluation!
+    if (!isServer)
+    {
+        if (!IsAdminAccount(PlayerNumber()))
+        {
+            terminate;
+        }
+    }
+    
     if (voteInProgress)
     {
         voteCancelled = true;
     }
     else
     {
-        Log(s: "There isn't a vote currently in progress.");
+        str msg = "There isn't a vote currently in progress.";
+        if (isServer)
+        {
+            Log(s: msg);
+        }
+        else
+        {
+            Print(s: msg);
+        }
     }
 }
 
