@@ -50,3 +50,4 @@ user int jm_introformat = 0;
 user bool jm_auto_fist = false;
 user bool jm_disablehints = false;
 user bool jm_boardscale = false;
+user noarchive int jm_oldseed = 0; // Internal seed for the hints system
