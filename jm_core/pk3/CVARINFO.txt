@@ -12,6 +12,12 @@ server noarchive bool jm_voting_enablenext = true;
 // Allow players to see who is coop spying one another.
 server noarchive bool jm_showspys = false;
 
+// Enable saving records and personal best times using the Zandronum database feature.
+server noarchive bool jm_enabledb = false;
+
+// Footer shown in the leaderboard.
+server noarchive string jm_footer = "";
+
 // Enable the countdown. (This also applies in singleplayer.)
 server bool jm_countdown = false;
 
