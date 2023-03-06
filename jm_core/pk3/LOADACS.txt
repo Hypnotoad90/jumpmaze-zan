@@ -5,7 +5,6 @@ startreset
 admin
 hints
 vote
-cvarset
 pickup
 speedometer
 Spying
