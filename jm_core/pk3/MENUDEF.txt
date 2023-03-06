@@ -47,7 +47,10 @@ OptionMenu "JMMain"
     Slider "Horizontal position", "jm_speedometer_xpos", 0, 640, 4
     Slider "Vertical position", "jm_speedometer_ypos", 0, 480, 4
     StaticText " "
-    StaticText "Singleplayer Settings", 1
+    StaticText "Game Settings", 1
+    StaticText "These options are only available when playing"
+    StaticText "singleplayer or logged into a server via RCON"
+    StaticText " "
     Option "Countdown on map start", "jm_countdown", "OnOff"
 }
 
