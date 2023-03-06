@@ -34,7 +34,6 @@ acsFiles := \
 	$(acsDir)/admin.o \
 	$(acsDir)/hints.o \
 	$(acsDir)/vote.o \
-	$(acsDir)/cvarset.o \
 	$(acsDir)/pickup.o \
 	$(acsDir)/paths.o \
 	$(acsDir)/speedometer.o \
