@@ -129,6 +129,17 @@ script 981 (int type) NET
         terminate;
     }
     
+    if (type == TYPE_NEXTMAP && !GetCVar("jm_voting_enablenext"))
+    {
+        Print(s: "Next map votes are disabled on this server");
+        terminate;
+    }
+    else if (type == TYPE_RESTART && !GetCVar("jm_voting_enablereset"))
+    {
+        Print(s: "Reset map votes are disabled on this server");
+        terminate;
+    }
+    
     bool shouldReset = false;
     if (type == TYPE_RESTART)
     {
