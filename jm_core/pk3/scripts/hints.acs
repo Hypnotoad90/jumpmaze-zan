@@ -53,7 +53,7 @@ script "jm_hints" OPEN CLIENTSIDE
 	if (GetCVar("jm_disablehints") == 1)
 		Terminate;
 	delay( 35 * 8 );
-	HudMessage(s:"Hint ",d:hint + 1,s:"/",d:MAXHINTS,s:": ",s:hints[hint],s:"\n\cg(to turn off hints, type set jm_disablehints 1, followed by archivecvar jm_disablehints).";HUDMSG_PLAIN | HUDMSG_LOG, 839, CR_LIGHTBLUE, 1.5, 0.75, 10.0);
+	HudMessage(s:"Hint ",d:hint + 1,s:"/",d:MAXHINTS,s:": ",s:hints[hint],s:"\n\cg(to turn off hints, go to the Jumpmaze Settings menu and set Disable Hints to On).";HUDMSG_PLAIN | HUDMSG_LOG, 839, CR_LIGHTBLUE, 1.5, 0.75, 10.0);
 	str seedcommand = strparam(s:"set jm_oldseed ", d:random(1,timer() % 1000));
     ConsoleCommand(seedcommand);
 	while(TRUE)
