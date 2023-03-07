@@ -109,7 +109,7 @@ function void clear_message_bold( int messageId ) {
 }
 
 function bool is_survival_mode( void ) {
-   return getCVar( "survival" );
+   return stricmp( getCurrentGameMode(), "survival" ) == 0;
 }
 
 function bool is_single_player( void ) {
