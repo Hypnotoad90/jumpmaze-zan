@@ -30,22 +30,18 @@ function bool SvmzIs( void ) {
 }
 
 // Initializes the server to play Survival Maze.
-function bool SvmzInit( void ) {
-   bool is_restart_needed = false;
+function void SvmzInit( void ) {
    if (getCVar( "jm_countdown" ) != 0)
    {
 		setCVar( "jm_countdown", 0 );
    }
    if ( ! is_survival_mode() ) {
       setCurrentGameMode( "survival" );
-      is_restart_needed = true;
    }
 
    // if ( ! getCVar( "sv_disallowsuicide" ) ) {
    //    consoleCommand( "sv_disallowsuicide true" );
    // }
-
-   return is_restart_needed;
 }
 
 // Main game script.

@@ -143,18 +143,16 @@ function void JmGameRun( void ) {
       }
    }
    else if ( _jmg_mode == JMG_MODE_SVMZ ) {
-      JmGameRunSvmz( "map map01" );
+      JmGameRunSvmz();
    }
    else {
       JmGameShowInitError();
    }
 }
 
-function void JmGameRunSvmz( str mapRestartCommand ) {
+function void JmGameRunSvmz( void ) {
    // Initialize the server and restart the map if necessary.
-   if ( SvmzInit() ) {
-      consoleCommand( mapRestartCommand );
-   }
+   SvmzInit();
 
    // We run the team ranker with a custom message that replaces the finish
    // time in Survival Maze. We do this so players can see their progress
