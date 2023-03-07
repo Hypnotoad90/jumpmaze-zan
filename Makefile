@@ -60,8 +60,6 @@ $(acsDir)/jm2_cdwn.o: $(sourceDir)/jm2_cdwn.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/TRANSLUCENT.o: $(sourceDir)/TRANSLUCENT.acs | $(acsDir)
 	$(ACC) $< $@
-$(acsDir)/sflags.o: $(sourceDir)/sflags.acs | $(acsDir)
-	$(ACC) $< $@
 $(acsDir)/jmwhoxit.o: $(sourceDir)/who_exited.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/jmtimer.o: $(sourceDir)/timer.acs | $(acsDir)
@@ -69,8 +67,6 @@ $(acsDir)/jmtimer.o: $(sourceDir)/timer.acs | $(acsDir)
 $(acsDir)/teleptch.o: $(sourceDir)/telefrag_patch.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/strigger.o: $(sourceDir)/script_trigger.acs | $(acsDir)
-	$(ACC) $< $@
-$(acsDir)/luksys.o: $(sourceDir)/luk.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/constant.o: $(sourceDir)/constants.acs | $(acsDir)
 	$(ACC) $< $@
@@ -91,8 +87,6 @@ $(acsDir)/admin.o: $(sourceDir)/admin.acs | $(acsDir)
 $(acsDir)/hints.o: $(sourceDir)/hints.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/vote.o: $(sourceDir)/vote.acs | $(acsDir)
-	$(ACC) $< $@
-$(acsDir)/cvarset.o: $(sourceDir)/cvarset.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/pickup.o: $(sourceDir)/pickup.acs | $(acsDir)
 	$(ACC) $< $@
