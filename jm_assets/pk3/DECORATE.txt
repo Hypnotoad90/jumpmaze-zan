@@ -2,6 +2,8 @@
 
       actor GIANTCYBER 11342
 {
+  //$Category "Jumpmaze 1"
+
   spawnid 159
   obituary "%o km."
   scale 5
@@ -94,6 +96,8 @@ ACTOR Snow
 
 actor Snowing128 12364
 {
+    //$Category "Jumpmaze 1"
+
     Radius 64
     Height 1
     Speed 0
@@ -111,6 +115,8 @@ actor Snowing128 12364
 
 actor BeatingHeart 6666
 {
+  //$Category "Jumpmaze 1"
+
   spawnid 201
   health 100
   radius 72
@@ -129,6 +135,8 @@ actor BeatingHeart 6666
 
 actor ElectricityShooter 19191
 {
+  //$Category "Jumpmaze 1"
+
    Radius 4
    Height 8
    Mass 1
@@ -214,6 +222,8 @@ ACTOR ElectricSpark
 
 Actor JungleTree1 30103
 {
+    //$Category "Jumpmaze 2"
+
 	Height 40
 	Radius 10
 	+SOLID
@@ -227,6 +237,8 @@ Actor JungleTree1 30103
 
 Actor JungleTree3 30105
 {
+    //$Category "Jumpmaze 2"
+
 	Height 60
 	Radius 10
 	+SOLID
@@ -240,6 +252,8 @@ Actor JungleTree3 30105
 
 Actor JungleTree4 30106
 {
+    //$Category "Jumpmaze 2"
+
 	Height 60
 	Radius 10
 	+SOLID
@@ -253,6 +267,8 @@ Actor JungleTree4 30106
 
 Actor JungleTree5 30110
 {
+    //$Category "Jumpmaze 2"
+
 	Height 150
 	Radius 20
 	+SOLID
@@ -266,6 +282,8 @@ Actor JungleTree5 30110
 
 Actor JungleTree6 30111
 {
+    //$Category "Jumpmaze 2"
+
 	Height 150
 	Radius 20
 	+SOLID
@@ -279,10 +297,13 @@ Actor JungleTree6 30111
 
 ACTOR SoundWaterfall2 : SoundWaterfall 30107
 {
+    //$Category "Jumpmaze 2"
 }
 
 actor WaveMarine 10001
 {
+  //$Category "Jumpmaze 2"
+
   Game Doom
   radius 20
   height 56
@@ -297,6 +318,8 @@ actor WaveMarine 10001
 
 actor HeadBangMarine 10002
 {
+  //$Category "Jumpmaze 2"
+
   Game Doom
   radius 20
   height 56
@@ -311,6 +334,8 @@ actor HeadBangMarine 10002
 
 actor FistMarine 10003
 {
+  //$Category "Jumpmaze 2"
+
   Game Doom
   radius 20
   height 56
@@ -325,6 +350,8 @@ actor FistMarine 10003
 
 actor SmallMudkip 24621
 {
+  //$Category "Jumpmaze"
+
   Game Doom
   radius 12
   height 24
@@ -341,6 +368,8 @@ actor SmallMudkip 24621
 
 actor Cyberhunter 2143
 {
+  //$Category "Jumpmaze 2"
+
   spawnid 151
   obituary "%o was demolished."
   hitobituary "%o was demolished."
@@ -410,6 +439,8 @@ actor Cyberhunter 2143
 
 ACTOR Turboqueer : CustomInventory 32111
 {
+    //$Category "Jumpmaze 2"
+
 	+NOGRAVITY
 	-INVENTORY.ALWAYSPICKUP
 	Inventory.PickupMessage "$PICKUP_TURBOSPHERE"
@@ -431,6 +462,8 @@ ACTOR Turboqueer : CustomInventory 32111
 
 ACTOR DerpRune : CustomInventory 32112
 {
+    //$Category "Jumpmaze 2"
+
 	+NOGRAVITY
 	+FLOATBOB
 	States
@@ -482,6 +515,8 @@ ACTOR HarmlessRocket
 
 ACTOR GeneralJroc : ScriptedMarine 32113
 {
+    //$Category "Jumpmaze 2"
+
 	States
 	{
 	  Spawn:
@@ -504,6 +539,8 @@ ACTOR GeneralJroc : ScriptedMarine 32113
 
 ACTOR Wario : ScriptedMarine 32114
 {
+    //$Category "Jumpmaze 2"
+
 	States
 	{
 	  Spawn:
@@ -526,6 +563,8 @@ ACTOR Wario : ScriptedMarine 32114
 
 ACTOR Positron : ScriptedMarine 32115
 {
+    //$Category "Jumpmaze 2"
+
 	States
 	{
   Spawn:
@@ -550,6 +589,8 @@ ACTOR Positron : ScriptedMarine 32115
 
 ACTOR ArtiPorkDoom : ArtiPork 10030
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -557,6 +598,8 @@ ACTOR ArtiPorkDoom : ArtiPork 10030
 
 ACTOR FogSpawnerDoom : FogSpawner 20000
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 	+CLIENTSIDEONLY
 }
@@ -565,6 +608,8 @@ ACTOR FogSpawnerDoom : FogSpawner 20000
 
 ACTOR FogPatchSmallDoom : FogPatchSmall 20001
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -572,6 +617,8 @@ ACTOR FogPatchSmallDoom : FogPatchSmall 20001
 
 ACTOR FogPatchMediumDoom : FogPatchMedium 20002
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -579,6 +626,8 @@ ACTOR FogPatchMediumDoom : FogPatchMedium 20002
 
 ACTOR FogPatchLargeDoom : FogPatchLarge 20003
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -588,6 +637,8 @@ ACTOR FogPatchLargeDoom : FogPatchLarge 20003
 
 ACTOR ThrustFloorUpDoom : ThrustFloorUp 10091
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -595,6 +646,8 @@ ACTOR ThrustFloorUpDoom : ThrustFloorUp 10091
 
 ACTOR ThrustFloorDownDoom : ThrustFloorDown 10090
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -602,26 +655,36 @@ ACTOR ThrustFloorDownDoom : ThrustFloorDown 10090
 
 ACTOR ZRock1Doom : ZRock1 10006
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZRock2Doom : ZRock2 10007
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZRock3Doom : ZRock3 10009
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZRock4Doom : ZRock4 10015
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZRockBlackDoom : ZRockBlack 10099
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -629,6 +692,8 @@ ACTOR ZRockBlackDoom : ZRockBlack 10099
 
 ACTOR ZPoisonShroomDoom : ZPoisonShroom 18104
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 
 	States
@@ -655,47 +720,65 @@ ACTOR PoisonCloudObit : PoisonCloud replaces PoisonCloud
 
 ACTOR ZShroomLarge1Doom : ZShroomLarge1 10039
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 
 ACTOR ZShroomLarge2Doom : ZShroomLarge2 10040
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZShroomLarge3Doom : ZShroomLarge3 10041
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZShroomSmall1Doom : ZShroomSmall1 10042
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZShroomSmall2Doom : ZShroomSmall2 10044
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZShroomSmall3Doom : ZShroomSmall3 10045
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZShroomSmall4Doom : ZShroomSmall4 10046
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZShroomSmall5Doom : ZShroomSmall5 10047
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZShrub1Doom : ZShrub1 18101
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -703,57 +786,79 @@ ACTOR ZShrub1Doom : ZShrub1 18101
 
 ACTOR ZShrub2Doom : ZShrub2 18102
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStalagmitePillarDoom : ZStalagmitePillar 10048
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStalagmiteLargeDoom : ZStalagmiteLarge 10049
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStalagmiteMediumDoom : ZStalagmiteMedium 10050
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStalagmiteSmallDoom : ZStalagmiteSmall 10051
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStalactiteLargeDoom : ZStalactiteLarge 10052
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStalactiteMediumDoom : ZStalactiteMedium 10056
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStalactiteSmallDoom : ZStalactiteSmall 10057
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 
 ACTOR BrassTorchDoom : BrassTorch 18061
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZTwinedTorchDoom : ZTwinedTorch 10116
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZTwinedTorchUnlitDoom : ZTwinedTorchUnlit 10117
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -761,16 +866,22 @@ ACTOR ZTwinedTorchUnlitDoom : ZTwinedTorchUnlit 10117
 
 ACTOR ZWallTorchDoom : ZWallTorch 10054
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZWallTorchUnlitDoom : ZWallTorchUnlit 10055
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZCandleDoom : ZCandle 10119
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -778,6 +889,8 @@ ACTOR ZCandleDoom : ZCandle 10119
 
 ACTOR ZBannerTatteredDoom : ZBannerTattered 10077
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -785,11 +898,15 @@ ACTOR ZBannerTatteredDoom : ZBannerTattered 10077
 
 ACTOR ZBarrelDoom : ZBarrel 18100
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZBucketDoom : ZBucket 18103
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -798,16 +915,22 @@ ACTOR ZBucketDoom : ZBucket 18103
 
 ACTOR ZCorpseKabobDoom : ZCorpseKabob 10061
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZCorpseSittingDoom : ZCorpseSitting 10110
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZCorpseHangingDoom : ZCorpseLynchedNoHeart 10071
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 	Radius 11
 	Height 75
@@ -815,11 +938,15 @@ ACTOR ZCorpseHangingDoom : ZCorpseLynchedNoHeart 10071
 
 ACTOR ZCorpseLynchedDoom : ZCorpseLynched 10108
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR BloodPoolDoom : BloodPool 10111
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -827,16 +954,22 @@ ACTOR BloodPoolDoom : BloodPool 10111
 
 ACTOR Pottery1Doom : Pottery1 10104
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR Pottery2Doom : Pottery2 10105
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR Pottery3Doom : Pottery3 10106
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -844,11 +977,15 @@ ACTOR Pottery3Doom : Pottery3 10106
 
 ACTOR TableShit1Doom : TableShit1 18500
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR TableShit2Doom : TableShit2 18501
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -856,6 +993,8 @@ ACTOR TableShit2Doom : TableShit2 18501
 
 ACTOR ZTreeDeadDoom 10024
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 	Radius 10
 	Height 96
@@ -870,6 +1009,8 @@ ACTOR ZTreeDeadDoom 10024
 
 ACTOR ZTreeDoom 10025
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 	Radius 15
 	Height 128
@@ -884,6 +1025,8 @@ ACTOR ZTreeDoom 10025
 
 ACTOR ZTreeSwamp150Doom 10026
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 	Radius 10
 	Height 150
@@ -898,82 +1041,114 @@ ACTOR ZTreeSwamp150Doom 10026
 
 ACTOR ZTreeSwamp120Doom : ZTreeSwamp120 10027
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStumpBurnedDoom : ZStumpBurned 10028
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStumpBareDoom : ZStumpBare 10029
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZTreeLarge1Doom : ZTreeLarge1 10078
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZTreeLarge2Doom : ZTreeLarge2 10079
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZTreeGnarled1Doom : ZTreeGnarled1 10080
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZTreeGnarled2Doom : ZTreeGnarled2 10087
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStumpSwamp1Doom : ZStumpSwamp1 10037
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZStumpSwamp2Doom : ZStumpSwamp2 10038
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZLogDoom : ZLog 10088
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR ZSwampVineDoom : ZSwampVine 10060
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR TreeDestructibleDoom : TreeDestructible 18062
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR BatSpawnerDoom : BatSpawner 10225
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR LeafSpawnerDoom : LeafSpawner 10113
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 	+CLIENTSIDEONLY
 }
 
 ACTOR TeleSmokeDoom : TeleSmoke 10140
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
 ACTOR BridgeDoom : Bridge 10118
 {
+    //$Category "Jumpmaze 2"
+
 	Game Doom
 }
 
@@ -995,6 +1170,8 @@ ACTOR TeleportFogHexen
 
 actor Interrogator 10252
 {
+    //$Category "Jumpmaze 2"
+
 	health 50000
 	radius 192
 	height 512
@@ -1016,6 +1193,8 @@ actor Interrogator 10252
 
 actor Hand1 : Interrogator 10253
 {
+    //$Category "Jumpmaze 2"
+
 	health 2000
 }
 
@@ -1044,6 +1223,8 @@ actor GlassSpawner
 
 actor Core 31140
 {
+  //$Category "Jumpmaze 2"
+
   obituary ""
   health 100
   radius 8
@@ -1095,6 +1276,8 @@ actor Core 31140
 
 actor "Crank Launcher" : DoomWeapon 31141
 {
+  //$Category "Jumpmaze 2"
+
   Game Doom
   SpawnID 29
   Weapon.SelectionOrder 2500
@@ -1276,6 +1459,8 @@ actor QuakeSpawner
 //map60 stuff
 
 actor ptSnowPineTree 13868 {
+   //$Category "Jumpmaze 2"
+
    +SOLID
    radius 16
    height 96
@@ -1288,6 +1473,8 @@ actor ptSnowPineTree 13868 {
 }
 
 actor ptSanta 13869 {
+   //$Category "Jumpmaze 2"
+
    +SOLID
    radius 16
    height 96
@@ -1300,6 +1487,8 @@ actor ptSanta 13869 {
 }
 
 actor ptSantaBack 13870 {
+   //$Category "Jumpmaze 2"
+
    +SOLID
    radius 16
    height 96
@@ -1312,6 +1501,8 @@ actor ptSantaBack 13870 {
 }
 
 actor ptDoNotDisturbSign 13872 {
+   //$Category "Jumpmaze 2"
+
    +SOLID
    radius 16
    height 64
@@ -1324,6 +1515,8 @@ actor ptDoNotDisturbSign 13872 {
 }
 
 actor ptSleepingSnowman 13873 {
+   //$Category "Jumpmaze 2"
+
    +SOLID
    radius 16
    height 64
@@ -1338,6 +1531,8 @@ actor ptSleepingSnowman 13873 {
 }
 
 actor ptAngrySnowman 13874 {
+   //$Category "Jumpmaze 2"
+
    +SOLID
    radius 16
    height 64
@@ -1353,6 +1548,8 @@ actor ptAngrySnowman 13874 {
 
 Actor phobos : DoomPlayer 30009
 {
+   //$Category "Jumpmaze 2"
+
    Translation "112:127=0:0"
    Obituary "%o was melted by \caAA\cnC\cf's plasma rifle."
    health 2500
@@ -2219,12 +2416,16 @@ ACTOR NoPlayerInSightTimer : Inventory
 //blocks of doom
 
 actor TttPistol : Pistol 18913 {
+   //$Category "Jumpmaze 2"
+
    weapon.SlotNumber 1
 }
 
 //bloody 
 
 actor Waldo 23999 {
+   //$Category "Jumpmaze 2"
+
    +SOLID
    Radius 32
    Height 92
@@ -2240,6 +2441,8 @@ actor Waldo 23999 {
 
 actor smalljungle 9546
 {
+  //$Category "Jumpmaze 2"
+
   Game Doom
   States
   {
@@ -2251,6 +2454,8 @@ actor smalljungle 9546
 
 actor smallbush 9548
 {
+  //$Category "Jumpmaze 2"
+
   Game Doom
   States
   {
@@ -2262,6 +2467,8 @@ actor smallbush 9548
 
 actor ConfusedMarine 32012 
 {
+  //$Category "Jumpmaze 2"
+
   health 1000
   radius 16
   height 56
@@ -2303,6 +2510,8 @@ actor ConfusedMarine 32012
 
 actor Chubs 32017
 {
+    //$Category "Jumpmaze 2"
+
     Health 150
 	Radius 22
 	Height 58
@@ -2363,6 +2572,8 @@ ACTOR SecretCheck : Inventory
 
 ACTOR WirtRune : CustomInventory 27666
 {
+    //$Category "Jumpmaze 2"
+
 	+NOGRAVITY
 	States
 	{
@@ -2386,11 +2597,15 @@ ACTOR HighJumpRune666: HighJumpRune
 
 ACTOR BirtPotion : HealthBonus 27667
 {
+    //$Category "Jumpmaze 2"
+
 	Inventory.RespawnTics 175
 }
 
 ACTOR BirtRune : CustomInventory 27668
 {
+    //$Category "Jumpmaze 2"
+
 	+NOGRAVITY
 	+INVENTORY.INVBAR
 	+INVENTORY.UNDROPPABLE
@@ -2419,6 +2634,8 @@ ACTOR BirtRune : CustomInventory 27668
 
 ACTOR NewStalagmite 9941
 {
+  //$Category "Jumpmaze 2"
+
   Game Doom
   Radius 16
   Height 48

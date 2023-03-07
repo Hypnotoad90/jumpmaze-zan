@@ -8,6 +8,9 @@
 
 // Base actor for all Survival Maze pickup items.
 actor SvmzItem : CustomInventory {
+   //$Category "Survival Maze"
+   //$NotAngled
+   
    +NOGRAVITY
    
    +INVENTORY.QUIET
@@ -39,6 +42,9 @@ actor SvmzItemMarker {
 
 // Small Time Boost.
 actor SvmzTimeBoost1 : SvmzItem 15900 {
+   //$Sprite SMB1A0
+   //$Title "Speed Boost (1 second)"
+   
    Inventory.RespawnTics 700
    
    // We make the size of the item larger than its sprite so it's
@@ -73,6 +79,9 @@ actor SvmzTimeBoost1Marker : SvmzItemMarker {
 
 // Medium Time Boost.
 actor SvmzTimeBoost2 : SvmzItem 15901 {
+   //$Sprite SMB2A0
+   //$Title "Speed Boost (3 seconds)"
+   
    Inventory.RespawnTics 1050
 
    Radius 16
@@ -103,6 +112,9 @@ actor SvmzTimeBoost2Marker : SvmzItemMarker {
 
 // Large Time Boost.
 actor SvmzTimeBoost3 : SvmzItem 15902 {
+   //$Sprite SMB3A0
+   //$Title "Speed Boost (10 seconds)"
+   
    Inventory.RespawnTics 1575
    
    Radius 16
@@ -135,6 +147,9 @@ actor SvmzTimeBoost3Marker : SvmzItemMarker {
 // -----------------------------------------------------------------------
 
 actor SvmzRagingBomb : SvmzItem 15903 {
+   //$Sprite SMRBA0
+   //$Title "Raging Bomb"
+   
    Inventory.RespawnTics 1050
 
    Radius 16
@@ -168,6 +183,9 @@ actor SvmzRagingBombMarker : SvmzItemMarker {
 // -----------------------------------------------------------------------
 
 actor SvmzImpunity : SvmzItem 15904 {
+   //$Sprite SMIMA0
+   //$Title "Impunity"
+   
    // We don't want this item respawning, so make the respawn time
    // something impossible to reach.
    Inventory.RespawnTics 999999999
