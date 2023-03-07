@@ -89,8 +89,6 @@ function void JmGameInit( int mapType, str par ) {
    }
    // Coop.
    else {
-      JmGameInitCoop();
-
       mode = JMG_MODE_COOP;
       TimerSetPar( par );
    }
@@ -105,13 +103,6 @@ function void JmGameInit( int mapType, str par ) {
    _jmg_mode = mode;
    _jmg_map_type = mapType;
    _jmg_par = par;
-}
-
-// Initializes engine for Coop games.
-function void JmGameInitCoop( void ) {
-   if ( getCvar( "sv_disallowsuicide" ) ) {
-      consoleCommand( "sv_disallowsuicide false" );
-   }
 }
 
 function void JmGameSetInitFlags( int flags ) {

@@ -26,5 +26,19 @@ Cooperative
         sv_nojump = false
         compat_skulltagjumping = true
         compat_nogravity_spheres = true
+        sv_disallowsuicide = false
+    }
+}
+
+Survival
+{
+    name "Survival Maze"
+    shortname "SVMZ"
+    
+    LockedGameSettings
+    {
+        sv_nojump = false
+        compat_skulltagjumping = true
+        compat_nogravity_spheres = true
     }
 }

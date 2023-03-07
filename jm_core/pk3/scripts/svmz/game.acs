@@ -34,10 +34,10 @@ function bool SvmzInit( void ) {
    bool is_restart_needed = false;
    if (getCVar( "jm_countdown" ) != 0)
    {
-		consoleCommand( "jm_countdown 0" );
+		setCVar( "jm_countdown", 0 );
    }
-   if ( ! getCVar( "survival" ) ) {
-      consoleCommand( "survival true" );
+   if ( ! is_survival_mode() ) {
+      setCurrentGameMode( "survival" );
       is_restart_needed = true;
    }
 	
