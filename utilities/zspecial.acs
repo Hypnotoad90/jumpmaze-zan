@@ -434,6 +434,11 @@ special
 	-148:GetChatMessage(2),
 	-149:GetMapRotationSize(0),
 	-150:GetMapRotationInfo(2),
+	-151:GetCurrentMapPosition(0),
+	-152:GetEventResult(0),
+	-153:GetActorSectorLocation(2),
+	-154:ChangeTeamScore(3,1),
+	-155:SetGameplaySetting(2),
 
 	// -1xx are reserved for Zandronum
 	-200:CheckClass(1),
