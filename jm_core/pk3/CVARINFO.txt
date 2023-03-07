@@ -58,7 +58,7 @@ user bool jm_disablehints = false;
 user bool jm_boardscale = false;
 
 // Show record details automatically when using the Standard map message format.
-server int jm_show_rdetails = 0;
+user int jm_show_rdetails = 0;
 
 
 // OTHER STUFF
