@@ -32,6 +32,6 @@ script 996 RESPAWN {
 
 script 997 ( void ) {
    if ( getCVar( "jm_auto_fist" ) ) {
-      consoleCommand( "use fist" );
+      useInventory( "fist" );
    }
 }
