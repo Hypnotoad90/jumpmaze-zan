@@ -18,9 +18,11 @@ server noarchive bool jm_enabledb = false;
 // Footer shown in the leaderboard.
 server noarchive string jm_footer = "";
 
+// Number of players to show in the high score table on solo maps. Minimum 3, maximum 5.
+server noarchive int jm_table_show_limit = 5;
+
 // Enable the countdown. (This also applies in singleplayer.)
 server bool jm_countdown = false;
-
 
 // USER SETTINGS
 
