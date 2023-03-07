@@ -18,7 +18,6 @@ acsFiles := \
 	$(acsDir)/jmrun.o \
 	$(acsDir)/jm2_cdwn.o \
 	$(acsDir)/TRANSLUCENT.o \
-	$(acsDir)/sflags.o \
 	$(acsDir)/jmwhoxit.o \
 	$(acsDir)/jmtimer.o \
 	$(acsDir)/teleptch.o \

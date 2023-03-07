@@ -1,5 +1,4 @@
 autofist
-sflags
 TRANSLUCENT
 startreset
 admin

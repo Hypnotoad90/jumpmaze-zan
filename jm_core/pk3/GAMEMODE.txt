@@ -24,5 +24,6 @@ Cooperative
     {
         sv_nojump = false
         compat_skulltagjumping = true
+        compat_nogravity_spheres = true
     }
 }
