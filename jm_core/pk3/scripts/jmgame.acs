@@ -15,8 +15,6 @@
 #import "utility.acs"
 #import "timer.acs"
 #import "who_exited.acs"
-// luk ACS library:
-#import "luk.acs" 
 // Rankers:
 #import "ranker_hs.acs"
 #import "ranker_solo.acs"

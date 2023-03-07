@@ -16,7 +16,6 @@
 #import "constants.acs"
 #import "utility.acs"
 #import "timer.acs"
-#import "luk.acs" 
 
 #import "ranker_hs.acs" 
 

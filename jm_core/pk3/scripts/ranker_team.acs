@@ -12,7 +12,6 @@
 #import "constants.acs"
 #import "utility.acs"
 #import "timer.acs"
-#import "luk.acs"
 
 #import "ranker_hs.acs"
 
@@ -371,47 +370,9 @@ script 963 ( void ) {
    //JrhSetLoadStatus( JRH_STATUS_WORKING );
 
    // Finish time.
-   /*
-   acs_ExecuteWait( LUK_RETSCRIPT, 0, LUK_RETQUERY_INT, JRT_HS_RTIME );
-
-    Bail out if we couldn't get the high score data.
-   int result = LukGetQueryResult();
-   if ( result != LUK_RESULT_OK ) {
-      // No high score is set:
-      if ( result == LUK_RESULT_FAILED ) {
-         JrhSetLoadStatus( JRH_STATUS_LOADED );
-      }
-      // Load error:
-      else {
-         JrhSetLoadStatus( JRH_STATUS_ERROR );
-      }
-
-      terminate;
-   }*/
-
    JrtHsSetFinishTime( GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RTIME) );
 
    // Date.
-   /*acs_ExecuteWait( LUK_RETSCRIPT, 0, LUK_RETQUERY_DATE, JRT_HS_RDATE );
-
-   if ( LukGetQueryResult() != LUK_RESULT_OK ) {
-      JrhSetLoadStatus( JRH_STATUS_ERROR );
-      terminate;
-   }
-
-   _jrt_hs_year = LukGetDateYear();
-   _jrt_hs_month = LukGetDateMonth();
-   _jrt_hs_day = LukGetDateDay();
-	
-   // Load total players.
-   acs_ExecuteWait( LUK_RETSCRIPT, 0, LUK_RETQUERY_INT, 
-      JRT_HS_RTOTAL_PLAYERS );
-
-   if ( LukGetQueryResult() != LUK_RESULT_OK ) {
-      JrhSetLoadStatus( JRH_STATUS_ERROR );
-      terminate;
-   }*/
-	
 	int packed_data = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), JRT_HS_RDATE);
 	
 	if (packed_data != 0)
@@ -432,24 +393,9 @@ script 963 ( void ) {
 
    for ( pos = 0; pos < total_players; pos += 1 ) {
       // Player name:
-	  /*
-      acs_ExecuteWait( LUK_LRETSCRIPT, 0, LUK_RETQUERY_STR, 
-         JRT_HS_RPLAYER_PREFIX, pos + 1 );
-
-      if ( LukGetQueryResult() != LUK_RESULT_OK ) {
-         break;
-		
-      }*/
       JrtHsSetHelperName( pos );
 
       // Player points:
-	  /*
-      acs_ExecuteWait( LUK_LRETSCRIPT, 0, LUK_RETQUERY_INT, 
-         JRT_HS_RPOINTS_PREFIX, pos + 1 );
-
-      if ( LukGetQueryResult() != LUK_RESULT_OK ) {
-         break;
-      }*/
 		str helperidpoints = strparam(s:JRT_HS_RPOINTS_PREFIX,s:"_",i:pos);
 		_jrt_hs_helpers_points[ pos ] = GetDBEntry(toUpper(StrParam(n:PRINTNAME_LEVEL)), helperidpoints);
 		points_collected += _jrt_hs_helpers_points[ pos ];
@@ -463,11 +409,8 @@ script 963 ( void ) {
       if ( points_collected < JrtGetTotalPoints() ) {
          _jrt_hs_unaccounted_points = JrtGetTotalPoints() - points_collected;
       }
-
-      //JrhSetLoadStatus( JRH_STATUS_LOADED );
    }
    else {
-      //JrhSetLoadStatus( JRH_STATUS_ERROR );
       terminate;
    }
 }

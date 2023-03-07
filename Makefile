@@ -22,7 +22,6 @@ acsFiles := \
 	$(acsDir)/jmtimer.o \
 	$(acsDir)/teleptch.o \
 	$(acsDir)/strigger.o \
-	$(acsDir)/luksys.o \
 	$(acsDir)/constant.o \
 	$(acsDir)/autofist.o \
 	$(acsDir)/rsdsys.o \
