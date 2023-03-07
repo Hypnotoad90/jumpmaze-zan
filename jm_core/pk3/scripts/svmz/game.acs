@@ -40,19 +40,6 @@ function bool SvmzInit( void ) {
       setCurrentGameMode( "survival" );
       is_restart_needed = true;
    }
-	
-   // I would like to get rid of the countdown entirely but it can't
-   // be done at this time.
-   if ( getCVar( "sv_survivalcountdowntime" ) != 3 ) {
-      consoleCommand( "sv_survivalcountdowntime 3" );
-      is_restart_needed = true;
-   }
-
-   // Survival Maze is a one-life game for now.
-   if ( getCVar( "sv_maxlives" ) != 1 ) {
-      consoleCommand( "sv_maxlives 1" );
-      is_restart_needed = true;
-   }
 
    // if ( ! getCVar( "sv_disallowsuicide" ) ) {
    //    consoleCommand( "sv_disallowsuicide true" );
