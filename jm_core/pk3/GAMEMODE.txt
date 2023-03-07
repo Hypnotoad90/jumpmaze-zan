@@ -18,6 +18,7 @@ Cooperative
         sv_coop_losekeys = false
         sv_unblockplayers = true
         sv_unblockallies = true
+        sv_shootthroughallies = true
     }
     
     LockedGameSettings
