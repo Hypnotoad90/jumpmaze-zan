@@ -27,10 +27,10 @@ script 996 RESPAWN {
    delay( 2 );
    // If countdown is enabled, make sure that fist is switched only after it is done.
    while (timerstage != 2) { delay(1); };
-   ClientExecute( playerNumber(), 997 );
+   executeClientScript( 997, playerNumber() );
 }
 
-script 997 ( void ) {
+script 997 ( void ) CLIENTSIDE {
    if ( getCVar( "jm_auto_fist" ) ) {
       useInventory( "fist" );
    }
