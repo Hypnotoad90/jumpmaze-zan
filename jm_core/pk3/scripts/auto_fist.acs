@@ -16,20 +16,20 @@
 
 #import "jm2_cdwn.acs"
 
-script 995 ENTER {
-   acs_ExecuteAlways( 996, 0 );
+script "AutoFist Enter" ENTER {
+   acs_NamedExecuteAlways( "AutoFist Respawn", 0 );
 }
 
-script 996 RESPAWN {
+script "AutoFist Respawn" RESPAWN {
    // Small delay to make sure the clearInventory() script has finished
    // executing. I don't like this solution but it will do for now.
    delay( 2 );
    // If countdown is enabled, make sure that fist is switched only after it is done.
    while (timerstage != 2) { delay(1); };
-   executeClientScript( 997, playerNumber() );
+   namedExecuteClientScript( "AutoFist Switch", playerNumber() );
 }
 
-script 997 ( void ) CLIENTSIDE {
+script "AutoFist Switch" ( void ) CLIENTSIDE {
    if ( getCVar( "jm_auto_fist" ) ) {
       useInventory( "fist" );
    }
