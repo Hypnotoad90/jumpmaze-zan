@@ -52,7 +52,7 @@ function void TimerShowTime( int time ) {
 // Show par.
 script 986 OPEN CLIENTSIDE {
    delay( 2 );
-   consoleCommand( "puke 987" );
+   RequestScriptPuke( 987 );
 }
 
 script 987 ( void ) NET {
