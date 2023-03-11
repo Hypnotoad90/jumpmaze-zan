@@ -3,12 +3,6 @@
 // Semicolon-separated list of admin usernames.
 server noarchive string jm_admins = "";
 
-// Enable reset map votes.
-server noarchive bool jm_voting_enablereset = true;
-
-// Enable next map votes.
-server noarchive bool jm_voting_enablenext = true;
-
 // Allow players to see who is coop spying one another.
 server noarchive bool jm_showspys = false;
 

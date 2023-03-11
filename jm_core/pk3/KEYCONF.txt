@@ -11,10 +11,6 @@ addmenukey "Record details" "puke 999"
 addmenukey "Leaderboards" "puke 891"
 
 //voting
-addmenukey "Call reset map vote" "puke 981"
-addmenukey "Call next map vote" "puke 981 1"
-addmenukey "Vote yes" "puke 982"
-addmenukey "Vote no" "puke 983"
 addmenukey "Declare ready to reset" "pukename readytoreset"
 
 //airship crap
