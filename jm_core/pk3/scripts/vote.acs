@@ -224,6 +224,14 @@ script "ReadyToReset" (void) NET
     }
 }
 
+script "ReadyToReset_Disconnect" (int who) DISCONNECT
+{
+    if (checkReadyToReset(who))
+    {
+        ACS_NamedExecute("vote_resetMap",0);
+    }
+}
+
 // Checks if all players are ready to reset,
 // pass in a player number to exclude from the count,
 // otherwise pass in -1
@@ -245,7 +253,7 @@ function bool checkReadyToReset (int exclude)
                 readyCount++;
         }
     }
-    return readyCount == inGameCount;
+    return inGameCount > 0 && readyCount == inGameCount;
 }
 
 // Checks vote while voting, only returns result if majority winner
