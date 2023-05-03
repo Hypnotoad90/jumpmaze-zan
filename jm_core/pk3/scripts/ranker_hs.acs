@@ -186,6 +186,9 @@ int lb_playercustom[MAX_PLAYERS];
 // Player's leaderboard position offset
 int lb_playeroffset[MAX_PLAYERS];
 
+// Player's leaderboard position offset last frame
+int lb_playerlastoffset[MAX_PLAYERS];
+
 // Player's leaderboard settings
 int lb_playersettings[MAX_PLAYERS];
 
@@ -312,6 +315,9 @@ function void DisplayCustomLeaderboard(str key, str header, str footer, bool use
         offset = count - 1;
         lb_playeroffset[player] = offset;
     }
+    
+    if (lb_playerlastoffset[player] != offset)
+        LocalAmbientSound("menu/cursor", 127);
 
     //- Get all the stuff from database
     int limit = LB_ENTRIES_PER_PAGE;
@@ -390,6 +396,8 @@ function void DisplayCustomLeaderboard(str key, str header, str footer, bool use
         HudMessage(s:shownnames; HUDMSG_PLAIN, LB_HUDMSG_ID+2, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
         HudMessage(s:statinfo; HUDMSG_PLAIN, LB_HUDMSG_ID+3, CR_UNTRANSLATED, 1.5, -0.1, 0.0);
     }
+    
+    lb_playerlastoffset[player] = offset;
 }
 
 // Displays the leaderboard + header & footer messages, using the current map pb key
@@ -455,7 +463,6 @@ script LB_UP (int count) NET {
         terminate;
     if (count <= 0)
         count = 1;
-    LocalAmbientSound("menu/cursor", 127);
     lb_playeroffset[player] -= count;
     if (lb_playeroffset[player] < 0)
         lb_playeroffset[player] = 0;
@@ -475,7 +482,6 @@ script LB_DOWN (int count) NET {
         terminate;
     if (count <= 0)
         count = 1;
-    LocalAmbientSound("menu/cursor", 127);
     lb_playeroffset[player] += count;
     if (lb_playercustom[player])
         ACS_NamedExecute( "CustomLB_Update", 0 ); // Maps must implement this script!
@@ -494,7 +500,6 @@ script LB_SPECIAL (void) NET {
         terminate;
     str mappbs = StrParam(s:toUpper(StrParam(n:PRINTNAME_LEVEL)),s:"_pbs");
     int count = GetDBEntryRank(mappbs, GetPlayerAccountName(playernumber()), 0);
-    LocalAmbientSound("menu/cursor", 127);
     lb_playeroffset[player] = count - (LB_ENTRIES_PER_PAGE / 2);
     if (lb_playeroffset[player] < 0) lb_playeroffset[player] = 0;
     if (lb_playercustom[player])

@@ -25,7 +25,6 @@ acsFiles := \
 	$(acsDir)/constant.o \
 	$(acsDir)/autofist.o \
 	$(acsDir)/rsdsys.o \
-	$(acsDir)/client.o \
 	$(acsDir)/ptport.o \
 	$(acsDir)/srvlmaze.o \
 	$(acsDir)/startreset.o \
@@ -73,8 +72,6 @@ $(acsDir)/constant.o: $(sourceDir)/constants.acs | $(acsDir)
 $(acsDir)/autofist.o: $(sourceDir)/auto_fist.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/rsdsys.o: $(sourceDir)/rsd.acs | $(acsDir)
-	$(ACC) $< $@
-$(acsDir)/client.o: $(sourceDir)/client.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/ptport.o: $(sourceDir)/personal_teleport.acs | $(acsDir)
 	$(ACC) $< $@
