@@ -1,0 +1,3 @@
+startupcolors = "EAD302", "003E62"
+startuptitle = "Jumpmaze"
+startuptype = "Doom"
