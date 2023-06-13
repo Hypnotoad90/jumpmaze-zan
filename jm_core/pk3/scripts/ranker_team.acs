@@ -17,6 +17,8 @@
 
 #import "paths.acs"
 
+#import "scoreboard.acs"
+
 // Start script number.
 #libdefine JRT_SCRIPT_START 960
 #libdefine JRT_SCRIPT_POINT 962
@@ -136,6 +138,8 @@ function void JrtAddPointToPlayer( int player ) {
    
    _jrt_table[ position ][ JRT_IDX_POINTS ] += 1;
    _jrt_points_left -= 1;
+	  
+   Scoreboard_UpdateTeam( playerNumber(), _jrt_table[ position ][ JRT_IDX_POINTS ] );
 }
 
 function int JrtGetPositionInTable( int player ) {

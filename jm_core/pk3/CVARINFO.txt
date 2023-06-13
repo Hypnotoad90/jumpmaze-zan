@@ -91,4 +91,4 @@ server noarchive int jm_mm_maptype = 0;
 server noarchive int jm_mm_paths = 1;
 
 // Internal seed for the hints system
-user noarchive int jm_oldseed = 0; 
+user noarchive int jm_oldseed = 0;

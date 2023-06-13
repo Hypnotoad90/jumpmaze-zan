@@ -1,0 +1,8 @@
+GameInfo
+{
+	AddCustomData = "JmSoloTime", "string", ""
+	AddCustomData = "JmTics", "int", 2147483647
+	AddCustomData = "JmPoints", "string", ""
+	AddCustomData = "JmRunCurrent", "string", ""
+	AddCustomData = "JmRunBest", "string", ""
+}

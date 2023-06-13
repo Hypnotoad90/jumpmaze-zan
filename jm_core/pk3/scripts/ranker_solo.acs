@@ -21,6 +21,8 @@
 
 #import "paths.acs"
 
+#import "scoreboard.acs"
+
 // Start script number.
 #libdefine JRS_SCRIPT_START 950
 
@@ -133,6 +135,8 @@ function void JrsFinish( void ) { //finish line
       else {
          JrsShowIndividualTime( finish_time ); 
       }
+	  
+	  Scoreboard_UpdateSolo( playerNumber(), finish_time );
    }
 }
 

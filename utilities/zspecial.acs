@@ -439,6 +439,9 @@ special
 	-153:GetActorSectorLocation(2),
 	-154:ChangeTeamScore(3,1),
 	-155:SetGameplaySetting(2),
+	-156:SetCustomPlayerValue(3),
+	-157:GetCustomPlayerValue(2),
+	-158:ResetCustomDataToDefault(2),
 
 	// -1xx are reserved for Zandronum
 	-200:CheckClass(1),

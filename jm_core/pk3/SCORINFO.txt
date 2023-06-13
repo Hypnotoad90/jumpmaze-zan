@@ -1,0 +1,170 @@
+// Stuff to do, if the features get added:
+// sorting, using JmTics column (which is ugly, but can't currently be sorted on when disabled...)
+// hiding/showing columns at runtime, so columns are always visible based on mode, instead of just showing up when data is set
+// 	(also allows using non-string column types for stuff like team points)
+// Also, Survival Maze support would be nice, but who cares.
+
+Column "JmSoloTime"
+{
+	AddFlag DISABLEIFEMPTY
+	
+	DisplayName = "Time"
+	Alignment = Right
+	Size = 20
+}
+
+Column "JmPoints"
+{
+	AddFlag DISABLEIFEMPTY
+	
+	DisplayName = "Points"
+	Alignment = Right
+	Size = 18
+}
+
+Column "JmRunBest"
+{
+	AddFlag DISABLEIFEMPTY
+	
+	DisplayName = "Best"
+	Alignment = Right
+	Size = 20
+}
+
+Column "JmRunCurrent"
+{
+	AddFlag DISABLEIFEMPTY
+	
+	DisplayName = "Current"
+	Alignment = Right
+	Size = 20
+}
+
+// Internal. Hopefully we can use this for sorting...
+Column "JmTics"
+{
+	AddFlag ALWAYSUSESHORTESTWIDTH
+	AddFlag REVERSEORDER
+}
+
+Scoreboard
+{
+	MainHeader
+	{
+		MultiLineBlock( horizontalalign = center )
+		{
+			DrawString( value = "Rankings", font = "BigFont", textcolor = "Red", bottompadding = 6 )
+
+			// [AK] Draw the name of the server if we're in an online game.
+			IfOnlineGame( true )
+			{
+				DrawString( value = cvar( sv_hostname ), textcolor = "Grey", bottompadding = 1 )
+			}
+
+			// [AK] Draw the name of the current game mode and level.
+			DrawString( value = levellump + ": " + levelname, textcolor = "Gold", bottompadding = 1 )
+			
+			// JM stuff
+			DrawString( value = "Author: " + cvar( jm_mm_author ), textcolor = "Gold", bottompadding = 1 )
+			
+			IfCVar( jm_mm_difficulty == -1 )
+			{
+				DrawString( value = "Difficulty: \cjUnset", textcolor = "Gold", bottompadding = 1 )
+			}
+			Else
+			{
+				IfCVar( jm_mm_difficulty == 0 )
+				{
+					DrawString( value = "Difficulty: \ccVaried", textcolor = "Gold", bottompadding = 1 )
+				}
+				Else
+				{
+					IfCVar( jm_mm_difficulty == 1 )
+					{
+						DrawString( value = "Difficulty: \cqVery Easy", textcolor = "Gold", bottompadding = 1 )
+					}
+					Else
+					{
+						IfCVar( jm_mm_difficulty == 2 )
+						{
+							DrawString( value = "Difficulty: \cdEasy", textcolor = "Gold", bottompadding = 1 )
+						}
+						Else
+						{
+							IfCVar( jm_mm_difficulty == 3 )
+							{
+								DrawString( value = "Difficulty: \chModerate", textcolor = "Gold", bottompadding = 1 )
+							}
+							Else
+							{
+								IfCVar( jm_mm_difficulty == 4 )
+								{
+									DrawString( value = "Difficulty: \cgHard", textcolor = "Gold", bottompadding = 1 )
+								}
+								Else
+								{
+									IfCVar( jm_mm_difficulty == 5 )
+									{
+										DrawString( value = "Difficulty: \cmVery Hard", textcolor = "Gold", bottompadding = 1 )
+									}
+									Else
+									{
+										DrawString( value = "Difficulty: " + cvar( jm_mm_difficultyname ), textcolor = "Gold", bottompadding = 1 )
+									}
+								}
+							}
+						}		
+					}
+				}
+			}
+
+			// Draw the time, frags, points, or kills we have left until the level ends.
+			DrawString( value = limitstrings, textcolor = "Grey", bottompadding = 1 )
+
+			// Draw the team scores and their relation (tied, red leads, etc).
+			IfPlayersOnTeams( true )
+			{
+				IfEarnType( Frags, Points, Wins )
+				{
+					DrawString( value = pointstring, textcolor = "Grey", bottompadding = 1 )
+				}
+				// Draw my rank and my frags, points, etc. Don't draw it if we're in the intermission.
+				Else
+				{
+					IfIntermission( false )
+					{
+						IfShouldShowRank( true )
+						{
+							DrawString( value = placestring, textcolor = "Grey", bottompadding = 1 )
+						}
+					}
+				}
+			}
+			// Draw my rank and my frags, points, etc. Don't draw it if we're in the intermission.
+			Else
+			{
+				IfIntermission( false )
+				{
+					IfShouldShowRank( true )
+					{
+						DrawString( value = placestring, textcolor = "Grey", bottompadding = 1 )
+					}
+				}
+			}
+
+			// [JS] Intermission countdown display.
+			IfIntermission( true )
+			{
+				IfOnlineGame( true )
+				{
+					IfCVar( cl_intermissiontimer == true )
+					{
+						DrawString( value = "Entering " + nextlevellump + ": " + nextlevelname + " in " + intermissiontimeleft + " second(s)", textcolor = "Green" )
+					}
+				}
+			}
+		}
+	}
+
+	ColumnOrder = "Index", "ReadyToGoIcon", "StatusIcon", "PlayerColor", "CountryFlag", "Player", "Vote", "JmSoloTime", "JmRunCurrent", "JmRunBest", "JmPoints", "Kills", "Damage", "Lives", "Secrets", "Deaths", "Time", "Ping"
+}

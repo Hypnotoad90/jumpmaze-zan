@@ -21,6 +21,8 @@
 
 #import "paths.acs"
 
+#import "scoreboard.acs"
+
 // Start script number.
 #libdefine JMR_SCRIPT_START 920
 
@@ -216,6 +218,7 @@ script JMR_SCRIPT_START ( void ) {
       // Run table refresh script.
       //acs_Execute( blah, 0 ); //right below!
    }
+   ACS_NamedExecuteAlways("JMR_Update_Scoreboard", 0);
 }
 
 function void JMRStartTimer (int timelimit)
@@ -247,6 +250,7 @@ function void JMRFinish( void ) { //finish line
 		{
 			p_top_time[playernumber()] = finish_time;
 			best_time(p_top_time[playernumber()]);
+			Scoreboard_UpdateJmRunBest(playernumber(), finish_time);
 		}
 			// In multiplayer, register player in table.
 			if ( is_online() ) { //check if online etc
@@ -309,6 +313,22 @@ script 922 ( int player, int playerTime ) {
    //else {
       //JMRShowIndividualTime( playerTime );
    //}
+}
+
+script "JMR_Update_Scoreboard" (void) {
+	for (int i = 0; i < 64; i++) {
+		if (PlayerInGame(i)) {
+			if (p_started[i]) {
+				int t = Timer() - p_starttic[i];
+				Scoreboard_UpdateJmRunCurrent(i, t);
+			} else {
+				Scoreboard_UpdateJmRunCurrent(i, 0);
+			}
+		}
+	}
+	
+	Delay(20);
+	restart;
 }
 
 function int JMRGetPosition( int player ) {

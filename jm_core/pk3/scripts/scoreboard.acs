@@ -1,0 +1,64 @@
+#library "jmscorb"
+#include "zcommon.acs"
+#import "constants.acs"
+#import "utility.acs"
+
+function str Scoreboard_FormatTime(int finish_time) {
+	int time = finish_time / TICS_IN_SECOND;
+	int minutes = time / SECONDS_IN_MINUTE;
+	int seconds = time % SECONDS_IN_MINUTE;
+	int centiseconds = cal_cseconds(finish_time % TICS_IN_SECOND);
+	return StrParam( 
+		s: number_prefix(minutes), i: minutes,
+		s: ":",
+		s: number_prefix(seconds), i: seconds, 
+		s: ".",
+		s: number_prefix(centiseconds), i: centiseconds
+	);
+}
+
+function void Scoreboard_Reset(int player) {
+	ResetCustomDataToDefault("JmTics", player);
+	ResetCustomDataToDefault("JmSoloTime", player);
+	ResetCustomDataToDefault("JmPoints", player);
+	ResetCustomDataToDefault("JmRunCurrent", player);
+	ResetCustomDataToDefault("JmRunBest", player);
+}
+
+Script "Scoreboard_Open" OPEN {
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		if (PlayerInGame(i)) {
+			Scoreboard_Reset(i);
+		}
+	}
+}
+
+Script "Scoreboard_Enter" ENTER {
+	Scoreboard_Reset(PlayerNumber());
+}
+
+function void Scoreboard_UpdateSolo(int player, int finish_time) {
+	str string = Scoreboard_FormatTime(finish_time);
+
+	SetCustomPlayerValue("JmTics", player, finish_time);
+	SetCustomPlayerValue("JmSoloTime", player, string);
+}
+
+function void Scoreboard_UpdateTeam(int player, int points) {
+	str string = "";
+	if (points > 0) {
+		string = StrParam(i: points);
+	}
+	SetCustomPlayerValue("JmPoints", player, string);
+}
+
+function void Scoreboard_UpdateJmRunBest(int player, int finish_time) {
+	str string = Scoreboard_FormatTime(finish_time);
+	SetCustomPlayerValue("JmRunBest", player, string);
+	SetCustomPlayerValue("JmTics", player, finish_time);
+}
+
+function void Scoreboard_UpdateJmRunCurrent(int player, int time) {
+	str string = Scoreboard_FormatTime(time);
+	SetCustomPlayerValue("JmRunCurrent", player, string);
+}

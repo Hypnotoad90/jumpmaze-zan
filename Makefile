@@ -35,7 +35,8 @@ acsFiles := \
 	$(acsDir)/paths.o \
 	$(acsDir)/speedometer.o \
 	$(acsDir)/Spying.o \
-	$(acsDir)/KeyPresses.o
+	$(acsDir)/KeyPresses.o \
+	$(acsDir)/jmscorb.o
 
 $(acsDir):
 	@$(MKDIR) $(MKDIRFLAGS) $@
@@ -94,6 +95,8 @@ $(acsDir)/speedometer.o: $(sourceDir)/speedometer.acs $(sourceDir)/speedfuncs.ac
 $(acsDir)/Spying.o: $(sourceDir)/Spying.acs | $(acsDir)
 	$(ACC) $< $@
 $(acsDir)/KeyPresses.o: $(sourceDir)/KeyPresses.acs | $(acsDir)
+	$(ACC) $< $@
+$(acsDir)/jmscorb.o: $(sourceDir)/scoreboard.acs | $(acsDir)
 	$(ACC) $< $@
 
 # PK3 files
