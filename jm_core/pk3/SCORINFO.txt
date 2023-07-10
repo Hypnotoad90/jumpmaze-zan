@@ -166,5 +166,5 @@ Scoreboard
 		}
 	}
 
-	ColumnOrder = "Index", "ReadyToGoIcon", "StatusIcon", "PlayerColor", "CountryFlag", "Player", "Vote", "JmSoloTime", "JmRunCurrent", "JmRunBest", "JmPoints", "Kills", "Damage", "Lives", "Secrets", "Deaths", "Time", "Ping"
+	ColumnOrder = "Index", "ReadyToGoAndStatusIcons", "CountryFlag", "Player", "Vote", "JmSoloTime", "JmRunCurrent", "JmRunBest", "JmPoints", "Kills", "Damage", "Lives", "Secrets", "Deaths", "Time", "Ping"
 }
