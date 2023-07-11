@@ -44,7 +44,6 @@ function void Scoreboard_UpdateSolo(int player, int finish_time) {
 
 	SetCustomPlayerValue("JmTics", player, finish_time);
 	SetCustomPlayerValue("JmSoloTime", player, string);
-	Log(s: "update scoreboard for ", n: player+1, s: " tics=", d: finish_time, s: " time=", s: string);
 }
 
 function void Scoreboard_UpdateTeam(int player, int points) {
