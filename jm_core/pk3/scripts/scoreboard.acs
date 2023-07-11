@@ -23,6 +23,8 @@ function void Scoreboard_Reset(int player) {
 	ResetCustomDataToDefault("JmPoints", player);
 	ResetCustomDataToDefault("JmRunCurrent", player);
 	ResetCustomDataToDefault("JmRunBest", player);
+	ResetCustomDataToDefault("JmPBTime", player);
+	ResetCustomDataToDefault("JmPBRank", player);
 }
 
 Script "Scoreboard_Open" OPEN {
@@ -42,6 +44,7 @@ function void Scoreboard_UpdateSolo(int player, int finish_time) {
 
 	SetCustomPlayerValue("JmTics", player, finish_time);
 	SetCustomPlayerValue("JmSoloTime", player, string);
+	Log(s: "update scoreboard for ", n: player+1, s: " tics=", d: finish_time, s: " time=", s: string);
 }
 
 function void Scoreboard_UpdateTeam(int player, int points) {
@@ -61,4 +64,12 @@ function void Scoreboard_UpdateJmRunBest(int player, int finish_time) {
 function void Scoreboard_UpdateJmRunCurrent(int player, int time) {
 	str string = Scoreboard_FormatTime(time);
 	SetCustomPlayerValue("JmRunCurrent", player, string);
+}
+
+function void Scoreboard_UpdatePB(int player, int time, int rank) {
+	str timestr = Scoreboard_FormatTime(time);
+	str rankstr = StrParam(i: rank);
+	
+	SetCustomPlayerValue("JmPBTime", player, timestr);
+	SetCustomPlayerValue("JmPBRank", player, rankstr);
 }

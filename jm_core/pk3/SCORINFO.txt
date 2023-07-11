@@ -10,7 +10,7 @@ Column "JmSoloTime"
 	
 	DisplayName = "Time"
 	Alignment = Right
-	Size = 20
+	Size = 40
 }
 
 Column "JmPoints"
@@ -28,7 +28,7 @@ Column "JmRunBest"
 	
 	DisplayName = "Best"
 	Alignment = Right
-	Size = 20
+	Size = 40
 }
 
 Column "JmRunCurrent"
@@ -37,7 +37,27 @@ Column "JmRunCurrent"
 	
 	DisplayName = "Current"
 	Alignment = Right
-	Size = 20
+	Size = 40
+}
+
+Column "JmPBRank"
+{
+	AddFlag DISABLEIFEMPTY
+	//AddFlag DONTSHOWHEADER
+	
+	DisplayName = "PB"
+	Size = 10
+	Alignment = Right
+}
+
+Column "JmPBTime"
+{
+	AddFlag DISABLEIFEMPTY
+	AddFlag DONTSHOWHEADER
+	
+	DisplayName = "PB"
+	Size = 40
+	Alignment = Right
 }
 
 // Internal. Hopefully we can use this for sorting...
@@ -45,6 +65,37 @@ Column "JmTics"
 {
 	AddFlag ALWAYSUSESHORTESTWIDTH
 	AddFlag REVERSEORDER
+}
+
+// Zan overides
+Column "Kills"
+{
+	DisplayName = "K"
+	ShortName = "K"
+}
+
+Column "Deaths"
+{
+	DisplayName = "D"
+	ShortName = "D"
+}
+
+Column "Secrets"
+{
+	DisplayName = "S"
+	ShortName = "S"
+}
+
+Column "Time"
+{
+	DisplayName = "T"
+	ShortName = "T"
+}
+
+Column "Ping"
+{
+	DisplayName = "P"
+	ShortName = "P"
 }
 
 Scoreboard
@@ -166,5 +217,5 @@ Scoreboard
 		}
 	}
 
-	ColumnOrder = "Index", "ReadyToGoAndStatusIcons", "CountryFlag", "Player", "Vote", "JmSoloTime", "JmRunCurrent", "JmRunBest", "JmPoints", "Kills", "Damage", "Lives", "Secrets", "Deaths", "Time", "Ping"
+	ColumnOrder = "JmPBRank", "JmPBTime", "Index", "ReadyToGoAndStatusIcons", "CountryFlag", "Player", "Vote", "JmSoloTime", "JmRunCurrent", "JmRunBest", "JmPoints", "Kills", "Damage", "Deaths", "Lives", "Secrets", "Time", "Ping"
 }

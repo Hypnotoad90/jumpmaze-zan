@@ -582,6 +582,7 @@ script 840 ENTER
 		int pb_centiseconds = cal_cseconds( yourpb % TICS_IN_SECOND );
 		int line_height = JRS_TBL_Y + ( ( JRS_RANK_LIMIT_MAX - _jrs_show_limit ) * JRS_TBL_LINE_HEIGHT ) - 2*JRS_TBL_LINE_HEIGHT;
 		int line_id = JRS_TBL_LINEID_OFFSET - 1;
+		int rank = GetDBEntryRank(StrParam(s:mapname,s:"_pbs"), yourname,0);
 		setFont( "SMALLFONT" );
 		hudMessage(
 		s : "\cnYour Best: \cb",
@@ -591,9 +592,10 @@ script 840 ENTER
 		s : "\cs.",
 		s : number_prefix( pb_centiseconds), i : pb_centiseconds, 
 		s : "\c-",
-		s : "\n(Rank: ",i:GetDBEntryRank(StrParam(s:mapname,s:"_pbs"), yourname,0),s:")";
+		s : "\n(Rank: ",i:rank,s:")";
 		HUDMSG_PLAIN, line_id, 0, JRS_TBL_X, line_height, 0
 		);
+		Scoreboard_UpdatePB(playernumber(), yourpb, rank);
 	}
 	if (joined[playernumber()] == 0)
 		acs_execute(842,0);
