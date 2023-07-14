@@ -24,7 +24,7 @@ Column "JmRunBest"
 {
 	DisplayName = "Best"
 	Alignment = Right
-	Size = 40
+	Size = 55
 	CVar = "_jm_scoreboard_showjmrtimes"
 }
 
@@ -32,7 +32,7 @@ Column "JmRunCurrent"
 {
 	DisplayName = "Current"
 	Alignment = Right
-	Size = 40
+	Size = 55
 	CVar = "_jm_scoreboard_showjmrtimes"
 }
 
