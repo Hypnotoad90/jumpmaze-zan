@@ -38,20 +38,25 @@ Column "JmRunCurrent"
 
 Column "JmPBRank"
 {
-	DisplayName = "PB"
-	Size = 10
-	Alignment = Right
-	CVar = "_jm_scoreboard_showpb"
+	AddFlag DONTSHOWHEADER
+	
+	Size = 20
 }
 
 Column "JmPBTime"
 {
 	AddFlag DONTSHOWHEADER
 	
-	DisplayName = "PB"
-	Size = 40
-	Alignment = Right
+	Size = 50
+}
+
+CompositeColumn "JmPB"
+{
+	Columns = "JmPBRank", "JmPBTime"
 	CVar = "_jm_scoreboard_showpb"
+	DisplayName = "Rank"
+	Size = 70
+	Alignment = Left
 }
 
 // Internal. Hopefully we can use this for sorting...
@@ -211,5 +216,5 @@ Scoreboard
 		}
 	}
 
-	ColumnOrder = "JmPBRank", "JmPBTime", "Index", "ReadyToGoAndStatusIcons", "CountryFlag", "Player", "Vote", "JmSoloTime", "JmRunCurrent", "JmRunBest", "JmPoints", "Kills", "Damage", "Deaths", "Lives", "Secrets", "Time", "Ping"
+	ColumnOrder = "JmPB", "Index", "ReadyToGoAndStatusIcons", "CountryFlag", "Player", "Vote", "JmSoloTime", "JmRunCurrent", "JmRunBest", "JmPoints", "Kills", "Damage", "Deaths", "Lives", "Secrets", "Time", "Ping"
 }
