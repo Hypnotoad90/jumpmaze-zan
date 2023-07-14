@@ -7,6 +7,7 @@
 Column "JmSoloTime"
 {
 	DisplayName = "Time"
+	ShortName = "Time"
 	Alignment = Right
 	Size = 40
 	CVar = "_jm_scoreboard_showsolotime"
@@ -15,6 +16,7 @@ Column "JmSoloTime"
 Column "JmPoints"
 {
 	DisplayName = "Points"
+	ShortName = "Pts"
 	Alignment = Right
 	Size = 18
 	CVar = "_jm_scoreboard_showteampoints"
@@ -23,6 +25,7 @@ Column "JmPoints"
 Column "JmRunBest"
 {
 	DisplayName = "Best"
+	ShortName = "Best"
 	Alignment = Right
 	Size = 55
 	CVar = "_jm_scoreboard_showjmrtimes"
@@ -31,6 +34,7 @@ Column "JmRunBest"
 Column "JmRunCurrent"
 {
 	DisplayName = "Current"
+	ShortName = "Cur"
 	Alignment = Right
 	Size = 55
 	CVar = "_jm_scoreboard_showjmrtimes"
@@ -55,6 +59,7 @@ CompositeColumn "JmPB"
 	Columns = "JmPBRank", "JmPBTime"
 	CVar = "_jm_scoreboard_showpb"
 	DisplayName = "Rank"
+	ShortName = "PB"
 	Size = 70
 	Alignment = Left
 }
