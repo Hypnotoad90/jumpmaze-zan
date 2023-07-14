@@ -6,58 +6,52 @@
 
 Column "JmSoloTime"
 {
-	AddFlag DISABLEIFEMPTY
-	
 	DisplayName = "Time"
 	Alignment = Right
 	Size = 40
+	CVar = "_jm_scoreboard_showsolotime"
 }
 
 Column "JmPoints"
 {
-	AddFlag DISABLEIFEMPTY
-	
 	DisplayName = "Points"
 	Alignment = Right
 	Size = 18
+	CVar = "_jm_scoreboard_showteampoints"
 }
 
 Column "JmRunBest"
 {
-	AddFlag DISABLEIFEMPTY
-	
 	DisplayName = "Best"
 	Alignment = Right
 	Size = 40
+	CVar = "_jm_scoreboard_showjmrtimes"
 }
 
 Column "JmRunCurrent"
 {
-	AddFlag DISABLEIFEMPTY
-	
 	DisplayName = "Current"
 	Alignment = Right
 	Size = 40
+	CVar = "_jm_scoreboard_showjmrtimes"
 }
 
 Column "JmPBRank"
 {
-	AddFlag DISABLEIFEMPTY
-	//AddFlag DONTSHOWHEADER
-	
 	DisplayName = "PB"
 	Size = 10
 	Alignment = Right
+	CVar = "_jm_scoreboard_showpb"
 }
 
 Column "JmPBTime"
 {
-	AddFlag DISABLEIFEMPTY
 	AddFlag DONTSHOWHEADER
 	
 	DisplayName = "PB"
 	Size = 40
 	Alignment = Right
+	CVar = "_jm_scoreboard_showpb"
 }
 
 // Internal. Hopefully we can use this for sorting...
@@ -67,7 +61,7 @@ Column "JmTics"
 	AddFlag REVERSEORDER
 }
 
-// Zan overides
+// Zan overrides
 Column "Kills"
 {
 	DisplayName = "K"

@@ -92,3 +92,9 @@ server noarchive int jm_mm_paths = 1;
 
 // Internal seed for the hints system
 user noarchive int jm_oldseed = 0;
+
+// Internal stuff for the scoreboard.
+server noarchive bool _jm_scoreboard_showpb = false;
+server noarchive bool _jm_scoreboard_showsolotime = false;
+server noarchive bool _jm_scoreboard_showteampoints = false;
+server noarchive bool _jm_scoreboard_showjmrtimes = false;
