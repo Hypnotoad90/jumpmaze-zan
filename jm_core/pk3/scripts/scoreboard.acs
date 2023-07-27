@@ -19,14 +19,16 @@ function str Scoreboard_FormatTime(int finish_time) {
 	);
 }
 
-function void Scoreboard_Reset(int player) {
+function void Scoreboard_Reset(int player, bool andPB) {
 	ResetCustomDataToDefault("JmTics", player);
 	ResetCustomDataToDefault("JmSoloTime", player);
 	ResetCustomDataToDefault("JmPoints", player);
 	ResetCustomDataToDefault("JmRunCurrent", player);
 	ResetCustomDataToDefault("JmRunBest", player);
-	ResetCustomDataToDefault("JmPBTime", player);
-	ResetCustomDataToDefault("JmPBRank", player);
+	if (andPB) {
+		ResetCustomDataToDefault("JmPBTime", player);
+		ResetCustomDataToDefault("JmPBRank", player);
+	}
 }
 
 Script "Scoreboard_Open" OPEN {
@@ -34,7 +36,7 @@ Script "Scoreboard_Open" OPEN {
 	
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		if (PlayerInGame(i)) {
-			Scoreboard_Reset(i);
+			Scoreboard_Reset(i, true);
 		}
 	}
 	
@@ -47,7 +49,11 @@ Script "Scoreboard_Open" OPEN {
 }
 
 Script "Scoreboard_Enter" ENTER {
-	Scoreboard_Reset(PlayerNumber());
+	Scoreboard_Reset(PlayerNumber(), true);
+}
+
+Script "Scoreboard_Disconnect" (int who) DISCONNECT {
+	Scoreboard_Reset(who, false);
 }
 
 function void Scoreboard_UpdateSolo(int player, int finish_time) {
