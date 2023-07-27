@@ -98,3 +98,4 @@ server noarchive bool _jm_scoreboard_showpb = false;
 server noarchive bool _jm_scoreboard_showsolotime = false;
 server noarchive bool _jm_scoreboard_showteampoints = false;
 server noarchive bool _jm_scoreboard_showjmrtimes = false;
+server noarchive string _jm_scoreboard_difficulty = "";

@@ -3,6 +3,7 @@
 #import "constants.acs"
 #import "utility.acs"
 #import "jmgame.acs"
+#import "map_message.acs"
 
 function str Scoreboard_FormatTime(int finish_time) {
 	int time = finish_time / TICS_IN_SECOND;
@@ -42,6 +43,7 @@ Script "Scoreboard_Open" OPEN {
 	SetCVar("_jm_scoreboard_showsolotime", mapType == JMG_MAP_SOLO);
 	SetCVar("_jm_scoreboard_showteampoints", mapType == JMG_MAP_TEAM);
 	SetCVar("_jm_scoreboard_showjmrtimes", mapType == JMG_MAP_JMRUN);
+	SetCVarString("_jm_scoreboard_difficulty", MmGetSkillName());
 }
 
 Script "Scoreboard_Enter" ENTER {

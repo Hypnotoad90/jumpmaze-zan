@@ -122,56 +122,7 @@ Scoreboard
 			// JM stuff
 			DrawString( value = "Author: " + cvar( jm_mm_author ), textcolor = "Gold", bottompadding = 1 )
 			
-			IfCVar( jm_mm_difficulty == -1 )
-			{
-				DrawString( value = "Difficulty: \cjUnset", textcolor = "Gold", bottompadding = 4 )
-			}
-			Else
-			{
-				IfCVar( jm_mm_difficulty == 0 )
-				{
-					DrawString( value = "Difficulty: \ccVaried", textcolor = "Gold", bottompadding = 4 )
-				}
-				Else
-				{
-					IfCVar( jm_mm_difficulty == 1 )
-					{
-						DrawString( value = "Difficulty: \cqVery Easy", textcolor = "Gold", bottompadding = 4 )
-					}
-					Else
-					{
-						IfCVar( jm_mm_difficulty == 2 )
-						{
-							DrawString( value = "Difficulty: \cdEasy", textcolor = "Gold", bottompadding = 4 )	
-						}
-						Else
-						{
-							IfCVar( jm_mm_difficulty == 3 )
-							{
-								DrawString( value = "Difficulty: \chModerate", textcolor = "Gold", bottompadding = 4 )
-							}
-							Else
-							{
-								IfCVar( jm_mm_difficulty == 4 )
-								{
-									DrawString( value = "Difficulty: \cgHard", textcolor = "Gold", bottompadding = 4 )
-								}
-								Else
-								{
-									IfCVar( jm_mm_difficulty == 5 )
-									{
-										DrawString( value = "Difficulty: \cmVery Hard", textcolor = "Gold", bottompadding = 4 )
-									}
-									Else
-									{
-										DrawString( value = "Difficulty: " + cvar( jm_mm_difficultyname ), textcolor = "Gold", bottompadding = 4 )
-									}
-								}
-							}
-						}		
-					}
-				}
-			}
+			DrawString( value = "Difficulty: " + cvar( _jm_scoreboard_difficulty ), textcolor = "Gold", bottompadding = 4 )
 
 			// Draw the time, frags, points, or kills we have left until the level ends.
 			DrawString( value = limitstrings, textcolor = "Grey", bottompadding = 1 )
