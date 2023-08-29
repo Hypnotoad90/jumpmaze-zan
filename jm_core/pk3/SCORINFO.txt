@@ -10,7 +10,7 @@ Column "JmSoloTime"
 	ShortName = "Time"
 	Alignment = Right
 	Size = 40
-	CVar = "_jm_scoreboard_showsolotime"
+	CVar = _jm_scoreboard_showsolotime
 }
 
 Column "JmPoints"
@@ -19,7 +19,7 @@ Column "JmPoints"
 	ShortName = "Pts"
 	Alignment = Right
 	Size = 18
-	CVar = "_jm_scoreboard_showteampoints"
+	CVar = _jm_scoreboard_showteampoints
 }
 
 Column "JmRunBest"
@@ -28,7 +28,7 @@ Column "JmRunBest"
 	ShortName = "Best"
 	Alignment = Right
 	Size = 55
-	CVar = "_jm_scoreboard_showjmrtimes"
+	CVar = _jm_scoreboard_showjmrtimes
 }
 
 Column "JmRunCurrent"
@@ -37,7 +37,7 @@ Column "JmRunCurrent"
 	ShortName = "Cur"
 	Alignment = Right
 	Size = 55
-	CVar = "_jm_scoreboard_showjmrtimes"
+	CVar = _jm_scoreboard_showjmrtimes
 }
 
 Column "JmPBRank"
@@ -57,7 +57,7 @@ Column "JmPBTime"
 CompositeColumn "JmPB"
 {
 	Columns = "JmPBRank", "JmPBTime"
-	CVar = "_jm_scoreboard_showpb"
+	CVar = _jm_scoreboard_showpb
 	DisplayName = "Rank"
 	ShortName = "PB"
 	Size = 70
@@ -69,6 +69,8 @@ Column "JmTics"
 {
 	AddFlag ALWAYSUSESHORTESTWIDTH
 	AddFlag REVERSEORDER
+	AddFlag SORTWHENDISABLED
+	CVar = _jm_scoreboard_showticsort
 }
 
 // Zan overrides
@@ -118,6 +120,11 @@ Scoreboard
 
 			// [AK] Draw the name of the current game mode and level.
 			DrawString( value = levellump + ": " + levelname, textcolor = "Gold", bottompadding = 1 )
+			
+			IfCvar( jm_mm_paths > 1 )
+			{
+				DrawString( value = "Route " + cvar( _jm_scoreboard_route ), textcolor = "Gold", bottompadding = 1 )
+			}
 			
 			// JM stuff
 			DrawString( value = "Author: " + cvar( jm_mm_author ), textcolor = "Gold", bottompadding = 1 )
@@ -172,5 +179,6 @@ Scoreboard
 		}
 	}
 
-	ColumnOrder = "JmPB", "Index", "ReadyToGoAndStatusIcons", "CountryFlag", "Player", "Vote", "JmSoloTime", "JmRunCurrent", "JmRunBest", "JmPoints", "Kills", "Damage", "Deaths", "Lives", "Secrets", "Time", "Ping"
+	ColumnOrder = "JmTics", "JmPB", "Index", "ReadyToGoAndStatusIcons", "CountryFlag", "Player", "Vote", "JmSoloTime", "JmRunCurrent", "JmRunBest", "JmPoints", "Kills", "Damage", "Deaths", "Lives", "Secrets", "Time", "Ping"
+	RankOrder = "JmTics", "JmPoints"
 }

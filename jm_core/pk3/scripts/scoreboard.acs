@@ -4,6 +4,7 @@
 #import "utility.acs"
 #import "jmgame.acs"
 #import "map_message.acs"
+#import "paths.acs"
 
 function str Scoreboard_FormatTime(int finish_time) {
 	int time = finish_time / TICS_IN_SECOND;
@@ -49,7 +50,12 @@ Script "Scoreboard_Open" OPEN {
 }
 
 Script "Scoreboard_Enter" ENTER {
-	Scoreboard_Reset(PlayerNumber(), true);
+	int player = PlayerNumber();
+	Scoreboard_Reset(player, true);
+	
+	Delay(1);
+	
+	SetUserCVar(player, "_jm_scoreboard_route", pathPlayerRoute( player ) + 1);
 }
 
 Script "Scoreboard_Disconnect" (int who) DISCONNECT {
