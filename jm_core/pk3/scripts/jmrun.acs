@@ -265,6 +265,7 @@ function void JMRFinish( void ) { //finish line
 		p_starttic[playernumber()] = 0;
 		p_started[playernumber()] = 0;
 		acs_execute(928,0,playernumber(), finish_time);
+		Scoreboard_UpdatePBForPlayer(playerNumber());
 	}
 }
 

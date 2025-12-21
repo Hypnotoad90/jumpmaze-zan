@@ -36,9 +36,7 @@ Script "Scoreboard_Open" OPEN {
 	Delay(1); // Just to make sure the map OPEN scripts run before this.
 	
 	for (int i = 0; i < MAX_PLAYERS; i++) {
-		if (PlayerInGame(i)) {
-			Scoreboard_Reset(i, true);
-		}
+		Scoreboard_Reset(i, true);
 	}
 	
 	int mapType = JmGameGetMapType();
@@ -47,6 +45,15 @@ Script "Scoreboard_Open" OPEN {
 	SetCVar("_jm_scoreboard_showteampoints", mapType == JMG_MAP_TEAM);
 	SetCVar("_jm_scoreboard_showjmrtimes", mapType == JMG_MAP_JMRUN);
 	SetCVarString("_jm_scoreboard_difficulty", MmGetSkillName());
+
+	// Update everyone's PB
+	for (i = 0; i < MAX_PLAYERS; i++) {
+		if (!PlayerInGame(i) && !PlayerIsSpectator(i)) {
+			continue;
+		}
+
+		Scoreboard_UpdatePBForPlayer(i);
+	}
 }
 
 Script "Scoreboard_Enter" ENTER {
@@ -56,6 +63,18 @@ Script "Scoreboard_Enter" ENTER {
 	Delay(1);
 	
 	SetUserCVar(player, "_jm_scoreboard_route", pathPlayerRoute( player ) + 1);
+	Scoreboard_UpdatePBForPlayer(player);
+}
+
+Script "Scoreboard_Connect" (int type, int who, int previous) EVENT {
+	if (type != GAMEEVENT_PLAYERCONNECT) terminate;
+
+	// Try to update their PB in a loop, so if they log in then the PB is shown
+	while (true) {
+		if (!PlayerInGame(who) && !PlayerIsSpectator(who)) break; // disconnected
+		if (Scoreboard_UpdatePBForPlayer(who)) break;
+		Delay(2);
+	}
 }
 
 Script "Scoreboard_Disconnect" (int who) DISCONNECT {
@@ -88,19 +107,30 @@ function void Scoreboard_UpdateJmRunCurrent(int player, int time) {
 	SetCustomPlayerValue("JmRunCurrent", player, string);
 }
 
-// workaround for a race condition where the scoreboard would reset
-// after the player's PB is set
-script "JM WaitAndUpdateScoreboardPB" (int player, int time, int rank)
-{
-	SetActivatorToPlayer(player);
-	Delay(3);
-	Scoreboard_UpdatePB(player, time, rank);
-}
-
 function void Scoreboard_UpdatePB(int player, int time, int rank) {
 	str timestr = Scoreboard_FormatTime(time);
 	str rankstr = StrParam(i: rank);
 	
 	SetCustomPlayerValue("JmPBTime", player, timestr);
 	SetCustomPlayerValue("JmPBRank", player, rankstr);
+}
+
+function bool Scoreboard_UpdatePBForPlayer(int player) {
+	if (!PlayerIsLoggedIn(player)) {
+		ResetCustomDataToDefault("JmPBTime", player);
+		ResetCustomDataToDefault("JmPBRank", player);
+		return false;
+	}
+
+	str mapname = pathMapName(pathPlayerRoute(player));
+	str username = GetPlayerAccountName(player);
+	str keyname = StrParam(s:mapname, s:"_pbs");
+	int time = GetDBEntry(keyname, username);
+	if (time != 0) {
+		int rank = GetDBEntryRank(keyname, username, 0);
+		Scoreboard_UpdatePB(player, time, rank);
+		return true;
+	}
+
+	return false;
 }
