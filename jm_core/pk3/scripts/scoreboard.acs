@@ -129,8 +129,7 @@ function bool Scoreboard_UpdatePBForPlayer(int player) {
 	if (time != 0) {
 		int rank = GetDBEntryRank(keyname, username, 0);
 		Scoreboard_UpdatePB(player, time, rank);
-		return true;
 	}
 
-	return false;
+	return true;
 }
