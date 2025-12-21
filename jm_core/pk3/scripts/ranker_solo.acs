@@ -595,7 +595,7 @@ script 840 ENTER
 		s : "\n(Rank: ",i:rank,s:")";
 		HUDMSG_PLAIN, line_id, 0, JRS_TBL_X, line_height, 0
 		);
-		Scoreboard_UpdatePB(playernumber(), yourpb, rank);
+		ACS_NamedExecuteAlways("JM WaitAndUpdateScoreboardPB", 0, playernumber(), yourpb, rank);
 	}
 	if (joined[playernumber()] == 0)
 		acs_execute(842,0);

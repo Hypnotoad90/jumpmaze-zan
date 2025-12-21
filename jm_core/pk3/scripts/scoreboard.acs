@@ -88,6 +88,15 @@ function void Scoreboard_UpdateJmRunCurrent(int player, int time) {
 	SetCustomPlayerValue("JmRunCurrent", player, string);
 }
 
+// workaround for a race condition where the scoreboard would reset
+// after the player's PB is set
+script "JM WaitAndUpdateScoreboardPB" (int player, int time, int rank)
+{
+	SetActivatorToPlayer(player);
+	Delay(3);
+	Scoreboard_UpdatePB(player, time, rank);
+}
+
 function void Scoreboard_UpdatePB(int player, int time, int rank) {
 	str timestr = Scoreboard_FormatTime(time);
 	str rankstr = StrParam(i: rank);
